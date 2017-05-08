@@ -300,6 +300,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         }
     }
 
+
     TimePickerDialog.OnTimeSetListener h2 = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
