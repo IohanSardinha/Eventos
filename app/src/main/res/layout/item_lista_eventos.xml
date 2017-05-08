@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="70sp"
+        app:srcCompat="@android:drawable/ic_menu_report_image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/imagem_evento_item" />
+
+    <TextView
+        android:text="Nome do evento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/titulo_evento_item"
+        android:layout_below="@id/imagem_evento_item"
+        android:layout_marginLeft="5sp"
+        android:textSize="20sp"
+        android:textColor="@android:color/background_dark" />
+
+    <TextView
+        android:text="Data do evento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/data_evento_item"
+        android:layout_below="@+id/titulo_evento_item"
+        android:layout_marginLeft="10sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titulo_evento_item"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="110dp"
+        android:layout_marginStart="110dp"
+        android:id="@+id/horario_evento_item"
+        android:text="horario" />
+
+</RelativeLayout>

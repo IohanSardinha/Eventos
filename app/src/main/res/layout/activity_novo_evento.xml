@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_novo_evento"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="br.com.sardinha.iohan.eventos.NovoEventoActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:id="@+id/titulo_Criacao"
+        android:hint="@string/titulo_criacao"
+        android:layout_alignParentLeft="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tipo_de_evento_criacao"
+        android:layout_below="@+id/titulo_Criacao"
+        android:minWidth="100sp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/privacidade_criacao"
+        android:layout_below="@+id/titulo_Criacao"
+        android:layout_toRightOf="@+id/tipo_de_evento_criacao"
+        android:layout_toEndOf="@+id/tipo_de_evento_criacao"
+        android:minWidth="100sp"
+/>
+
+    <TextView
+        android:text="Inicio: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tipo_de_evento_criacao"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="16sp"/>
+
+    <TextView
+        android:text="Fim*: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="16sp"/>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:layout_width="110sp"
+        android:id="@+id/data_encerramento_criacao"
+        android:hint="00/00/0000"
+        android:onClick="selecionarDataEncerramentoClick"
+        android:layout_below="@id/textView3"
+        android:layout_toRightOf="@id/textView6"
+        android:layout_alignBaseline="@id/textView6"
+        android:textAlignment="center" />
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:layout_width="110sp"
+        android:id="@+id/data_inicio_criacao"
+        android:hint="00/00/0000"
+        android:onClick="selecionarDataInicioClick"
+        android:layout_below="@id/tipo_de_evento_criacao"
+        android:layout_toRightOf="@id/textView3"
+        android:layout_alignBaseline="@id/textView3"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="@string/as"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tipo_de_evento_criacao"
+        android:layout_toRightOf="@id/data_inicio_criacao"
+        android:layout_alignBaseline="@id/textView3"/>
+
+    <EditText
+        android:layout_width="55sp"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/hora_inicio_criacao"
+        android:hint="@string/hora_zero"
+        android:textAlignment="center"
+        android:onClick="selecionarHoraInicioClick"
+        android:layout_below="@id/tipo_de_evento_criacao"
+        android:layout_toRightOf="@id/textView"
+        android:layout_alignBaseline="@id/textView3"/>
+
+    <TextView
+        android:text="@string/as"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/textView3"
+        android:layout_toRightOf="@id/data_encerramento_criacao"
+        android:layout_alignBaseline="@id/textView6"/>
+
+    <EditText
+        android:layout_width="55sp"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/hora_encerramento_criacao"
+        android:hint="@string/hora_zero"
+        android:textAlignment="center"
+        android:onClick="selecionarHoraEncerramentoClick"
+        android:layout_below="@id/textView3"
+        android:layout_toRightOf="@id/textView2"
+        android:layout_alignBaseline="@id/textView2"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:lines="5"
+        android:id="@+id/descricao_criacao"
+        android:hint="@string/descricao_criacao"
+        android:gravity="top|left"
+        android:layout_below="@id/textView6"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="32sp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:id="@+id/limite_de_convidados_criacao"
+        android:layout_below="@id/descricao_criacao"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="16sp"
+        android:textSize="17sp"
+        android:layout_toStartOf="@+id/hora_inicio_criacao"
+        android:layout_toLeftOf="@+id/hora_inicio_criacao"
+        android:hint="@string/limite_de_convidados"
+        android:textAllCaps="false" />
+
+    <Button
+        android:text="@string/criar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="criarEventoClick" />
+
+    <TextView
+        android:text="*Opcional"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textSize="12sp"
+        android:layout_alignParentBottom="true" />
+
+
+</RelativeLayout>

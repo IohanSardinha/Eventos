@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Eventos</string>
+    <string name="evento">Evento</string>
+    <string name="novo_evento">Novo evento</string>
+    <string name="titulo_criacao">Título do seu evento</string>
+    <string name="data_criacao">Data do seu evento</string>
+    <string name="limite_de_convidados">Limite de convidados*</string>
+    <string name="hora_zero">00:00</string>
+    <string name="descricao_criacao">Descrição</string>
+    <string name="de">das </string>
+    <string name="as">às</string>
+    <string name="criar">Criar</string>
+    <string name="dia">Dia</string>
+    <string-array name="tipos_de_eventos">
+        <item>Tipo</item>
+        <item>Aniversário</item>
+        <item>Festa</item>
+        <item>Show</item>
+        <item>Outro</item>
+    </string-array>
+    <string-array name="tipos_de_privacidade">
+        <item>Privacidade</item>
+        <item>Aberto</item>
+        <item>Público</item>
+        <item>Privado</item>
+    </string-array>
+</resources>
