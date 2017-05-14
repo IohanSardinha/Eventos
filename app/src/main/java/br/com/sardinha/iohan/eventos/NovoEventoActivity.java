@@ -35,6 +35,39 @@ public class NovoEventoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_evento);
+        try {
+            Intent intent = getIntent();
+            if (intent != null) {
+                Evento evento = (Evento) intent.getSerializableExtra("evento");
+                ((EditText) findViewById(R.id.titulo_Criacao)).setText(evento.getTitulo());
+                ((EditText) findViewById(R.id.data_inicio_criacao)).setText(evento.getDataInicio());
+                ((EditText) findViewById(R.id.data_encerramento_criacao)).setText(evento.getDataEncerramento());
+                ((EditText) findViewById(R.id.hora_inicio_criacao)).setText(evento.getHoraInicio());
+                ((EditText) findViewById(R.id.hora_encerramento_criacao)).setText(evento.getHoraEncerramento());
+                ((EditText) findViewById(R.id.descricao_criacao)).setText(evento.getDescricao());
+                if(evento.getLimite() != -1)
+                {
+                    ((EditText) findViewById(R.id.limite_de_convidados_criacao)).setText(String.valueOf(evento.getLimite()));
+                }
+                switch(evento.getTipo()){
+                    case "Aniversário":
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(1);
+                        break;
+                    case "Show":
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(2);
+                        break;
+                    case "Festa":
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(3);
+                        break;
+                    default:
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(4);
+                        break;
+                }
+            }
+        }
+        catch (Exception ex){
+
+        }
 
         ((EditText)findViewById(R.id.data_inicio_criacao)).setKeyListener(null);
         ((EditText)findViewById(R.id.data_inicio_criacao)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -299,7 +332,6 @@ public class NovoEventoActivity extends AppCompatActivity {
             new TimePickerDialog(this, h, calendario.get(Calendar.HOUR_OF_DAY), calendario.get(Calendar.MINUTE)+1, true).show();
         }
     }
-
 
     TimePickerDialog.OnTimeSetListener h2 = new TimePickerDialog.OnTimeSetListener() {
         @Override

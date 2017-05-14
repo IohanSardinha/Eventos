@@ -17,7 +17,8 @@
         android:id="@+id/imagem_detalhes"
         android:layout_height="100sp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:scaleType="fitXY"/>
 
     <TextView
         android:text="Dia 00/00/0000"
