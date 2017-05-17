@@ -41,6 +41,7 @@ public class ItemListaEventosAdapter extends ArrayAdapter{
         this.sort();;
     }
 
+
     public void sort(){
 
         if(list.size() < 2)

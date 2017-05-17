@@ -77,7 +77,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 intent.putExtra("evento",evento);
                 startActivityForResult(intent,1);
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

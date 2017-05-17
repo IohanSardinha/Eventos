@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             Evento evento = (Evento) tempAdapter.getItem(position);
             Intent intent = new Intent(MainActivity.this,DetalhesEventoActivity.class);
             intent.putExtra("evento",evento);
-            startActivity(intent);
+            startActivityForResult(intent,2);
         }
     }
 

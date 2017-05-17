@@ -35,6 +35,15 @@ public class NovoEventoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_evento);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_eventos,R.layout.support_simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        ((Spinner)findViewById(R.id.tipo_de_evento_criacao)).setAdapter(adapter);
+
+        adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_privacidade,R.layout.support_simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        ((Spinner)findViewById(R.id.privacidade_criacao)).setAdapter(adapter);
+
         try {
             Intent intent = getIntent();
             if (intent != null) {
@@ -51,16 +60,29 @@ public class NovoEventoActivity extends AppCompatActivity {
                 }
                 switch(evento.getTipo()){
                     case "Aniversário":
-                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(1);
+                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(1);
                         break;
                     case "Show":
-                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(2);
+                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(2);
                         break;
                     case "Festa":
+                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(3);
+                        break;
+                    default:
+                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(4);
+                        break;
+                }
+                switch(evento.getPrivacidade()){
+                    case "Aberto":
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(1);
+                        break;
+                    case "Público":
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(2);
+                        break;
+                    case "Privado":
                         ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(3);
                         break;
                     default:
-                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(4);
                         break;
                 }
             }
@@ -104,15 +126,6 @@ public class NovoEventoActivity extends AppCompatActivity {
                     selecionarHoraEncerramentoClick(findViewById(R.id.hora_encerramento_criacao));
             }
         });
-
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_eventos,R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        ((Spinner)findViewById(R.id.tipo_de_evento_criacao)).setAdapter(adapter);
-
-        adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_privacidade,R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        ((Spinner)findViewById(R.id.privacidade_criacao)).setAdapter(adapter);
 
     }
 
