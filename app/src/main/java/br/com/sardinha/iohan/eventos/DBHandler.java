@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by iohan.soares on 17/05/2017.
  */
@@ -39,7 +42,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addShop(Evento evento) {
+    public void addEvento(Evento evento) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_TITULO, evento.getTitulo());
@@ -47,15 +50,55 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, values);
         db.close(); // Closing database connection
     }
-    //http://mobilesiri.com/android-sqlite-database-tutorial-using-android-studio/
-    /*public Evento getShop(int id) {
+
+    public Evento getEvento(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITULO, KEY_TITULO }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
+        Cursor cursor = db.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITULO, KEY_DATA }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
-        Evento contact = new Shop(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2));// return shop
+        Evento contact = new Evento(cursor.getString(1),cursor.getString(2),"","","","","","",Integer.parseInt(cursor.getString(0)));
         return contact;
-    }*/
+    }
+
+    public List<Evento> getAllEvento() {
+        List<Evento> eventoList = new ArrayList<Evento>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Evento evento = new Evento("","","","","","","","",-1);
+                evento.setLimite(Integer.parseInt(cursor.getString(0)));
+                evento.setTitulo(cursor.getString(1));
+                evento.setDataInicio(cursor.getString(2));
+        // Adding contact to list
+                eventoList.add(evento);
+            } while (cursor.moveToNext());
+        }
+        // return contact list
+        return eventoList;
+    }
+
+    public int getEventoCount() {
+        String countQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        cursor.close();
+        // return count
+        return cursor.getCount();
+    }
+
+    public int updateEvento(Evento evento) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TITULO, evento.getTitulo());
+        values.put(KEY_DATA, evento.getDataInicio());
+        // updating row
+        return db.update(TABLE_NAME, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(evento.getLimite())});
+    }
 
 }

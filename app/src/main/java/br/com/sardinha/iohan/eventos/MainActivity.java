@@ -49,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == 1 && resultCode == RESULT_OK)
         {
             Evento evento = (Evento)data.getSerializableExtra("evento");
-            adapter.add(evento);
-
+            DBHandler db = new DBHandler(MainActivity.this);
+            db.addEvento(evento);
+            adapter.add(db.getEvento(evento.getLimite()));
         }
 
     }

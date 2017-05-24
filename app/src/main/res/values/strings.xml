@@ -11,6 +11,7 @@
     <string name="as">às</string>
     <string name="criar">Criar</string>
     <string name="dia">Dia</string>
+    <string name="salvar">Salvar</string>
     <string-array name="tipos_de_eventos">
         <item>Tipo</item>
         <item>Aniversário</item>

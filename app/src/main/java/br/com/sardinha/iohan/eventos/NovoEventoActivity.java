@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -54,6 +55,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                 ((EditText) findViewById(R.id.hora_inicio_criacao)).setText(evento.getHoraInicio());
                 ((EditText) findViewById(R.id.hora_encerramento_criacao)).setText(evento.getHoraEncerramento());
                 ((EditText) findViewById(R.id.descricao_criacao)).setText(evento.getDescricao());
+                ((Button) findViewById(R.id.criar_criacao)).setText(R.string.salvar);
                 if(evento.getLimite() != -1)
                 {
                     ((EditText) findViewById(R.id.limite_de_convidados_criacao)).setText(String.valueOf(evento.getLimite()));
