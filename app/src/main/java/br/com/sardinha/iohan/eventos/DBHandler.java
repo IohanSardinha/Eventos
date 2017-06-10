@@ -9,10 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by iohan.soares on 17/05/2017.
- */
-
 public class DBHandler extends SQLiteOpenHelper {
 
     // Database Version

@@ -6,17 +6,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView eventos;
     ItemListaEventosAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +35,45 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ItemListaEventosAdapter(this,R.layout.item_lista_eventos);
         eventos.setAdapter(adapter);
         eventos.setOnItemClickListener(new ListItemClick());
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://api-eventos.herokuapp.com/users.json", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(responseBody == null)
+                {
+                    Toast.makeText(MainActivity.this, "Sem resposta", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Type listType = new TypeToken<ArrayList<User>>(){}.getType();
+                Gson gson = new Gson();
+                List<User> l = gson.fromJson(new String(responseBody),listType);
+                Toast.makeText(MainActivity.this, l.get(0).getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(MainActivity.this, "erro", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*RequestParams params = new RequestParams();
+        params.put("name","user");
+        params.put("email","email");
+        params.put("password","password");
+
+        client.post("http://api-eventos.herokuapp.com/users", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Toast.makeText(MainActivity.this, new String(responseBody), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(MainActivity.this, "erro", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
     }
     class ListItemClick implements AdapterView.OnItemClickListener{
         @Override
