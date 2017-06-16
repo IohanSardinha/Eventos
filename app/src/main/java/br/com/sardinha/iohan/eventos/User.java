@@ -6,11 +6,13 @@ package br.com.sardinha.iohan.eventos;
 
 public class User {
 
+    private String id;
     private String email;
     private String name;
     private String password;
 
-    public User(String email, String name, String password) {
+    public User(String id, String email, String name, String password) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
@@ -38,5 +40,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getId() {
+        return Integer.parseInt(id);
+    }
+
+    public void setId(int id) {
+        this.id = String.valueOf(id);
     }
 }
