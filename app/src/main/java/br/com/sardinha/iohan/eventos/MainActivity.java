@@ -78,4 +78,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Preencha os campos", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void novoUsuario(View view) {
+        startActivity(new Intent(MainActivity.this,NovoUsuarioAcivity.class));
+    }
 }

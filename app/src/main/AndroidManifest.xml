@@ -22,7 +22,8 @@
             android:name=".NovoEventoActivity"
             android:label="@string/novo_evento" />
         <activity android:name=".DetalhesEventoActivity" />
-        <activity android:name=".EventosActivity"></activity>
+        <activity android:name=".EventosActivity" />
+        <activity android:name=".NovoUsuarioAcivity"></activity>
     </application>
 
 </manifest>
