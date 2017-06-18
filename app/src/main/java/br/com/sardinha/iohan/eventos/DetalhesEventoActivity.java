@@ -10,11 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class DetalhesEventoActivity extends AppCompatActivity {
-
-
     Evento evento;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +78,10 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 intent.putExtra("evento",evento);
                 startActivityForResult(intent,1);
                 return true;
+            case R.id.delete_action:
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(evento.getId());
+                reference.removeValue();
+                finish();
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

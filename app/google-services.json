@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "205472519774",
+    "firebase_url": "https://eventos-35472.firebaseio.com",
+    "project_id": "eventos-35472",
+    "storage_bucket": "eventos-35472.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205472519774:android:f12068e151e170f4",
+        "android_client_info": {
+          "package_name": "br.com.sardinha.iohan.eventos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205472519774-qluj0bbeatdv79ogg69hduqpe837ppg1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.sardinha.iohan.eventos",
+            "certificate_hash": "68689250d4220d6e3eeccb5b5c01116ea46940d2"
+          }
+        },
+        {
+          "client_id": "205472519774-5ivj0njngls33lghafjfs6gu9p2qc0h1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.sardinha.iohan.eventos",
+            "certificate_hash": "f2a47f355f4c0211adb1f3e706747cb8f3494d1c"
+          }
+        },
+        {
+          "client_id": "205472519774-eajo0ns7f257ici2l8vq4ici4v5imtfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUqbGijW3tClnhE4M-IZqB5MTlU1EbYk8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205472519774-eajo0ns7f257ici2l8vq4ici4v5imtfd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

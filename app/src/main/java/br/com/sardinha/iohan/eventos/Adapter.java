@@ -1,5 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,14 +10,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by Iohan on 13/06/2017.
- */
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-    ArrayList<Event> list;
-    public Adapter(ArrayList<Event> list) {
+    ArrayList<Evento> list;
+    Context context;
+    public Adapter(ArrayList<Evento> list, Context context) {
         this.list = list;
+        this.context = context;
     }
 
     @Override
@@ -25,8 +26,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
-        holder.info.setText(String.valueOf(list.get(position).getTitle()));
-        holder.description.setText(String.valueOf(list.get(position).getDescription()));
+        holder.info.setText(String.valueOf(list.get(position).getTitulo()));
+        holder.description.setText(String.valueOf(list.get(position).getDescricao()));
     }
 
     @Override
@@ -46,7 +47,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            System.out.println(list.get(getAdapterPosition()));
+            Intent intent = new Intent(context,DetalhesEventoActivity.class);
+            intent.putExtra("evento",list.get(getAdapterPosition()));
+            context.startActivity(intent);
         }
     }
 }

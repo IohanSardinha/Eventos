@@ -7,7 +7,10 @@
     card_view:cardCornerRadius="2dp"
     card_view:contentPadding="1dp"
     card_view:cardElevation="5dp"
-    android:layout_margin="2dp">
+    android:layout_margin="2dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/info_text"

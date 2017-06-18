@@ -19,6 +19,10 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,10 +36,18 @@ public class NovoEventoActivity extends AppCompatActivity {
     Context cont = this;
     int hora = -1;
     int minuto = -1;
+    private String ID;
+
+    private DatabaseReference reference;
+    private String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_evento);
+
+        reference = FirebaseDatabase.getInstance().getReference("Events");
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_eventos,R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -49,6 +61,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             Intent intent = getIntent();
             if (intent != null) {
                 Evento evento = (Evento) intent.getSerializableExtra("evento");
+                ID = evento.getId();
                 ((EditText) findViewById(R.id.titulo_Criacao)).setText(evento.getTitulo());
                 ((EditText) findViewById(R.id.data_inicio_criacao)).setText(evento.getDataInicio());
                 ((EditText) findViewById(R.id.data_encerramento_criacao)).setText(evento.getDataEncerramento());
@@ -64,10 +77,10 @@ public class NovoEventoActivity extends AppCompatActivity {
                     case "Aniversário":
                         ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(1);
                         break;
-                    case "Show":
+                    case "Festa":
                         ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(2);
                         break;
-                    case "Festa":
+                    case "Show":
                         ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(3);
                         break;
                     default:
@@ -139,7 +152,7 @@ public class NovoEventoActivity extends AppCompatActivity {
     }
 
     public void criarEventoClick(View view) {
-        Intent intent = new Intent(this,MainActivity.class);
+        //Intent intent = new Intent(this,MainActivity.class);
 
         Map<String,String> campos = new HashMap<>();
 
@@ -198,8 +211,14 @@ public class NovoEventoActivity extends AppCompatActivity {
         {
             data_encerramento = data_inicio;
         }
-        intent.putExtra("evento",e);
-        setResult(RESULT_OK,intent);
+
+        if(ID == null)
+        {
+            ID = reference.push().getKey();
+        }
+        e.setId(ID);
+        reference.child(userID).child(ID).setValue(e);
+        setResult(RESULT_OK,(new Intent()).putExtra("evento",e));
         finish();
     }
 
