@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
@@ -44,6 +45,23 @@ public class EventosActivity extends AppCompatActivity {
         userID = auth.getCurrentUser().getUid();
         reference = database.getReference("Events").child(userID);
 
+        /*DatabaseReference ref = database.getReference("Users");
+        Query query = ref.orderByChild("nome").startAt("Iohan").endAt("Iohan\uf8ff");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    Usuario u = ds.getValue(Usuario.class);
+                    System.out.println(u.getNome());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Erro");
+            }
+        });*/
 
         list = new ArrayList<>();
 
@@ -65,6 +83,17 @@ public class EventosActivity extends AppCompatActivity {
         recyclerView.setAdapter(new Adapter(list,this));
     }
 
+    private void showData(DataSnapshot dataSnapshot)
+    {
+        list = new ArrayList<>();
+        for(DataSnapshot ds: dataSnapshot.getChildren())
+        {
+            list.add(ds.getValue(Evento.class));
+        }
+        recyclerView.setAdapter(new Adapter(list,this));
+        progress.setVisibility(View.GONE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -84,18 +113,6 @@ public class EventosActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void showData(DataSnapshot dataSnapshot)
-    {
-        list = new ArrayList<>();
-        for(DataSnapshot ds: dataSnapshot.getChildren())
-        {
-            list.add(ds.getValue(Evento.class));
-        }
-        //list.add(evento);
-        recyclerView.setAdapter(new Adapter(list,this));
-        progress.setVisibility(View.GONE);
     }
 
     public void novoEvento(View view) {

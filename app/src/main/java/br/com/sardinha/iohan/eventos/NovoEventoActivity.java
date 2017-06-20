@@ -8,6 +8,8 @@ import android.content.Intent;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -38,6 +43,10 @@ public class NovoEventoActivity extends AppCompatActivity {
     int minuto = -1;
     private String ID;
 
+    private final int GALLERY_RESULT = 2;
+    Uri image;
+
+    private StorageReference storage;
     private DatabaseReference reference;
     private String userID;
 
@@ -48,6 +57,7 @@ public class NovoEventoActivity extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("Events");
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        storage = FirebaseStorage.getInstance().getReference("Events");
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_eventos,R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -215,6 +225,10 @@ public class NovoEventoActivity extends AppCompatActivity {
         if(ID == null)
         {
             ID = reference.push().getKey();
+        }
+        if(image != null)
+        {
+            storage.child(ID).putFile(image);
         }
         e.setId(ID);
         reference.child(userID).child(ID).setValue(e);
@@ -430,4 +444,19 @@ public class NovoEventoActivity extends AppCompatActivity {
         }
     }
 
+    public void selecionarImagemClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent,GALLERY_RESULT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == GALLERY_RESULT && resultCode == RESULT_OK)
+        {
+            image = data.getData();
+            ((ImageView)findViewById(R.id.imagem_criacao)).setImageURI(image);
+        }
+    }
 }

@@ -1,6 +1,10 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,6 +37,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         else
         {
             ((ImageView)findViewById(R.id.imagem_detalhes)).setImageResource(evento.getImagem());
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(BitmapFactory.decodeResource(getResources(), evento.getImagem()))));
         }
 
         this.setTitle(evento.getTitulo());
@@ -101,6 +106,42 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public static int getDominantColor(Bitmap bitmap) {
+        if (bitmap == null) {
+            return Color.TRANSPARENT;
+        }
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int size = width * height;
+        int pixels[] = new int[size];
+        //Bitmap bitmap2 = bitmap.copy(Bitmap.Config.ARGB_4444, false);
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        int color;
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        int a;
+        int count = 0;
+        for (int i = 0; i < pixels.length; i++) {
+            color = pixels[i];
+            a = Color.alpha(color);
+            if (a > 0) {
+                r += Color.red(color);
+                g += Color.green(color);
+                b += Color.blue(color);
+                count++;
+            }
+        }
+        r /= count;
+        g /= count;
+        b /= count;
+        r = (r << 16) & 0x00FF0000;
+        g = (g << 8) & 0x0000FF00;
+        b = b & 0x000000FF;
+        color = 0xFF000000 | r | g | b;
+        return color;
     }
 
 }

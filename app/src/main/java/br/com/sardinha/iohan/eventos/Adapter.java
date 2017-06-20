@@ -2,10 +2,12 @@ package br.com.sardinha.iohan.eventos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
         holder.info.setText(String.valueOf(list.get(position).getTitulo()));
         holder.description.setText(String.valueOf(list.get(position).getDescricao()));
+        holder.image.setImageResource(list.get(position).getImagem());
     }
 
     @Override
@@ -38,8 +41,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView info;
         TextView description;
+        ImageView image;
         public ViewHolder(View itemView) {
             super(itemView);
+            image = (ImageView)itemView.findViewById(R.id.imagem_item_lista);
             info = (TextView)itemView.findViewById(R.id.info_text);
             description = (TextView)itemView.findViewById(R.id.info_text2);
             itemView.setOnClickListener(this);
