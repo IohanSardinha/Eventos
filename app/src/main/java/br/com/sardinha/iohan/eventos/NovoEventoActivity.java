@@ -238,7 +238,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         if(image != null)
         {
             StorageReference storageReference = storage.child(ID);
-            progress = ProgressDialog.show(this,"Espere por favor","Salvando...",true);
+            progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
             storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
