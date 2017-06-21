@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,11 +23,13 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -42,6 +45,7 @@ public class NovoEventoActivity extends AppCompatActivity {
     int hora = -1;
     int minuto = -1;
     private String ID;
+    private ProgressDialog progress;
 
     private final int GALLERY_RESULT = 2;
     Uri image;
@@ -162,7 +166,6 @@ public class NovoEventoActivity extends AppCompatActivity {
     }
 
     public void criarEventoClick(View view) {
-        //Intent intent = new Intent(this,MainActivity.class);
 
         Map<String,String> campos = new HashMap<>();
 
@@ -199,14 +202,15 @@ public class NovoEventoActivity extends AppCompatActivity {
         String horaEncerramento = ((EditText) findViewById(R.id.hora_encerramento_criacao)).getText().toString();
         String limite = ((EditText) findViewById(R.id.limite_de_convidados_criacao)).getText().toString();
 
-        Evento e = new Evento(titulo,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
+        final Evento evento = new Evento(titulo,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
+
         if(!limite.isEmpty())
         {
-            e.setLimite(Integer.parseInt(limite));
+            evento.setLimite(Integer.parseInt(limite));
         }
         if(!data_encerramento.isEmpty() && !horaEncerramento.isEmpty())
         {
-            e.setDataEncerramento(data_encerramento);
+            evento.setDataEncerramento(data_encerramento);
         }
         else if(!data_encerramento.isEmpty())
         {
@@ -215,7 +219,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         }
         if(!horaEncerramento.isEmpty())
         {
-            e.setHoraEncerramento(horaEncerramento);
+            evento.setHoraEncerramento(horaEncerramento);
         }
         else if(data_encerramento.isEmpty())
         {
@@ -226,16 +230,38 @@ public class NovoEventoActivity extends AppCompatActivity {
         {
             ID = reference.push().getKey();
         }
+        evento.setId(ID);
+        setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
+
+        reference.child(userID).child(ID).setValue(evento);
+
         if(image != null)
         {
-            storage.child(ID).putFile(image);
+            StorageReference storageReference = storage.child(ID);
+            progress = ProgressDialog.show(this,"Espere por favor","Salvando...",true);
+            storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    evento.setImagem(taskSnapshot.getDownloadUrl().toString());
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events").child(userID).child(ID);
+                    ref.setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            progress.dismiss();
+                            finish();
+                        }
+                    });
+                }
+            });
         }
-        e.setId(ID);
-        reference.child(userID).child(ID).setValue(e);
-        setResult(RESULT_OK,(new Intent()).putExtra("evento",e));
-        finish();
+        else
+        {
+            Toast.makeText(cont, "Selecione uma imagem", Toast.LENGTH_SHORT).show();
+        }
     }
 
+
+    //region DatePickers
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -330,7 +356,9 @@ public class NovoEventoActivity extends AppCompatActivity {
             new DatePickerDialog(cont, d2, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH)).show();
         }
     }
+//endregion
 
+    //region TimePicker
     TimePickerDialog.OnTimeSetListener h = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -443,6 +471,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             new TimePickerDialog(cont,h2,calendario.get(Calendar.HOUR_OF_DAY),calendario.get(Calendar.MINUTE),true).show();
         }
     }
+    //endregion
 
     public void selecionarImagemClick(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);

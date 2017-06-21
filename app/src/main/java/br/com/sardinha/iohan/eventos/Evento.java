@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.media.Image;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import java.io.Serializable;
@@ -89,11 +90,11 @@ public class Evento implements Serializable {
         this.dataEncerramento = dataEncerramento;
     }
 
-    public int getImagem() {
+    public String getImagem() {
         return imagem;
     }
 
-    public void setImagem(int imagem) {
+    public void setImagem(String imagem) {
         this.imagem = imagem;
     }
 
@@ -117,7 +118,7 @@ public class Evento implements Serializable {
     private String descricao;
     private int limite;
     private double dataHora;
-    private int imagem;
+    private String imagem;
     private String id;
 
     public Evento()
@@ -144,20 +145,6 @@ public class Evento implements Serializable {
         }
         for (String s: tempHora) {
             tempDataHora += s;
-        }
-        if(tipo.equals("Aniversário")){
-            this.setImagem(R.drawable.aniversario);
-        }
-        else if(tipo.equals("Show")){
-            this.setImagem(R.drawable.show);
-        }
-        else if(tipo.equals("Festa"))
-        {
-            this.setImagem(R.drawable.festa);
-        }
-        else
-        {
-            imagem = -1;
         }
         this.dataHora = Double.parseDouble(tempDataHora);
     }

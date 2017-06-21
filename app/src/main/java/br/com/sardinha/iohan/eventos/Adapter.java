@@ -3,12 +3,15 @@ package br.com.sardinha.iohan.eventos;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -30,7 +33,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
         holder.info.setText(String.valueOf(list.get(position).getTitulo()));
         holder.description.setText(String.valueOf(list.get(position).getDescricao()));
-        holder.image.setImageResource(list.get(position).getImagem());
+        if(list.get(position).getImagem() != null)
+        {
+            Picasso.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.image);
+        }
     }
 
     @Override

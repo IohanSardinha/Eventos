@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +19,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 public class DetalhesEventoActivity extends AppCompatActivity {
     Evento evento;
@@ -30,14 +34,29 @@ public class DetalhesEventoActivity extends AppCompatActivity {
     }
 
     void Draw(){
-        if(evento.getImagem() == -1)
+        if(evento.getImagem() == null)
         {
             ((ImageView)findViewById(R.id.imagem_detalhes)).setVisibility(View.GONE);
         }
         else
         {
-            ((ImageView)findViewById(R.id.imagem_detalhes)).setImageResource(evento.getImagem());
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(BitmapFactory.decodeResource(getResources(), evento.getImagem()))));
+            Picasso.with(this).load(Uri.parse(evento.getImagem())).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    ((ImageView)findViewById(R.id.imagem_detalhes)).setImageBitmap(bitmap);
+                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(bitmap)));
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
         }
 
         this.setTitle(evento.getTitulo());
