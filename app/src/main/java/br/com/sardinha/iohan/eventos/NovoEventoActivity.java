@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -76,6 +79,9 @@ public class NovoEventoActivity extends AppCompatActivity {
             if (intent != null) {
                 Evento evento = (Evento) intent.getSerializableExtra("evento");
                 ID = evento.getId();
+                Picasso.with(this).load(evento.getImagem()).into(((ImageView)findViewById(R.id.imagem_criacao)));
+                image = Uri.parse(evento.getImagem());
+                System.out.println(image);
                 ((EditText) findViewById(R.id.titulo_Criacao)).setText(evento.getTitulo());
                 ((EditText) findViewById(R.id.data_inicio_criacao)).setText(evento.getDataInicio());
                 ((EditText) findViewById(R.id.data_encerramento_criacao)).setText(evento.getDataEncerramento());
@@ -231,11 +237,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             ID = reference.push().getKey();
         }
         evento.setId(ID);
-        setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
-
-        reference.child(userID).child(ID).setValue(evento);
-
-        if(image != null)
+        if(image != null && !image.toString().substring(0,5).equals("https"))
         {
             StorageReference storageReference = storage.child(ID);
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
@@ -248,9 +250,38 @@ public class NovoEventoActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progress.dismiss();
+                            setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
                             finish();
                         }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
+                        }
                     });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(cont, "Erro no upload da imagem", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else if(image != null && image.toString().substring(0,5).equals("https"))
+        {
+            progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
+            evento.setImagem(image.toString());
+            reference.child(userID).child(ID).setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    progress.dismiss();
+                    finish();
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -315,7 +346,6 @@ public class NovoEventoActivity extends AppCompatActivity {
             String dataEncerramento = ((EditText)findViewById(R.id.data_encerramento_criacao)).getText().toString();
             if (!horaEncerramento.isEmpty() && dataSelecionada.equals(dataInicio) && !dataEncerramento.isEmpty() && !dataEncerramento.equals(((EditText)findViewById(R.id.data_inicio_criacao)).getText().toString()))
             {
-                System.out.println(horaInicio);
                 ((EditText)findViewById(R.id.data_encerramento_criacao)).setText(formatador(dayOfMonth)+"/"+formatador(month+1)+"/"+String.valueOf(year));
                 ((EditText)findViewById(R.id.hora_encerramento_criacao)).setText(horaInicio);
 

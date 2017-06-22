@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,9 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -49,7 +54,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable) {
-
+                    System.out.println("ERRO");
                 }
 
                 @Override
@@ -103,7 +108,21 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 startActivityForResult(intent,1);
                 return true;
             case R.id.delete_action:
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(evento.getId());
+                String USER_ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                StorageReference storage = FirebaseStorage.getInstance().getReference("Events").child(evento.getId());
+                System.out.println(storage.getPath());
+                storage.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(DetalhesEventoActivity.this, "ERA PRA TER FUNFADO", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(DetalhesEventoActivity.this, "DEU RUIM", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(USER_ID).child(evento.getId());
                 reference.removeValue();
                 finish();
             default:
