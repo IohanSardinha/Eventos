@@ -1,5 +1,6 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -108,23 +110,20 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 startActivityForResult(intent,1);
                 return true;
             case R.id.delete_action:
-                String USER_ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                StorageReference storage = FirebaseStorage.getInstance().getReference("Events").child(evento.getId());
-                System.out.println(storage.getPath());
-                storage.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(DetalhesEventoActivity.this, "ERA PRA TER FUNFADO", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(DetalhesEventoActivity.this, "DEU RUIM", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(USER_ID).child(evento.getId());
-                reference.removeValue();
-                finish();
+                new AlertDialog.Builder(this).setTitle("Evento será cancelado")
+                        .setMessage("Tem certeza que quer cancelar o evento?")
+                        .setNegativeButton("Não",null)
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String USER_ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                StorageReference storage = FirebaseStorage.getInstance().getReference("Events").child(evento.getId());
+                                storage.delete();
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(USER_ID).child(evento.getId());
+                                reference.removeValue();
+                                finish();
+                            }
+                        }).show();
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

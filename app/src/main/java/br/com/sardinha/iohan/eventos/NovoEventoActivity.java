@@ -176,6 +176,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         Map<String,String> campos = new HashMap<>();
 
         String titulo = ((EditText) findViewById(R.id.titulo_Criacao)).getText().toString();
+        String endereco = ((EditText)findViewById(R.id.endereco_cricao)).getText().toString();
         String data_inicio = ((EditText) findViewById(R.id.data_inicio_criacao)).getText().toString();
         String horaInicio = ((EditText) findViewById(R.id.hora_inicio_criacao)).getText().toString();
         String descricao = ((EditText) findViewById(R.id.descricao_criacao)).getText().toString();
@@ -183,6 +184,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         campos.put("Descrição do evento não pode ser vazia!",descricao);
         campos.put("Hora de início do evento não pode ser vazia!",horaInicio);
         campos.put("Data do evento não pode ser vazia!",data_inicio);
+        campos.put("Endereço do evento não pode ser vazio",endereco);
         campos.put("Título do evento não pode ser vazio!",titulo);
 
         for (String s: campos.keySet()) {
@@ -208,7 +210,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         String horaEncerramento = ((EditText) findViewById(R.id.hora_encerramento_criacao)).getText().toString();
         String limite = ((EditText) findViewById(R.id.limite_de_convidados_criacao)).getText().toString();
 
-        final Evento evento = new Evento(titulo,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
+        final Evento evento = new Evento(titulo,endereco,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
 
         if(!limite.isEmpty())
         {

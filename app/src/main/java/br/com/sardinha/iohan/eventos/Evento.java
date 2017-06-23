@@ -106,9 +106,21 @@ public class Evento implements Serializable {
         this.id = id;
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public void setDataHora(double dataHora) {
+        this.dataHora = dataHora;
+    }
     //endregion
 
     private String titulo;
+    private String endereco;
     private String horaInicio;
     private String horaEncerramento;
     private String dataInicio;
@@ -126,8 +138,9 @@ public class Evento implements Serializable {
         //Empty constructor for Firebase
     }
 
-    public Evento(String titulo, String dataInicio, String dataEncerramento, String horaInicio, String horaEncerramento, String tipo, String privacidade, String descricao, int limite){
+    public Evento(String titulo,String endereco, String dataInicio, String dataEncerramento, String horaInicio, String horaEncerramento, String tipo, String privacidade, String descricao, int limite){
         this.setTitulo(titulo);
+        this.endereco = endereco;
         this.setDataInicio(dataInicio);
         this.setDataEncerramento(dataEncerramento);
         this.setHoraInicio(horaInicio);

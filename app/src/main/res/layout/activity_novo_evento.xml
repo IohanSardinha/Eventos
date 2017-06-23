@@ -55,8 +55,16 @@
                 android:layout_below="@+id/titulo_Criacao"
                 android:layout_toRightOf="@+id/tipo_de_evento_criacao"
                 android:layout_toEndOf="@+id/tipo_de_evento_criacao"
-                android:minWidth="100sp"
-        />
+                android:minWidth="100sp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:layout_below="@id/tipo_de_evento_criacao"
+                android:id="@+id/endereco_cricao"
+                android:hint="Endereço" />
 
             <TextView
                 android:text="Inicio: "
@@ -65,7 +73,7 @@
                 android:id="@+id/textView3"
                 android:textSize="18sp"
                 android:textColor="@android:color/black"
-                android:layout_below="@id/tipo_de_evento_criacao"
+                android:layout_below="@id/endereco_cricao"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="16sp"/>
 
