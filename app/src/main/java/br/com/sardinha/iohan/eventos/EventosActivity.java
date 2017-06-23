@@ -110,6 +110,9 @@ public class EventosActivity extends AppCompatActivity {
                 auth.signOut();
                 finish();
                 return true;
+            case R.id.usuario:
+                startActivity(new Intent(this,UsuarioActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

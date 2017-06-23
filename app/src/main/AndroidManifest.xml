@@ -21,9 +21,14 @@
         <activity
             android:name=".NovoEventoActivity"
             android:label="@string/novo_evento" />
-        <activity android:name=".DetalhesEventoActivity" />
-        <activity android:name=".EventosActivity" />
-        <activity android:name=".NovoUsuarioAcivity"></activity>
+        <activity android:name=".DetalhesEventoActivity"
+            android:label="Detalhes"/>
+        <activity android:name=".EventosActivity"
+            android:label="Eventos"/>
+        <activity android:name=".NovoUsuarioAcivity"
+            android:label="Novo usuário"/>
+        <activity android:name=".UsuarioActivity"
+            android:label="Detalhes"></activity>
     </application>
 
 </manifest>

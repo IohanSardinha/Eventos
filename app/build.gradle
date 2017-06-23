@@ -5,6 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "br.com.sardinha.iohan.eventos"
+        vectorDrawables.useSupportLibrary = true
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
