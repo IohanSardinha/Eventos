@@ -24,7 +24,7 @@
         <activity android:name=".DetalhesEventoActivity"
             android:label="Detalhes"/>
         <activity android:name=".EventosActivity"
-            android:label="Eventos"/>
+            android:label=""/>
         <activity android:name=".NovoUsuarioAcivity"
             android:label="Novo usuário"/>
         <activity android:name=".UsuarioActivity"
