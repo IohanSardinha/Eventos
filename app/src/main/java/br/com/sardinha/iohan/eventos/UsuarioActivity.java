@@ -1,5 +1,6 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -14,13 +15,17 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UsuarioActivity extends AppCompatActivity {
 
-    private DatabaseReference reference;
+    //private DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        Intent intent = getIntent();
+        Usuario user = (Usuario)intent.getSerializableExtra("Usuario");
+        ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
+        /*reference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -31,6 +36,6 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(UsuarioActivity.this, "Erro ao carregar usuario", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 }

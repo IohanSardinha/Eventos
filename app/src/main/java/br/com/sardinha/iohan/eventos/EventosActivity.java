@@ -32,6 +32,7 @@ public class EventosActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference reference;
     private String userID;
+    private DatabaseReference userReference;
 
     ArrayList<Evento> list;
 
@@ -47,23 +48,7 @@ public class EventosActivity extends AppCompatActivity {
         userID = auth.getCurrentUser().getUid();
         reference = database.getReference("Events").child(userID);
 
-        /*DatabaseReference ref = database.getReference("Users");
-        Query query = ref.orderByChild("nome").startAt("Iohan").endAt("Iohan\uf8ff");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren())
-                {
-                    Usuario u = ds.getValue(Usuario.class);
-                    System.out.println(u.getNome());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("Erro");
-            }
-        });*/
+        userReference = database.getReference("Users");
 
         list = new ArrayList<>();
 
@@ -106,7 +91,34 @@ public class EventosActivity extends AppCompatActivity {
         SearchView searchView = (SearchView) menu.findItem(R.id.search_eventos).getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Query firebaseQuery = userReference.orderByChild("nome").startAt(query).endAt(query+"\uf8ff").limitToFirst(1);
+                firebaseQuery.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds: dataSnapshot.getChildren())
+                        {
+                            Usuario u = ds.getValue(Usuario.class);
+                            Intent intent = new Intent(EventosActivity.this,UsuarioActivity.class);
+                            intent.putExtra("Usuario",u);
+                            startActivity(intent);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("Erro");
+                    }
+                });
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 

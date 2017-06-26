@@ -1,10 +1,12 @@
 package br.com.sardinha.iohan.eventos;
 
+import java.io.Serializable;
+
 /**
  * Created by Iohan on 20/06/2017.
  */
 
-public class Usuario {
+public class Usuario implements Serializable {
     public String getId() {
         return id;
     }
