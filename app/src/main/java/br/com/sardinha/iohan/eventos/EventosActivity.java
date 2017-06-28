@@ -43,8 +43,12 @@ public class EventosActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        if(auth.getCurrentUser() == null)
+        {
+            finish();
+        }
         userID = auth.getCurrentUser().getUid();
-        reference = database.getReference("Events").child(userID);
+        reference = database.getReference("Followings").child(userID);
 
         userReference = database.getReference("Users");
 
@@ -53,7 +57,23 @@ public class EventosActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
+                list.clear();
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    System.out.println(ds.getKey());
+                    DatabaseReference ref = database.getReference("Events").child(ds.getKey());
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            showData(dataSnapshot);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -70,7 +90,6 @@ public class EventosActivity extends AppCompatActivity {
 
     private void showData(DataSnapshot dataSnapshot)
     {
-        list = new ArrayList<>();
         for(DataSnapshot ds: dataSnapshot.getChildren())
         {
             list.add(ds.getValue(Evento.class));
