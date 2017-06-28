@@ -25,4 +25,7 @@
         <item>Público</item>
         <item>Privado</item>
     </string-array>
+    <string name="title_activity_resultado_pesquisa">ResultadoPesquisaActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

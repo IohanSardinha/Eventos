@@ -15,17 +15,16 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UsuarioActivity extends AppCompatActivity {
 
-    //private DatabaseReference reference;
+    private DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
-        Intent intent = getIntent();
-        Usuario user = (Usuario)intent.getSerializableExtra("Usuario");
-        ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
-        /*reference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        //Usuario user = (Usuario)intent.getSerializableExtra("Usuario");
+        //((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -36,6 +35,6 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(UsuarioActivity.this, "Erro ao carregar usuario", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 }

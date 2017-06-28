@@ -15,21 +15,21 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {
     ArrayList<Evento> list;
     Context context;
-    public Adapter(ArrayList<Evento> list, Context context) {
+    public ListaEventosAdapter(ArrayList<Evento> list, Context context) {
         this.list = list;
         this.context = context;
     }
 
     @Override
-    public Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ListaEventosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_evento,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ListaEventosAdapter.ViewHolder holder, int position) {
         holder.info.setText(String.valueOf(list.get(position).getTitulo()));
         holder.description.setText(String.valueOf(list.get(position).getDescricao()));
         if(list.get(position).getImagem() != null)
