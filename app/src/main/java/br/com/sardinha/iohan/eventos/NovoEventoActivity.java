@@ -210,7 +210,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         String horaEncerramento = ((EditText) findViewById(R.id.hora_encerramento_criacao)).getText().toString();
         String limite = ((EditText) findViewById(R.id.limite_de_convidados_criacao)).getText().toString();
 
-        final Evento evento = new Evento(titulo,endereco,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
+        final Evento evento = new Evento(userID,titulo,endereco,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
 
         if(!limite.isEmpty())
         {
@@ -277,6 +277,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Void aVoid) {
                     progress.dismiss();
+                    startActivity(new Intent(NovoEventoActivity.this,EventosActivity.class));
                     finish();
                 }
             })
@@ -519,5 +520,17 @@ public class NovoEventoActivity extends AppCompatActivity {
             image = data.getData();
             ((ImageView)findViewById(R.id.imagem_criacao)).setImageURI(image);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(ID == null)
+        {
+            startActivity(new Intent(this,EventosActivity.class));
+            finish();
+            return;
+        }
+        finish();
     }
 }

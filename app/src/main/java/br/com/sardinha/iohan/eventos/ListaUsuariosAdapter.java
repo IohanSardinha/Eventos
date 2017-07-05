@@ -52,7 +52,6 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
         database.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot.getValue(String.class));
                 if(dataSnapshot.getValue(String.class) != null)
                 {
                     holder.followButton.setText("Seguindo");

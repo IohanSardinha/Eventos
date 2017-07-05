@@ -30,7 +30,7 @@ public class EventosActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference reference;
     private String userID;
-    private DatabaseReference userReference;
+    private DatabaseReference eventsReference;
 
     ArrayList<Evento> list;
 
@@ -50,14 +50,24 @@ public class EventosActivity extends AppCompatActivity {
         userID = auth.getCurrentUser().getUid();
         reference = database.getReference("Followings").child(userID);
 
-        userReference = database.getReference("Users");
+        eventsReference = database.getReference("Events").child(userID);
 
         list = new ArrayList<>();
 
+        getData();
+
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new ListaEventosAdapter(list,this));
+    }
+
+    private void getData()
+    {
+        list.clear();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     System.out.println(ds.getKey());
@@ -81,11 +91,17 @@ public class EventosActivity extends AppCompatActivity {
 
             }
         });
+        eventsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                showData(dataSnapshot);
+            }
 
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ListaEventosAdapter(list,this));
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void showData(DataSnapshot dataSnapshot)
@@ -143,5 +159,6 @@ public class EventosActivity extends AppCompatActivity {
 
     public void novoEvento(View view) {
         startActivity(new Intent(this,NovoEventoActivity.class));
+        finish();
     }
 }

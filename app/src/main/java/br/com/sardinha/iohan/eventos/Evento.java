@@ -16,6 +16,15 @@ import java.util.List;
 public class Evento implements Serializable {
 
     //region Getters and Setters
+
+    public String getUserID() {
+    return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
     public String getDataInicio() {
         return dataInicio;
     }
@@ -132,13 +141,15 @@ public class Evento implements Serializable {
     private double dataHora;
     private String imagem;
     private String id;
+    private String userID;
 
     public Evento()
     {
         //Empty constructor for Firebase
     }
 
-    public Evento(String titulo,String endereco, String dataInicio, String dataEncerramento, String horaInicio, String horaEncerramento, String tipo, String privacidade, String descricao, int limite){
+    public Evento(String userID,String titulo,String endereco, String dataInicio, String dataEncerramento, String horaInicio, String horaEncerramento, String tipo, String privacidade, String descricao, int limite){
+        this.userID = userID;
         this.setTitulo(titulo);
         this.endereco = endereco;
         this.setDataInicio(dataInicio);

@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -18,6 +23,7 @@ import java.util.ArrayList;
 public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {
     ArrayList<Evento> list;
     Context context;
+    DatabaseReference reference;
     public ListaEventosAdapter(ArrayList<Evento> list, Context context) {
         this.list = list;
         this.context = context;
@@ -29,7 +35,18 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     }
 
     @Override
-    public void onBindViewHolder(ListaEventosAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ListaEventosAdapter.ViewHolder holder, int position) {
+        reference.child(list.get(position).getUserID()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.userName.setText(dataSnapshot.getValue(Usuario.class).getNome()+" criou um evento");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         holder.info.setText(String.valueOf(list.get(position).getTitulo()));
         holder.description.setText(String.valueOf(list.get(position).getDescricao()));
         if(list.get(position).getImagem() != null)
@@ -46,12 +63,15 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView info;
         TextView description;
+        TextView userName;
         ImageView image;
         public ViewHolder(View itemView) {
             super(itemView);
+            reference = FirebaseDatabase.getInstance().getReference("Users");
             image = (ImageView)itemView.findViewById(R.id.imagem_item_lista);
             info = (TextView)itemView.findViewById(R.id.info_text);
             description = (TextView)itemView.findViewById(R.id.info_text2);
+            userName = (TextView)itemView.findViewById(R.id.nome_usuario_item_evento);
             itemView.setOnClickListener(this);
         }
 
