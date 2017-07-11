@@ -97,7 +97,11 @@ public class DetalhesEventoActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        getMenuInflater().inflate(R.menu.menu_detalhes, menu);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(evento.getUserID().equals(userId))
+        {
+            getMenuInflater().inflate(R.menu.menu_detalhes, menu);
+        }
         return true;
     }
 
