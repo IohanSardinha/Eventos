@@ -43,11 +43,15 @@ public class EventosActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        if(auth.getCurrentUser() == null)
+        try
         {
+            userID = auth.getCurrentUser().getUid();
+        }
+        catch(Exception ex)
+        {
+            startActivity(new Intent(this,MainActivity.class));
             finish();
         }
-        userID = auth.getCurrentUser().getUid();
         reference = database.getReference("Followings").child(userID);
 
         eventsReference = database.getReference("Events").child(userID);

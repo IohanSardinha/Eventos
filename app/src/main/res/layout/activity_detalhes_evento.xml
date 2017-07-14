@@ -79,4 +79,26 @@
         android:textColor="@android:color/black" />
 
 
+    <TextView
+        android:text="Participarão"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descricao_detalhes"
+        android:layout_alignLeft="@+id/descricao_detalhes"
+        android:layout_alignStart="@+id/descricao_detalhes"
+        android:id="@+id/Perticiparao"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lista_usuarios_detalhes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Perticiparao"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"/>
+
+
 </RelativeLayout>
