@@ -134,6 +134,7 @@ public class EventosActivity extends AppCompatActivity {
                 Intent intent = new Intent(EventosActivity.this,ResultadoPesquisaActivity.class);
                 intent.putExtra("Query",query);
                 startActivity(intent);
+                finish();
                 return false;
             }
 
@@ -152,6 +153,7 @@ public class EventosActivity extends AppCompatActivity {
             case R.id.signout:
                 auth.signOut();
                 finish();
+                startActivity(new Intent(this,MainActivity.class));
                 return true;
             case R.id.usuario:
                 startActivity(new Intent(this,UsuarioActivity.class));

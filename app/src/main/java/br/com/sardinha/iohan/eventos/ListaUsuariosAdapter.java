@@ -25,6 +25,7 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
     private ArrayList<Usuario> list;
     Context context;
     DatabaseReference database;
+    String user;
 
     public ListaUsuariosAdapter(ArrayList<Usuario> users, Context context) {
         list = users;
@@ -38,32 +39,38 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.userName.setText(list.get(position).getNome());
-        holder.followButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                database.child(list.get(position).getId()).setValue(list.get(position).getId());
-                holder.followButton.setText("Seguindo");
-                holder.followButton.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary));
-                notifyDataSetChanged();
-
-            }
-        });
-        database.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue(String.class) != null)
-                {
+        if(list.get(position).getId().equals(user))
+        {
+            holder.userName.setText(list.get(position).getNome());
+            holder.followButton.setVisibility(View.GONE);
+        }
+        else {
+            holder.userName.setText(list.get(position).getNome());
+            holder.followButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    database.child(list.get(position).getId()).setValue(list.get(position).getId());
                     holder.followButton.setText("Seguindo");
-                    holder.followButton.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary));
+                    holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    notifyDataSetChanged();
+
                 }
-            }
+            });
+            database.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue(String.class) != null) {
+                        holder.followButton.setText("Seguindo");
+                        holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override
@@ -79,6 +86,7 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
             database = FirebaseDatabase.getInstance().getReference("Followings").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item);
             followButton = (Button)itemView.findViewById(R.id.seguir_usuario_item);
+            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
     }
 }

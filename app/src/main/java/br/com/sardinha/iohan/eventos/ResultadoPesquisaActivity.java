@@ -1,5 +1,6 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -54,4 +55,10 @@ public class ResultadoPesquisaActivity extends AppCompatActivity {
         viewPager.setAdapter(a);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        startActivity(new Intent(this,EventosActivity.class));
+    }
 }
