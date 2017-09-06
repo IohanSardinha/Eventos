@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EventosActivity extends AppCompatActivity {
 
@@ -74,7 +75,6 @@ public class EventosActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    System.out.println(ds.getKey());
                     DatabaseReference ref = database.getReference("Events").child(ds.getKey());
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -114,6 +114,7 @@ public class EventosActivity extends AppCompatActivity {
         {
             list.add(ds.getValue(Evento.class));
         }
+        Collections.sort(list);
         recyclerView.setAdapter(new ListaEventosAdapter(list,this));
         progress.setVisibility(View.GONE);
     }

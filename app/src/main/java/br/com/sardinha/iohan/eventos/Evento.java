@@ -13,7 +13,7 @@ import java.util.List;
  * Created by iohan.soares on 24/02/2017.
  */
 
-public class Evento implements Serializable {
+public class Evento implements Serializable,Comparable<Evento> {
 
     //region Getters and Setters
 
@@ -174,5 +174,8 @@ public class Evento implements Serializable {
     }
 
 
-
+    @Override
+    public int compareTo(Evento e) {
+        return Double.compare(this.dataHora,e.dataHora);
+    }
 }

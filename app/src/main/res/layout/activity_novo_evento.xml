@@ -25,21 +25,22 @@
 
             <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:srcCompat="@android:drawable/ic_menu_gallery"
+                android:layout_height="wrap_content"
                 android:id="@+id/imagem_criacao"
                 android:layout_alignParentTop="true"
-                android:scaleType="fitXY"
-                android:onClick="selecionarImagemClick" />
+                android:scaleType="centerCrop"
+                android:onClick="selecionarImagemClick"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/selecionar" />
 
             <EditText
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:id="@+id/titulo_Criacao"
                 android:hint="@string/titulo_criacao"
                 android:layout_below="@id/imagem_criacao"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent" />
 
             <Spinner
                 android:layout_width="wrap_content"
@@ -58,7 +59,7 @@
                 android:minWidth="100sp" />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"

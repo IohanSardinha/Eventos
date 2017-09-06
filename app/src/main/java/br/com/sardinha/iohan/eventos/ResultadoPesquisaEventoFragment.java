@@ -45,8 +45,6 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
 
         list = new ArrayList<>();
 
-        System.out.println(query);
-
         databaseReference = FirebaseDatabase.getInstance().getReference("Events");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
