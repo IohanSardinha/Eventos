@@ -15,10 +15,11 @@
         android:layout_width="match_parent"
         app:srcCompat="@android:drawable/ic_menu_report_image"
         android:id="@+id/imagem_detalhes"
-        android:layout_height="100sp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:scaleType="fitXY"/>
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:text="Dia 00/00/0000"
