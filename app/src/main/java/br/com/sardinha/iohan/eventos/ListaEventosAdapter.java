@@ -3,6 +3,7 @@ package br.com.sardinha.iohan.eventos;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +42,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
     @Override
     public void onBindViewHolder(final ListaEventosAdapter.ViewHolder holder, final int position) {
+
         userReference.child(list.get(position).getUserID()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -52,6 +54,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
             }
         });
+
         final String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         participationReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -59,7 +62,14 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                 if(dataSnapshot.hasChild(uID))
                 {
                     holder.participate.setText("Participando");
-                    holder.participate.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary));
+                    holder.participate.setBackgroundResource(R.color.colorPrimary);
+                    holder.participate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            participationReference.child(list.get(position).getId()).child(userID).removeValue();
+                        }
+                    });
                 }
                 else
                 {
@@ -69,6 +79,8 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                     }
                     else
                     {
+                        holder.participate.setBackgroundResource(R.color.button);
+                        holder.participate.setText("Participar");
                         holder.participate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

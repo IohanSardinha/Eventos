@@ -69,16 +69,6 @@
         android:layout_marginRight="6dp"
         android:layout_marginEnd="6dp" />
 
-    <TextView
-        android:text="Endereço"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imagem_detalhes"
-        android:layout_alignRight="@+id/limite_detalhes"
-        android:layout_alignEnd="@+id/limite_detalhes"
-        android:id="@+id/endereco_detalhes"
-        android:textColor="@android:color/black" />
-
 
     <TextView
         android:text="Participarão"
@@ -100,6 +90,16 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"/>
+
+    <TextView
+        android:text="Endereço"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/endereco_detalhes"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/privacidade_detalhes"
+        android:layout_alignLeft="@+id/privacidade_detalhes"
+        android:layout_alignStart="@+id/privacidade_detalhes" />
 
 
 </RelativeLayout>
