@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null)
                 {
-                    Toast.makeText(MainActivity.this, "Logado com: "+user.getEmail(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "Logado com: "+user.getEmail(), Toast.LENGTH_SHORT).show();
                     progress.setVisibility(View.GONE);
                     startActivity(new Intent(MainActivity.this,EventosActivity.class));
                     ((EditText)findViewById(R.id.email)).setText("");
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "Saiu", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "Saiu", Toast.LENGTH_SHORT).show();
                 }
             }
         };

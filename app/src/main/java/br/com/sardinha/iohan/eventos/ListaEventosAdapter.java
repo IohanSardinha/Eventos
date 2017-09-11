@@ -1,5 +1,6 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -133,6 +134,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             Intent intent = new Intent(context,DetalhesEventoActivity.class);
             intent.putExtra("evento",list.get(getAdapterPosition()));
             context.startActivity(intent);
+            ((Activity)context).finish();
         }
     }
 }

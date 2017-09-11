@@ -1,5 +1,6 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 
 public class DetalhesEventoActivity extends AppCompatActivity {
     Evento evento;
+    Context previousContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,6 +170,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                                 storage.delete();
                                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(USER_ID).child(evento.getId());
                                 reference.removeValue();
+                                startActivity(new Intent(DetalhesEventoActivity.this,EventosActivity.class));
                                 finish();
                             }
                         }).show();

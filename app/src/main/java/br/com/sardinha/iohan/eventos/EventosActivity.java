@@ -3,6 +3,7 @@ package br.com.sardinha.iohan.eventos;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -115,6 +116,8 @@ public class EventosActivity extends AppCompatActivity {
             list.add(ds.getValue(Evento.class));
         }
         Collections.sort(list);
+        progress.setVisibility(View.VISIBLE);
+        SystemClock.sleep(250);
         recyclerView.setAdapter(new ListaEventosAdapter(list,this));
         progress.setVisibility(View.GONE);
     }
