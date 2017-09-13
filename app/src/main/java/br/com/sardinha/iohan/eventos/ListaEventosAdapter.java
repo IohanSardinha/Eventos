@@ -3,11 +3,7 @@ package br.com.sardinha.iohan.eventos;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +26,7 @@ import java.util.ArrayList;
 public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {
     ArrayList<Evento> list;
     Context context;
-    DatabaseReference userReference,participationReference;
+    DatabaseReference userReference, userParticipatingReference, eventsParticipatingReference;
     public ListaEventosAdapter(ArrayList<Evento> list, Context context) {
         this.list = list;
         this.context = context;
@@ -57,7 +53,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         });
 
         final String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        participationReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+        userParticipatingReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(uID))
@@ -68,7 +64,8 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                         @Override
                         public void onClick(View v) {
                             String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            participationReference.child(list.get(position).getId()).child(userID).removeValue();
+                            userParticipatingReference.child(list.get(position).getId()).child(userID).removeValue();
+                            eventsParticipatingReference.child(userID).child(list.get(position).getId()).removeValue();
                         }
                     });
                 }
@@ -86,7 +83,8 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                             @Override
                             public void onClick(View v) {
                                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                participationReference.child(list.get(position).getId()).child(userID).setValue(userID);
+                                userParticipatingReference.child(list.get(position).getId()).child(userID).setValue(userID);
+                                eventsParticipatingReference.child(userID).child(list.get(position).getId()).setValue(list.get(position));
                             }
                         });
                     }
@@ -120,7 +118,8 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             userReference = FirebaseDatabase.getInstance().getReference("Users");
-            participationReference = FirebaseDatabase.getInstance().getReference("Participations");
+            userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating");
+            eventsParticipatingReference = FirebaseDatabase.getInstance().getReference("EventsParticipating");
             image = (ImageView)itemView.findViewById(R.id.imagem_item_lista);
             info = (TextView)itemView.findViewById(R.id.info_text);
             description = (TextView)itemView.findViewById(R.id.info_text2);

@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -39,13 +40,12 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.userName.setText(list.get(position).getNome());
         if(list.get(position).getId().equals(user))
         {
-            holder.userName.setText(list.get(position).getNome());
             holder.followButton.setVisibility(View.GONE);
         }
         else {
-            holder.userName.setText(list.get(position).getNome());
             holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -62,6 +62,24 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
                     if (dataSnapshot.getValue(String.class) != null) {
                         holder.followButton.setText("Seguindo");
                         holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                        holder.followButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                database.child(list.get(position).getId()).removeValue();
+                                holder.followButton.setText("Seguir");
+                                holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.button));
+                                holder.followButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        database.child(list.get(position).getId()).setValue(list.get(position).getId());
+                                        holder.followButton.setText("Seguindo");
+                                        holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                                        notifyDataSetChanged();
+
+                                    }
+                                });
+                            }
+                        });
                     }
                 }
 
@@ -87,6 +105,14 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item);
             followButton = (Button)itemView.findViewById(R.id.seguir_usuario_item);
             user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,UsuarioActivity.class);
+                    intent.putExtra("Usuario",list.get(getAdapterPosition()));
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

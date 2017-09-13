@@ -34,6 +34,8 @@ public class EventosActivity extends AppCompatActivity {
     private String userID;
     private DatabaseReference eventsReference;
 
+    private Usuario currentUser;
+
     ArrayList<Evento> list;
 
     @Override
@@ -59,6 +61,18 @@ public class EventosActivity extends AppCompatActivity {
         eventsReference = database.getReference("Events").child(userID);
 
         list = new ArrayList<>();
+
+        database.getReference("Users").child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currentUser = dataSnapshot.getValue(Usuario.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         getData();
 
@@ -113,6 +127,11 @@ public class EventosActivity extends AppCompatActivity {
     {
         for(DataSnapshot ds: dataSnapshot.getChildren())
         {
+            Evento evento = ds.getValue(Evento.class);
+            if(evento.getPrivacidade().equals("Público"))
+            {
+                //list.add(ds.getValue(Evento.class));
+            }
             list.add(ds.getValue(Evento.class));
         }
         Collections.sort(list);
@@ -160,7 +179,9 @@ public class EventosActivity extends AppCompatActivity {
                 startActivity(new Intent(this,MainActivity.class));
                 return true;
             case R.id.usuario:
-                startActivity(new Intent(this,UsuarioActivity.class));
+                Intent intent = new Intent(this,UsuarioActivity.class);
+                intent.putExtra("Usuario",currentUser);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

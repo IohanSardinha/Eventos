@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -27,8 +28,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NovoEventoActivity extends AppCompatActivity {
 
@@ -274,7 +279,42 @@ public class NovoEventoActivity extends AppCompatActivity {
         {
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
             evento.setImagem(image.toString());
-            reference.child(userID).child(ID).setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
+            DatabaseReference userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(ID);
+            //final ArrayList<DatabaseReference> references = new ArrayList<DatabaseReference>();
+            final Map<String,Object> updateMap = new HashMap<String, Object>();
+            updateMap.put((FirebaseDatabase.getInstance().getReference("Events").child(userID).child(ID)).toString(),evento);
+            //references.add(FirebaseDatabase.getInstance().getReference("Events").child(userID).child(ID));
+            userParticipatingReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot user:dataSnapshot.getChildren())
+                    {
+                        //references.add(FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId()));
+                        updateMap.put((FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId())).toString(),"A");
+                    }
+                    System.out.println("---------"+updateMap);
+                    FirebaseDatabase.getInstance().getReference().updateChildren(updateMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            progress.dismiss();
+                            setResult(RESULT_OK,(new Intent()).putExtra("evento","A"));
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            /*reference.child(userID).child(ID).setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     progress.dismiss();
@@ -287,7 +327,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
                 }
-            });
+            });*/
         }
         else
         {
