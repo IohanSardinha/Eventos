@@ -289,11 +289,13 @@ public class NovoEventoActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot user:dataSnapshot.getChildren())
                     {
+                        String cUid = user.getValue(Usuario.class).getId();
                         //references.add(FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId()));
-                        updateMap.put((FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId())).toString(),"A");
+                        //updateMap.put((FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId())).toString(),"A");
+                        updateMap.put((FirebaseDatabase.getInstance().getReference("EventsParticipating").child(cUid)).toString(),evento);
                     }
                     System.out.println("---------"+updateMap);
-                    FirebaseDatabase.getInstance().getReference().updateChildren(updateMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    /*FirebaseDatabase.getInstance().getReference().updateChildren(updateMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progress.dismiss();
@@ -305,7 +307,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    });*/
                 }
 
                 @Override
