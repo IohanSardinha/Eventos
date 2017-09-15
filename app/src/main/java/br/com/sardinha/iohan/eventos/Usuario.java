@@ -31,9 +31,28 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
+    public int getEventosConfirmados() {
+        return eventosConfirmados;
+    }
+
+    public void setEventosConfirmados(int eventosConfirmados) {
+        this.eventosConfirmados = eventosConfirmados;
+    }
+
+    public int getEventosComparecidos() {
+        return eventosComparecidos;
+    }
+
+    public void setEventosComparecidos(int eventosComparecidos) {
+        this.eventosComparecidos = eventosComparecidos;
+    }
+
+
     private String id;
     private String nome;
     private String email;
+    private int eventosConfirmados = 10;
+    private int eventosComparecidos = 10;
 
     public Usuario() {
     }
@@ -42,5 +61,13 @@ public class Usuario implements Serializable {
         this.id = id;
         this.nome = nome;
         this.email = email;
+    }
+
+    public Usuario(String id, String nome, String email,int eventosConfirmados, int eventosComparecidos) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.eventosConfirmados = eventosConfirmados;
+        this.eventosComparecidos = eventosComparecidos;
     }
 }

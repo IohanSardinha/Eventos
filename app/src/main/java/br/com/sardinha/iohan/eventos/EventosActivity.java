@@ -2,8 +2,10 @@ package br.com.sardinha.iohan.eventos;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class EventosActivity extends AppCompatActivity {
@@ -30,7 +33,7 @@ public class EventosActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private FirebaseAuth auth;
-    private DatabaseReference reference;
+    private DatabaseReference followingsReference;
     private String userID;
     private DatabaseReference eventsReference;
 
@@ -56,7 +59,7 @@ public class EventosActivity extends AppCompatActivity {
             startActivity(new Intent(this,MainActivity.class));
             finish();
         }
-        reference = database.getReference("Followings").child(userID);
+        followingsReference = database.getReference("Followings").child(userID);
 
         eventsReference = database.getReference("Events").child(userID);
 
@@ -84,8 +87,52 @@ public class EventosActivity extends AppCompatActivity {
 
     private void getData()
     {
+
+        final double dateNow = Double.parseDouble(
+                         formatador(Calendar.getInstance().get(Calendar.YEAR))
+                        +formatador(Calendar.getInstance().get(Calendar.MONTH)+1)
+                        +formatador(Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+                        +formatador(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
+                        +formatador(Calendar.getInstance().get(Calendar.MINUTE)));
+
+        eventsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    final Evento e = ds.getValue(Evento.class);
+                    if(e.getDataHora()<=dateNow)
+                    {
+                        new AlertDialog.Builder(EventosActivity.this)
+                                .setTitle("Confirmação de presentes")
+                                .setMessage("Parece que seu evento já aconteceu ou está acontecendo. \n\n" +
+                                        "Confirme quem realmente foi.")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class));
+                                    }
+                                })
+                                .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        eventsReference.child(e.getId()).removeValue();
+                                        list.clear();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         list.clear();
-        reference.addValueEventListener(new ValueEventListener() {
+        followingsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren())
@@ -110,6 +157,7 @@ public class EventosActivity extends AppCompatActivity {
 
             }
         });
+
         eventsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -191,5 +239,12 @@ public class EventosActivity extends AppCompatActivity {
     public void novoEvento(View view) {
         startActivity(new Intent(this,NovoEventoActivity.class));
         finish();
+    }
+
+    private String formatador(int x){
+        if (x < 10){
+            return "0"+String.valueOf(x);
+        }
+        return String.valueOf(x);
     }
 }

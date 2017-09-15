@@ -30,30 +30,6 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:text="NOME"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/nome_usuario_descricao"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:layout_marginBottom="11dp"
-                android:textSize="30sp"
-                android:layout_alignBottom="@+id/imageView2"
-                android:layout_toRightOf="@+id/imageView2"
-                android:layout_toEndOf="@+id/imageView2" />
-
-            <Button
-                android:text="Seguir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/seguir_usuario_descricao"
-                android:background="@color/button"
-                android:layout_marginLeft="17dp"
-                android:layout_marginStart="17dp"
-                android:layout_alignTop="@+id/nome_usuario_descricao"
-                android:layout_toRightOf="@+id/nome_usuario_descricao"
-                android:layout_toEndOf="@+id/nome_usuario_descricao" />
-
-            <TextView
                 android:text="Eventos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,18 +38,52 @@
                 android:layout_below="@+id/imageView2"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp" />
+                android:layout_marginLeft="5dp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/textView12"
                 android:layout_alignLeft="@+id/textView12"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
                 android:layout_alignStart="@+id/textView12"
+                android:layout_marginRight="5dp"
                 android:id="@+id/eventos_usuario_list" />
+
+            <Button
+                android:text="Seguir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/seguir_usuario_descricao"
+                android:background="@color/button"
+                android:layout_alignBottom="@+id/imageView2"
+                android:layout_alignRight="@+id/eventos_usuario_list"
+                android:layout_alignEnd="@+id/eventos_usuario_list"
+                android:layout_marginRight="13dp"
+                android:layout_marginEnd="13dp" />
+
+            <TextView
+                android:text="Índice de Presença: 100%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="101dp"
+                android:layout_marginStart="101dp"
+                android:layout_marginTop="63dp"
+                android:id="@+id/indice_de_presenca_usuario" />
+
+            <TextView
+                android:text="NOME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/nome_usuario_descricao"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="30sp"
+                android:layout_alignBottom="@+id/indice_de_presenca_usuario"
+                android:layout_alignLeft="@+id/indice_de_presenca_usuario"
+                android:layout_alignStart="@+id/indice_de_presenca_usuario"
+                android:layout_marginBottom="17dp" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

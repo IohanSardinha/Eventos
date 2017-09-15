@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +36,22 @@ public class UsuarioActivity extends AppCompatActivity {
         final Usuario user = (Usuario)intent.getSerializableExtra("Usuario");
         followButton = (Button)findViewById(R.id.seguir_usuario_descricao);
         ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
+
+        database.getReference("Users").child(UID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Usuario usuario = dataSnapshot.getValue(Usuario.class);
+                float comp = usuario.getEventosComparecidos();
+                float conf = usuario.getEventosConfirmados();
+                int confiabilidade =  Math.round(comp/conf*100);
+                ((TextView)findViewById(R.id.indice_de_presenca_usuario)).setText("Índice de presença: "+String.valueOf(confiabilidade)+"%");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         if(user.getId().equals(UID)) {
             followButton.setVisibility(View.GONE);

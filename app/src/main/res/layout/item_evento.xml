@@ -17,7 +17,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/nome_usuario_item_evento"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="2dp"
+        android:text="Fulaninho da Silva Confirmou presença em um evento de Ciclaninho de Souza"
+        android:textSize="12sp" />
 
     <ImageView
         android:layout_marginTop="20dp"

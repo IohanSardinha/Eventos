@@ -280,26 +280,21 @@ public class NovoEventoActivity extends AppCompatActivity {
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
             evento.setImagem(image.toString());
             DatabaseReference userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(ID);
-            //final ArrayList<DatabaseReference> references = new ArrayList<DatabaseReference>();
-            final Map<String,Object> updateMap = new HashMap<String, Object>();
-            updateMap.put((FirebaseDatabase.getInstance().getReference("Events").child(userID).child(ID)).toString(),evento);
-            //references.add(FirebaseDatabase.getInstance().getReference("Events").child(userID).child(ID));
+            final Map<String,Object> updateMap = new HashMap<>();
+            updateMap.put("Events/"+userID+"/"+evento.getId(),evento);
             userParticipatingReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot user:dataSnapshot.getChildren())
                     {
                         String cUid = user.getValue(Usuario.class).getId();
-                        //references.add(FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId()));
-                        //updateMap.put((FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getValue(Usuario.class).getId())).toString(),"A");
-                        updateMap.put((FirebaseDatabase.getInstance().getReference("EventsParticipating").child(cUid)).toString(),evento);
+                        updateMap.put("EventsParticipating/"+cUid+"/"+evento.getId(),evento);
                     }
-                    System.out.println("---------"+updateMap);
-                    /*FirebaseDatabase.getInstance().getReference().updateChildren(updateMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference().updateChildren(updateMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progress.dismiss();
-                            setResult(RESULT_OK,(new Intent()).putExtra("evento","A"));
+                            setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
                             finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -307,7 +302,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
                         }
-                    });*/
+                    });
                 }
 
                 @Override
@@ -315,21 +310,6 @@ public class NovoEventoActivity extends AppCompatActivity {
 
                 }
             });
-
-            /*reference.child(userID).child(ID).setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    progress.dismiss();
-                    startActivity(new Intent(NovoEventoActivity.this,EventosActivity.class));
-                    finish();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
-                }
-            });*/
         }
         else
         {

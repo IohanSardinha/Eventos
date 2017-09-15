@@ -100,6 +100,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.limite_detalhes)).setText(getString(R.string.limite_de_convidados)+":\n"+String.valueOf(evento.getLimite()));
         }
         ((TextView)findViewById(R.id.descricao_detalhes)).setText(evento.getDescricao());
+
         ((TextView)findViewById(R.id.endereco_detalhes)).setText(evento.getEndereco());
 
 

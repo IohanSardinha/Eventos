@@ -27,6 +27,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     ArrayList<Evento> list;
     Context context;
     DatabaseReference userReference, userParticipatingReference, eventsParticipatingReference;
+    String uID;
     public ListaEventosAdapter(ArrayList<Evento> list, Context context) {
         this.list = list;
         this.context = context;
@@ -40,17 +41,64 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     @Override
     public void onBindViewHolder(final ListaEventosAdapter.ViewHolder holder, final int position) {
 
-        userReference.child(list.get(position).getUserID()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                holder.userName.setText(dataSnapshot.getValue(Usuario.class).getNome()+" criou um evento");
-            }
+        if (context instanceof UsuarioActivity)
+        {
+            if(list.get(position).getId().equals(uID))
+            {
+                userReference.child(uID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        holder.userName.setText(dataSnapshot.getValue(Usuario.class).getNome()+" criou um evento");
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
+                    }
+                });
             }
-        });
+            else
+            {
+                userReference.child(uID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String userName = dataSnapshot.getValue(Usuario.class).getNome();
+                        userReference.child(list.get(position).getUserID()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                holder.userName.setText(userName+" confirmou presença em um evento de "+dataSnapshot.getValue(Usuario.class).getNome());
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+        else
+        {
+            userReference.child(uID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    holder.userName.setText(dataSnapshot.getValue(Usuario.class).getNome()+" criou um evento");
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
 
         final String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userParticipatingReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
@@ -82,8 +130,18 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                         holder.participate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                userParticipatingReference.child(list.get(position).getId()).child(userID).setValue(userID);
+                                final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                userReference.child(userID).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        userParticipatingReference.child(list.get(position).getId()).child(userID).setValue(dataSnapshot.getValue(Usuario.class));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                                 eventsParticipatingReference.child(userID).child(list.get(position).getId()).setValue(list.get(position));
                             }
                         });
@@ -117,6 +175,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         Button participate;
         public ViewHolder(View itemView) {
             super(itemView);
+            uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
             userReference = FirebaseDatabase.getInstance().getReference("Users");
             userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating");
             eventsParticipatingReference = FirebaseDatabase.getInstance().getReference("EventsParticipating");
