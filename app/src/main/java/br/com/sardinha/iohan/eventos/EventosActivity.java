@@ -110,7 +110,7 @@ public class EventosActivity extends AppCompatActivity {
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class));
+                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("eventID",e.getId()));
                                     }
                                 })
                                 .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {

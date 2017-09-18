@@ -110,25 +110,14 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         final ArrayList<Usuario> users = new ArrayList<>();
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Participations").child(evento.getId());
+        DatabaseReference reference = database.getReference("UsersParticipating").child(evento.getId());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    DatabaseReference ref = database.getReference("Users").child(ds.getValue(String.class));
-                    ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            users.add(dataSnapshot.getValue(Usuario.class));
-                            recyclerView.setAdapter(new ListaUsuariosAdapter(users,DetalhesEventoActivity.this));
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                    users.add(ds.getValue(Usuario.class));
+                    recyclerView.setAdapter(new ListaUsuariosAdapter(users,DetalhesEventoActivity.this));
                 }
             }
 
