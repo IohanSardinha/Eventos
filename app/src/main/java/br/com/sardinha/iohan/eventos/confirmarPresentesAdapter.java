@@ -38,6 +38,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
     @Override
     public void onBindViewHolder(final confirmarPresentesAdapter.ViewHolder holder, final int position) {
         holder.nomeUsuario.setText(list.get(position).getNome());
+
         holder.buttonSim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
