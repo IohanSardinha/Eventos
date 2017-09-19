@@ -43,7 +43,8 @@ public class UsuarioActivity extends AppCompatActivity {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
                 float comp = usuario.getEventosComparecidos();
                 float conf = usuario.getEventosConfirmados();
-                int confiabilidade =  Math.round(comp/conf*100);
+                System.out.println(comp+"   "+conf);
+                float confiabilidade =  Math.round(comp/conf*100);
                 ((TextView)findViewById(R.id.indice_de_presenca_usuario)).setText("Índice de presença: "+String.valueOf(confiabilidade)+"%");
             }
 

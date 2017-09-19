@@ -22,6 +22,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
     private DatabaseReference usersReference;
     private DatabaseReference usersParticipatingReference;
     private String eventID;
+    private boolean CLICKED = false;
 
     public confirmarPresentesAdapter(ArrayList<Usuario> list, String eventID)
     {
@@ -42,48 +43,54 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
         holder.buttonSim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                usersReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Usuario user = dataSnapshot.getValue(Usuario.class);
-                        user.setEventosComparecidos(user.getEventosComparecidos()+1);
-                        user.setEventosConfirmados(user.getEventosConfirmados()+1);
-                        usersReference.child(user.getId()).setValue(user);
-                        usersParticipatingReference.child(list.get(position).getId()).removeValue();
-                        notifyDataSetChanged();
-                        list.remove(position);
-                        holder.buttonSim.setEnabled(false);
-                        holder.buttonNao.setEnabled(false);
-                    }
+                if(!CLICKED) {
+                    usersReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Usuario user = dataSnapshot.getValue(Usuario.class);
+                            user.setEventosComparecidos(user.getEventosComparecidos() + 1);
+                            user.setEventosConfirmados(user.getEventosConfirmados() + 1);
+                            if(!CLICKED) {
+                                usersReference.child(user.getId()).setValue(user);
+                                usersParticipatingReference.child(list.get(position).getId()).removeValue();
+                                notifyDataSetChanged();
+                                list.remove(position);
+                            }
+                            CLICKED = true;
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
         holder.buttonNao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                usersReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Usuario user = dataSnapshot.getValue(Usuario.class);
-                        user.setEventosComparecidos(user.getEventosComparecidos()+1);
-                        usersReference.child(user.getId()).setValue(user);
-                        usersParticipatingReference.child(list.get(position).getId()).removeValue();
-                        list.remove(position);
-                        notifyDataSetChanged();
-                        holder.buttonSim.setEnabled(false);
-                        holder.buttonNao.setEnabled(false);
-                    }
+                if(!CLICKED) {
+                    usersReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Usuario user = dataSnapshot.getValue(Usuario.class);
+                            user.setEventosConfirmados(user.getEventosConfirmados() + 1);
+                            if(!CLICKED) {
+                                usersReference.child(user.getId()).setValue(user);
+                                usersParticipatingReference.child(list.get(position).getId()).removeValue();
+                                list.remove(position);
+                                notifyDataSetChanged();
+                            }
+                            CLICKED = true;
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
     }
