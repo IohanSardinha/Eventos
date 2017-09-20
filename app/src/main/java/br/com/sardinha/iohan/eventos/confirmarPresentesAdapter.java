@@ -1,5 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +25,13 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
     private DatabaseReference usersParticipatingReference;
     private String eventID;
     private boolean CLICKED = false;
+    private Context context;
 
-    public confirmarPresentesAdapter(ArrayList<Usuario> list, String eventID)
+    public confirmarPresentesAdapter(ArrayList<Usuario> list, String eventID, Context context)
     {
         this.list = list;
         this.eventID = eventID;
+        this.context = context;
     }
 
     @Override
@@ -53,9 +57,9 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
                             if(!CLICKED) {
                                 usersReference.child(user.getId()).setValue(user);
                                 usersParticipatingReference.child(list.get(position).getId()).removeValue();
-                                notifyDataSetChanged();
-                                list.remove(position);
                             }
+                            list.remove(position);
+                            notifyDataSetChanged();
                             CLICKED = true;
                         }
 
@@ -79,9 +83,9 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
                             if(!CLICKED) {
                                 usersReference.child(user.getId()).setValue(user);
                                 usersParticipatingReference.child(list.get(position).getId()).removeValue();
-                                list.remove(position);
-                                notifyDataSetChanged();
                             }
+                            list.remove(position);
+                            notifyDataSetChanged();
                             CLICKED = true;
                         }
 

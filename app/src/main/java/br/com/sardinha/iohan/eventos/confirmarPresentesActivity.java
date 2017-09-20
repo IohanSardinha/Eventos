@@ -41,7 +41,7 @@ public class confirmarPresentesActivity extends AppCompatActivity {
                 {
                     list.add(ds.getValue(Usuario.class));
                 }
-                recyclerView.setAdapter(new confirmarPresentesAdapter(list,eventID));
+                recyclerView.setAdapter(new confirmarPresentesAdapter(list,eventID,confirmarPresentesActivity.this));
             }
 
             @Override
