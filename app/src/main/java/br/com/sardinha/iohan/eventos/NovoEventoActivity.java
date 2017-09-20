@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -245,6 +246,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             ID = reference.push().getKey();
         }
         evento.setId(ID);
+        evento.setIdPesquisa(ID.toLowerCase());
         if(image != null && !image.toString().substring(0,5).equals("https"))
         {
             StorageReference storageReference = storage.child(ID);

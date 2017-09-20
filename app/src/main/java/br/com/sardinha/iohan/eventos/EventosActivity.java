@@ -121,6 +121,7 @@ public class EventosActivity extends AppCompatActivity {
                                         list.clear();
                                     }
                                 })
+                                .setCancelable(false)
                                 .show();
                     }
                 }
@@ -204,7 +205,7 @@ public class EventosActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Intent intent = new Intent(EventosActivity.this,ResultadoPesquisaActivity.class);
-                intent.putExtra("Query",query);
+                intent.putExtra("Query",query.toLowerCase());
                 startActivity(intent);
                 finish();
                 return false;

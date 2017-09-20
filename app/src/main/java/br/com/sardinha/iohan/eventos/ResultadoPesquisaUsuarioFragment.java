@@ -50,7 +50,7 @@ public class ResultadoPesquisaUsuarioFragment extends Fragment {
         list = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        Query firebaseQuery = databaseReference.orderByChild("nome").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
+        Query firebaseQuery = databaseReference.orderByChild("nomeLow").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
         firebaseQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

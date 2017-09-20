@@ -51,7 +51,7 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    Query firebaseQuery = databaseReference.child(ds.getKey()).orderByChild("titulo").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
+                    Query firebaseQuery = databaseReference.child(ds.getKey()).orderByChild("tituloLow").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
                     firebaseQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

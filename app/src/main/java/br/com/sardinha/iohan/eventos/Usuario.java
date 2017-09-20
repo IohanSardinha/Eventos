@@ -47,9 +47,17 @@ public class Usuario implements Serializable {
         this.eventosComparecidos = eventosComparecidos;
     }
 
+    public String getNomeLow() {
+        return nomeLow;
+    }
+
+    public void setNomeLow(String nomeLow) {
+        this.nomeLow = nomeLow;
+    }
 
     private String id;
     private String nome;
+    private String nomeLow;
     private String email;
     private int eventosConfirmados = 10;
     private int eventosComparecidos = 10;
@@ -60,6 +68,7 @@ public class Usuario implements Serializable {
     public Usuario(String id, String nome, String email) {
         this.id = id;
         this.nome = nome;
+        this.nomeLow = nome.toLowerCase();
         this.email = email;
     }
 
@@ -70,4 +79,6 @@ public class Usuario implements Serializable {
         this.eventosConfirmados = eventosConfirmados;
         this.eventosComparecidos = eventosComparecidos;
     }
+
+
 }

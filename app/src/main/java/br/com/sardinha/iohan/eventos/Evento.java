@@ -21,10 +21,6 @@ public class Evento implements Serializable,Comparable<Evento> {
     return userID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
     public String getDataInicio() {
         return dataInicio;
     }
@@ -126,9 +122,18 @@ public class Evento implements Serializable,Comparable<Evento> {
     public void setDataHora(double dataHora) {
         this.dataHora = dataHora;
     }
+
+    public String getTituloLow() {
+        return tituloLow;
+    }
+
+    public void setTituloLow(String tituloLow) {
+        this.tituloLow = tituloLow;
+    }
     //endregion
 
     private String titulo;
+    private String tituloLow;
     private String endereco;
     private String horaInicio;
     private String horaEncerramento;
@@ -141,6 +146,7 @@ public class Evento implements Serializable,Comparable<Evento> {
     private double dataHora;
     private String imagem;
     private String id;
+    private String idPesquisa;
     private String userID;
 
     public Evento()
@@ -160,6 +166,7 @@ public class Evento implements Serializable,Comparable<Evento> {
         this.setPrivacidade(privacidade);
         this.setDescricao(descricao);
         this.setLimite(limite);
+        this.tituloLow = titulo.toLowerCase();
         List<String> tempData = Arrays.asList(dataInicio.split("/"));
         Collections.reverse(tempData);
         List<String> tempHora = Arrays.asList(horaInicio.split(":"));
@@ -177,5 +184,14 @@ public class Evento implements Serializable,Comparable<Evento> {
     @Override
     public int compareTo(Evento e) {
         return Double.compare(this.dataHora,e.dataHora);
+    }
+
+
+    public String getIdPesquisa() {
+        return idPesquisa;
+    }
+
+    public void setIdPesquisa(String idPesquisa) {
+        this.idPesquisa = idPesquisa;
     }
 }
