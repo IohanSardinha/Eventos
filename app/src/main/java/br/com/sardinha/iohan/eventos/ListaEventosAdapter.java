@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {
@@ -28,6 +29,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     Context context;
     DatabaseReference userReference, userParticipatingReference, eventsParticipatingReference;
     String uID;
+    double dateNow;
     public ListaEventosAdapter(ArrayList<Evento> list, Context context) {
         this.list = list;
         this.context = context;
@@ -40,10 +42,10 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
     @Override
     public void onBindViewHolder(final ListaEventosAdapter.ViewHolder holder, final int position) {
-
+        final Evento evento = list.get(position);
         if (context instanceof UsuarioActivity)
         {
-            if(list.get(position).getId().equals(uID))
+            if(evento.getUserID().equals(uID))
             {
                 userReference.child(uID).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -63,10 +65,19 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String userName = dataSnapshot.getValue(Usuario.class).getNome();
-                        userReference.child(list.get(position).getUserID()).addValueEventListener(new ValueEventListener() {
+                        userReference.child(evento.getUserID()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                holder.userName.setText(userName+" confirmou presença em um evento de "+dataSnapshot.getValue(Usuario.class).getNome());
+                                if(evento.getDataHora()<= dateNow)
+                                {
+                                    holder.userName.setText(userName+" compareceu a um evento de "+dataSnapshot.getValue(Usuario.class).getNome());
+                                    holder.participate.setVisibility(View.GONE);
+                                    holder.itemView.setClickable(false);
+                                }
+                                else
+                                {
+                                    holder.userName.setText(userName+" confirmou presença em um evento de "+dataSnapshot.getValue(Usuario.class).getNome());
+                                }
                             }
 
                             @Override
@@ -85,7 +96,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         }
         else
         {
-            userReference.child(uID).addValueEventListener(new ValueEventListener() {
+            userReference.child(evento.getUserID()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     holder.userName.setText(dataSnapshot.getValue(Usuario.class).getNome()+" criou um evento");
@@ -184,6 +195,13 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             description = (TextView)itemView.findViewById(R.id.info_text2);
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item_evento);
             participate = (Button)itemView.findViewById(R.id.participar_item_evento);
+            Calendar calendar = Calendar.getInstance();
+            dateNow = Double.parseDouble(
+                    formatador(calendar.get(Calendar.YEAR))
+                            +formatador(calendar.get(Calendar.MONTH)+1)
+                            +formatador(calendar.get(Calendar.DAY_OF_MONTH))
+                            +formatador(calendar.get(Calendar.HOUR_OF_DAY))
+                            +formatador(calendar.get(Calendar.MINUTE)));
             itemView.setOnClickListener(this);
         }
 
@@ -194,5 +212,11 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             context.startActivity(intent);
             ((Activity)context).finish();
         }
+    }
+    private String formatador(int x){
+        if (x < 10){
+            return "0"+String.valueOf(x);
+        }
+        return String.valueOf(x);
     }
 }

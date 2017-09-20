@@ -22,6 +22,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
     private String UID;
     private FirebaseDatabase database;
+    private DatabaseReference userReference;
     private Button followButton;
     private ArrayList<Evento> list;
     RecyclerView recyclerView;
@@ -36,8 +37,9 @@ public class UsuarioActivity extends AppCompatActivity {
         final Usuario user = (Usuario)intent.getSerializableExtra("Usuario");
         followButton = (Button)findViewById(R.id.seguir_usuario_descricao);
         ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
+        userReference = database.getReference("Users").child(user.getId());
 
-        database.getReference("Users").child(UID).addValueEventListener(new ValueEventListener() {
+        userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
@@ -95,11 +97,30 @@ public class UsuarioActivity extends AppCompatActivity {
             });
         }
 
-        DatabaseReference userEventsReference = database.getReference("Events").child(user.getId());
         list = new ArrayList<>();
         recyclerView = (RecyclerView)findViewById(R.id.eventos_usuario_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        DatabaseReference eventsParticipatedReference = database.getReference("EventsParticipated").child(user.getId());
+        eventsParticipatedReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds:dataSnapshot.getChildren())
+                {
+                    list.add(ds.getValue(Evento.class));
+
+                }
+                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference userEventsReference = database.getReference("Events").child(user.getId());
         userEventsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

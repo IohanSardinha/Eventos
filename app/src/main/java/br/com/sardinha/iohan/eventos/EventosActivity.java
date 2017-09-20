@@ -87,13 +87,13 @@ public class EventosActivity extends AppCompatActivity {
 
     private void getData()
     {
-
+        Calendar calendar = Calendar.getInstance();
         final double dateNow = Double.parseDouble(
-                         formatador(Calendar.getInstance().get(Calendar.YEAR))
-                        +formatador(Calendar.getInstance().get(Calendar.MONTH)+1)
-                        +formatador(Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-                        +formatador(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
-                        +formatador(Calendar.getInstance().get(Calendar.MINUTE)));
+                         formatador(calendar.get(Calendar.YEAR))
+                        +formatador(calendar.get(Calendar.MONTH)+1)
+                        +formatador(calendar.get(Calendar.DAY_OF_MONTH))
+                        +formatador(calendar.get(Calendar.HOUR_OF_DAY))
+                        +formatador(calendar.get(Calendar.MINUTE)));
 
         eventsReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -104,13 +104,14 @@ public class EventosActivity extends AppCompatActivity {
                     if(e.getDataHora()<=dateNow)
                     {
                         new AlertDialog.Builder(EventosActivity.this)
-                                .setTitle("Confirmação de presentes")
-                                .setMessage("Parece que seu evento já aconteceu ou está acontecendo. \n\n" +
+                                .setTitle(e.getTitulo())
+                                .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
                                         "Confirme quem realmente foi.")
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("eventID",e.getId()));
+                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
+                                        finish();
                                     }
                                 })
                                 .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {

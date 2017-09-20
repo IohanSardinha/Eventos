@@ -23,14 +23,16 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
     private FirebaseDatabase database;
     private DatabaseReference usersReference;
     private DatabaseReference usersParticipatingReference;
-    private String eventID;
+    private DatabaseReference eventsParticipating;
+    private DatabaseReference eventsParticipated;
+    private Evento event;
     private boolean CLICKED = false;
     private Context context;
 
-    public confirmarPresentesAdapter(ArrayList<Usuario> list, String eventID, Context context)
+    public confirmarPresentesAdapter(ArrayList<Usuario> list, Evento event, Context context)
     {
         this.list = list;
-        this.eventID = eventID;
+        this.event = event;
         this.context = context;
     }
 
@@ -57,9 +59,10 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
                             if(!CLICKED) {
                                 usersReference.child(user.getId()).setValue(user);
                                 usersParticipatingReference.child(list.get(position).getId()).removeValue();
+                                eventsParticipating.child(user.getId()).child(event.getId()).removeValue();
+                                eventsParticipated.child(user.getId()).child(event.getId()).setValue(event);
+                                list.clear();
                             }
-                            list.remove(position);
-                            notifyDataSetChanged();
                             CLICKED = true;
                         }
 
@@ -83,9 +86,9 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
                             if(!CLICKED) {
                                 usersReference.child(user.getId()).setValue(user);
                                 usersParticipatingReference.child(list.get(position).getId()).removeValue();
+                                eventsParticipating.child(user.getId()).child(event.getId()).removeValue();
+                                list.clear();
                             }
-                            list.remove(position);
-                            notifyDataSetChanged();
                             CLICKED = true;
                         }
 
@@ -113,8 +116,9 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
             super(itemView);
             database = FirebaseDatabase.getInstance();
             usersReference = database.getReference("Users");
-            usersParticipatingReference = database.getReference("UsersParticipating").child(eventID);
-            System.out.println(usersParticipatingReference);
+            usersParticipatingReference = database.getReference("UsersParticipating").child(event.getId());
+            eventsParticipated = database.getReference("EventsParticipated");
+            eventsParticipating = database.getReference("EventsParticipating");
             nomeUsuario = (TextView)itemView.findViewById(R.id.nome_usuario_item_confirmacao);
             buttonSim = (Button)itemView.findViewById(R.id.foi_item_confirmacao);
             buttonNao = (Button)itemView.findViewById(R.id.nao_foi_item_confirmacao);
