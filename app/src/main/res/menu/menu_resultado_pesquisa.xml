@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="br.com.sardinha.iohan.eventos.ResultadoPesquisaActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/search_eventos"
+        android:title="Procurar"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always" />
 </menu>

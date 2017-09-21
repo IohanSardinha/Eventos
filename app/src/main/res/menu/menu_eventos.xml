@@ -9,11 +9,8 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/usuario"
-        android:title=""
-        android:icon="@drawable/ic_person_black_24dp"
-        app:showAsAction="always" />
+        android:title="Perfil" />
     <item
         android:id="@+id/signout"
-        android:title="Sair"
-        app:showAsAction="always"/>
+        android:title="Sair" />
 </menu>

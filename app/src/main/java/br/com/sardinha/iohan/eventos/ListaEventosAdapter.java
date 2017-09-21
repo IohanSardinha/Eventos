@@ -136,44 +136,34 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                     }
                     else
                     {
-                        userParticipatingReference.child(evento.getId()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1)
-                                {
-                                    holder.participate.setBackgroundResource(R.color.button);
-                                    holder.participate.setText("Participar");
-                                    holder.participate.setOnClickListener(new View.OnClickListener() {
+                        if(evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1)
+                        {
+                            holder.participate.setBackgroundResource(R.color.button);
+                            holder.participate.setText("Participar");
+                            holder.participate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    userReference.child(userID).addValueEventListener(new ValueEventListener() {
                                         @Override
-                                        public void onClick(View v) {
-                                            final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                            userReference.child(userID).addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    userParticipatingReference.child(list.get(position).getId()).child(userID).setValue(dataSnapshot.getValue(Usuario.class));
-                                                }
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            userParticipatingReference.child(list.get(position).getId()).child(userID).setValue(dataSnapshot.getValue(Usuario.class));
+                                        }
 
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                                }
-                                            });
-                                            eventsParticipatingReference.child(userID).child(list.get(position).getId()).setValue(list.get(position));
                                         }
                                     });
+                                    eventsParticipatingReference.child(userID).child(list.get(position).getId()).setValue(list.get(position));
                                 }
-                                else
-                                {
-                                    holder.participate.setBackgroundResource(R.color.button);
-                                    holder.participate.setText("Lotado");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                            });
+                        }
+                        else if(!dataSnapshot.hasChild(uID))
+                        {
+                            holder.participate.setBackgroundResource(R.color.button);
+                            holder.participate.setText("Lotado");
+                        }
                     }
                 }
             }
