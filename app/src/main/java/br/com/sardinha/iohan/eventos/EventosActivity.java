@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -59,6 +61,7 @@ public class EventosActivity extends AppCompatActivity {
             startActivity(new Intent(this,MainActivity.class));
             finish();
         }
+        //FirebaseMessaging.getInstance().subscribeToTopic("teste");
         followingsReference = database.getReference("Followings").child(userID);
 
         eventsReference = database.getReference("Events").child(userID);
