@@ -62,6 +62,9 @@ public class EventosActivity extends AppCompatActivity {
             finish();
         }
         //FirebaseMessaging.getInstance().subscribeToTopic("teste");
+
+        new NotificationSender().Test(this,userID,"IOHAN");
+
         followingsReference = database.getReference("Followings").child(userID);
 
         eventsReference = database.getReference("Events").child(userID);
