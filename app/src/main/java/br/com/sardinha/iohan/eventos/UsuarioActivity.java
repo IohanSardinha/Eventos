@@ -47,7 +47,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 float conf = usuario.getEventosConfirmados();
                 System.out.println(comp+"   "+conf);
                 float confiabilidade =  Math.round(comp/conf*100);
-                ((TextView)findViewById(R.id.indice_de_presenca_usuario)).setText("Índice de presença: "+String.valueOf(confiabilidade)+"%");
+                ((TextView)findViewById(R.id.indice_de_presenca_usuario)).setText("Presença: "+String.valueOf(confiabilidade)+"%");
             }
 
             @Override
@@ -58,6 +58,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
         if(user.getId().equals(UID)) {
             followButton.setVisibility(View.GONE);
+            findViewById(R.id.notification_button).setVisibility(View.GONE);
         }
         else
         {
@@ -153,5 +154,9 @@ public class UsuarioActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void setNotificate(View view) {
+
     }
 }

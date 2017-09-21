@@ -11,10 +11,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
 
-/**
- * Created by Iohan on 21/09/2017.
- */
-
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     private static final String TAG = "FirebaseMessagingServic";
 

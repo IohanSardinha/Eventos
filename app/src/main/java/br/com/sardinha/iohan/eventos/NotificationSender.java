@@ -1,15 +1,12 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -18,7 +15,7 @@ import java.util.Map;
 
 public class NotificationSender {
 
-    public void Test(Context context, final String title, final String message)
+    public void Test(Context context, final String title, final String message, final String topic)
     {
         String URL = "https://fcm.googleapis.com/fcm/send";
 
@@ -50,7 +47,7 @@ public class NotificationSender {
                 String body =
                         "{" +
                             "\"to\":" +
-                                "\"/topics/teste\"" +
+                                "\"/topics/"+topic+"\"" +
                             "," +
                             "\"data\":" +
                             "{" +
