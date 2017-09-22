@@ -11,6 +11,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="br.com.sardinha.iohan.eventos.NovoEventoActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:onClick="criarEventoClick"
+        app:backgroundTint="@android:color/holo_green_light"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_done_black_24dp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +35,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:layout_width="match_parent"
@@ -197,18 +211,9 @@
                 android:id="@+id/textView4"
                 android:textSize="12sp"
                 android:layout_alignParentBottom="true" />
+
         </RelativeLayout>
     </ScrollView>
-
-    <Button
-        android:text="@string/criar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/criar_criacao"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="criarEventoClick" />
 
 
 </RelativeLayout>
