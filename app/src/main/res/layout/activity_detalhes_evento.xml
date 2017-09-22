@@ -101,5 +101,15 @@
         android:layout_alignLeft="@+id/privacidade_detalhes"
         android:layout_alignStart="@+id/privacidade_detalhes" />
 
+    <Button
+        android:id="@+id/participar_evento_detalhes"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/imagem_detalhes"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/button"
+        android:text="Participar" />
+
 
 </RelativeLayout>

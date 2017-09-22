@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class NotificationSender {
 
-    public void Test(Context context, final String title, final String message, final String topic)
+    public void SendNotification(Context context, final String title, final String message, final String topic)
     {
         String URL = "https://fcm.googleapis.com/fcm/send";
 

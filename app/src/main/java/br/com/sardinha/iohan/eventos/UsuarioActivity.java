@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -38,7 +40,6 @@ public class UsuarioActivity extends AppCompatActivity {
         followButton = (Button)findViewById(R.id.seguir_usuario_descricao);
         ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
         userReference = database.getReference("Users").child(user.getId());
-
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -62,6 +63,42 @@ public class UsuarioActivity extends AppCompatActivity {
         }
         else
         {
+            final ImageButton notificateButton = (ImageButton)findViewById(R.id.notification_button);
+            final DatabaseReference notificateReference = database.getReference("NotificateUsers").child(user.getId());
+            notificateReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild(UID))
+                    {
+                        notificateButton.setBackgroundResource(R.color.colorPrimary);
+                        notificateButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                notificateReference.child(UID).removeValue();
+                                FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getId()+"-WhenCreateEvent");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        notificateButton.setBackgroundResource(R.color.button);
+                        notificateButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                notificateReference.child(UID).setValue(UID);
+                                FirebaseMessaging.getInstance().subscribeToTopic(user.getId()+"-WhenCreateEvent");
+                            }
+                        });
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             final DatabaseReference authFollowers;
             authFollowers = database.getReference("Followings").child(UID);
             authFollowers.addValueEventListener(new ValueEventListener() {
@@ -154,9 +191,5 @@ public class UsuarioActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void setNotificate(View view) {
-
     }
 }

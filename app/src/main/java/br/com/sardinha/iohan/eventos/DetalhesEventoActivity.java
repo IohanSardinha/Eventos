@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,14 +40,27 @@ import java.util.ArrayList;
 
 public class DetalhesEventoActivity extends AppCompatActivity {
     Evento evento;
-    Context previousContext;
+    Usuario user;
+    private FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_evento);
+        database = FirebaseDatabase.getInstance();
         Intent intent = getIntent();
         evento = (Evento) intent.getSerializableExtra("evento");
-        Draw();
+        database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(Usuario.class);
+                Draw();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     void Draw(){
@@ -76,6 +90,52 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         }
 
         this.setTitle(evento.getTitulo());
+
+        final Button participate = (Button)findViewById(R.id.participar_evento_detalhes);
+        if(evento.getUserID().equals(user.getId()))
+        {
+            participate.setVisibility(View.GONE);
+        }
+        else
+        {
+            final DatabaseReference userParticipating = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(evento.getId()).child(user.getId());
+            final DatabaseReference eventsParticipating = FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getId()).child(evento.getId());
+            userParticipating.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue(Usuario.class) == null)
+                    {
+                        participate.setText("Participar");
+                        participate.setBackgroundResource(R.color.button);
+                        participate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //eventsParticipating.child(evento.getId()).setValue(evento);
+                                userParticipating.child(user.getId()).setValue(user);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        participate.setText("Participando");
+                        participate.setBackgroundResource(R.color.colorPrimary);
+                        participate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //eventsParticipating.child(evento.getId()).removeValue();
+                                userParticipating.child(user.getId()).removeValue();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
         if(evento.getDataInicio().equals(evento.getDataEncerramento()))
         {
@@ -182,7 +242,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         }
 
     }
-
     public static int getDominantColor(Bitmap bitmap) {
         if (bitmap == null) {
             return Color.TRANSPARENT;
@@ -218,5 +277,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         color = 0xFF000000 | r | g | b;
         return color;
     }
+
 
 }

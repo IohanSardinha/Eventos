@@ -6,11 +6,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,7 +41,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class NovoEventoActivity extends AppCompatActivity {
 
@@ -60,17 +56,32 @@ public class NovoEventoActivity extends AppCompatActivity {
     Uri image;
 
     private StorageReference storage;
-    private DatabaseReference reference;
+    private DatabaseReference eventReference;
+    private DatabaseReference userReference;
     private String userID;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_evento);
 
-        reference = FirebaseDatabase.getInstance().getReference("Events");
+        eventReference = FirebaseDatabase.getInstance().getReference("Events");
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         storage = FirebaseStorage.getInstance().getReference("Events");
+
+        userReference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+        userReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                usuario = dataSnapshot.getValue(Usuario.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_eventos,R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -243,10 +254,11 @@ public class NovoEventoActivity extends AppCompatActivity {
 
         if(ID == null)
         {
-            ID = reference.push().getKey();
+            ID = eventReference.push().getKey();
         }
         evento.setId(ID);
         evento.setIdPesquisa(ID.toLowerCase());
+        //CRIANDO
         if(image != null && !image.toString().substring(0,5).equals("https"))
         {
             StorageReference storageReference = storage.child(ID);
@@ -260,6 +272,12 @@ public class NovoEventoActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progress.dismiss();
+                            new NotificationSender().SendNotification(
+                                    NovoEventoActivity.this,
+                                    usuario.getNome()+" criou um novo evento",
+                                    evento.getTitulo()+" dia "+evento.getDataInicio()+" as "+ evento.getHoraInicio(),
+                                    usuario.getId()+"-WhenCreateEvent"
+                            );
                             setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
                             finish();
                         }
@@ -277,6 +295,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                 }
             });
         }
+        //ATUALIZANDO
         else if(image != null && image.toString().substring(0,5).equals("https"))
         {
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
