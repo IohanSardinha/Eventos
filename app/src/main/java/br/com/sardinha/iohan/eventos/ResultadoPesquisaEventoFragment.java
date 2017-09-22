@@ -45,6 +45,10 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
 
         list = new ArrayList<>();
 
+        recyclerView = (RecyclerView)view.findViewById(R.id.lista_eventos_resultado_pesquisa);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
         databaseReference = FirebaseDatabase.getInstance().getReference("Events");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -55,9 +59,9 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
                     firebaseQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            list.clear();
                             for(DataSnapshot dss: dataSnapshot.getChildren())
                             {
+                                System.out.println(dss.getValue(Evento.class).getTitulo());
                                 list.add(dss.getValue(Evento.class));
                             }
                             recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
@@ -78,9 +82,6 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
             }
         });
 
-        recyclerView = (RecyclerView)view.findViewById(R.id.lista_eventos_resultado_pesquisa);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
 
         return view;

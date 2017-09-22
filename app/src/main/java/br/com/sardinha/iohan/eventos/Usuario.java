@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 
 /**
  * Created by Iohan on 20/06/2017.
@@ -68,7 +69,7 @@ public class Usuario implements Serializable {
     public Usuario(String id, String nome, String email) {
         this.id = id;
         this.nome = nome;
-        this.nomeLow = nome.toLowerCase();
+        this.nomeLow = Normalizer.normalize(nome, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         this.email = email;
     }
 

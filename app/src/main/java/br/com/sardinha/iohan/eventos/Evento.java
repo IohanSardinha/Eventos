@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -166,7 +167,7 @@ public class Evento implements Serializable,Comparable<Evento> {
         this.setPrivacidade(privacidade);
         this.setDescricao(descricao);
         this.setLimite(limite);
-        this.tituloLow = titulo.toLowerCase();
+        this.tituloLow = Normalizer.normalize(titulo, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         List<String> tempData = Arrays.asList(dataInicio.split("/"));
         Collections.reverse(tempData);
         List<String> tempHora = Arrays.asList(horaInicio.split(":"));
