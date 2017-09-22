@@ -50,7 +50,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     private void sendNotification(String title,String messageBody,String clickAction,String eventID,String userID) {
         Intent intent;
 
-        if(clickAction.equals("EVENTO")){
+        if(clickAction.equals("NOVO_EVENTO")){
             intent = new Intent(this,LoadingActivity.class);
             intent.putExtra("eventID",eventID);
             intent.putExtra("userID",userID);

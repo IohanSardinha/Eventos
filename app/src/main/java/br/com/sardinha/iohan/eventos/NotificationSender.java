@@ -15,13 +15,39 @@ import java.util.Map;
 
 public class NotificationSender {
 
-    public void SendNotification(Context context, final String title, final String message, final String topic,final Evento event)
+    public void SendNewEventNotification(Context context, Evento event, Usuario user)
+    {
+        String message = user.getNome()+" criou um novo evento";
+        String title = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
+        String topic = user.getId()+"-WhenCreateEvent";
+        String body =
+                "{" +
+                        "\"to\":" +
+                        "\"/topics/"+topic+"\"" +
+                        "," +
+                        "\"data\":" +
+                        "{" +
+                        "\"eventID\" : \"" +event.getId()+"\""+
+                        "\"userID\" : \"" +event.getUserID()+"\""+
+                        "}," +
+                        "\"notification\":" +
+                        "{" +
+                        "\"title\" : \""+title+"\"," +
+                        "\"text\" : \""+message+"\"" +
+                        "\"click_action\" : \"NOVO_EVENTO\""+
+                        "}" +
+                        "}";
+
+        SendNotification(context,body.getBytes());
+
+    }
+
+    public void SendNotification(Context context, final byte[] body)
     {
         String URL = "https://fcm.googleapis.com/fcm/send";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,URL, new Response.Listener<String>()
         {
-
             @Override
             public void onResponse(String response) {
 
@@ -44,25 +70,7 @@ public class NotificationSender {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                String body =
-                        "{" +
-                            "\"to\":" +
-                                "\"/topics/"+topic+"\"" +
-                            "," +
-                            "\"data\":" +
-                            "{" +
-                                "\"eventID\" : \"" +event.getId()+"\""+
-                                "\"userID\" : \"" +event.getUserID()+"\""+
-                            "}," +
-                            "\"notification\":" +
-                            "{" +
-                                "\"title\" : \""+title+"\"," +
-                                "\"text\" : \""+message+"\"" +
-                                "\"click_action\" : \"EVENTO\""+
-                            "}" +
-                        "}";
-
-                return body.getBytes();
+                return body;
             }
         };
 

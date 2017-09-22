@@ -272,13 +272,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progress.dismiss();
-                            new NotificationSender().SendNotification(
-                                    NovoEventoActivity.this,
-                                    usuario.getNome()+" criou um novo evento",
-                                    evento.getTitulo()+" dia "+evento.getDataInicio()+" as "+ evento.getHoraInicio(),
-                                    usuario.getId()+"-WhenCreateEvent",
-                                    evento
-                            );
+                            new NotificationSender().SendNewEventNotification(NovoEventoActivity.this,evento,usuario);
                             setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
                             finish();
                         }

@@ -51,7 +51,7 @@
 
         <activity android:name=".LoadingActivity">
             <intent-filter>
-                <action android:name="EVENTO"></action>
+                <action android:name="NOVO_EVENTO"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
