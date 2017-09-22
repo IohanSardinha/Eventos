@@ -37,11 +37,11 @@
             android:name=".ResultadoPesquisaActivity"
             android:label="@string/title_activity_resultado_pesquisa"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".confirmarPresentesActivity"/>
+        <activity android:name=".confirmarPresentesActivity" />
 
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -49,6 +49,12 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <activity android:name=".LoadingActivity">
+            <intent-filter>
+                <action android:name="EVENTO"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

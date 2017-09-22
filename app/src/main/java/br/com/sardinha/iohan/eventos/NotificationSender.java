@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class NotificationSender {
 
-    public void SendNotification(Context context, final String title, final String message, final String topic)
+    public void SendNotification(Context context, final String title, final String message, final String topic,final Evento event)
     {
         String URL = "https://fcm.googleapis.com/fcm/send";
 
@@ -51,12 +51,14 @@ public class NotificationSender {
                             "," +
                             "\"data\":" +
                             "{" +
-                                "\"extra_information\" : \"Informacao extra\"" +
+                                "\"eventID\" : \"" +event.getId()+"\""+
+                                "\"userID\" : \"" +event.getUserID()+"\""+
                             "}," +
                             "\"notification\":" +
                             "{" +
                                 "\"title\" : \""+title+"\"," +
                                 "\"text\" : \""+message+"\"" +
+                                "\"click_action\" : \"EVENTO\""+
                             "}" +
                         "}";
 

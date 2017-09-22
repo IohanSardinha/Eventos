@@ -276,7 +276,8 @@ public class NovoEventoActivity extends AppCompatActivity {
                                     NovoEventoActivity.this,
                                     usuario.getNome()+" criou um novo evento",
                                     evento.getTitulo()+" dia "+evento.getDataInicio()+" as "+ evento.getHoraInicio(),
-                                    usuario.getId()+"-WhenCreateEvent"
+                                    usuario.getId()+"-WhenCreateEvent",
+                                    evento
                             );
                             setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
                             finish();

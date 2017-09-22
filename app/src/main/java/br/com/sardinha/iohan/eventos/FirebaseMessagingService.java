@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONObject;
+
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     private static final String TAG = "FirebaseMessagingServic";
 
@@ -19,21 +21,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
-        }
+        if(remoteMessage.getNotification() != null && remoteMessage.getData().size() > 0)
+        {
+            String title = remoteMessage.getNotification().getTitle();
+            String message = remoteMessage.getNotification().getBody();
+            String click_action = remoteMessage.getNotification().getClickAction();
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            String title = remoteMessage.getNotification().getTitle(); //get title
-            String message = remoteMessage.getNotification().getBody(); //get message
-
-            Log.d(TAG, "Message Notification Title: " + title);
-            Log.d(TAG, "Message Notification Body: " + message);
-
-            sendNotification(title, message);
+            try
+            {
+                JSONObject data = new JSONObject(remoteMessage.getData());
+                String eventID = data.getString("eventID");
+                String userID = data.getString("userID");
+                sendNotification(title,message,click_action,eventID,userID);
+            }
+            catch (Exception ex)
+            {
+                sendNotification(title,message,"ERROR","","");
+            }
         }
     }
 
@@ -42,11 +47,20 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     }
 
-    private void sendNotification(String title,String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(String title,String messageBody,String clickAction,String eventID,String userID) {
+        Intent intent;
+
+        if(clickAction.equals("EVENTO")){
+            intent = new Intent(this,LoadingActivity.class);
+            intent.putExtra("eventID",eventID);
+            intent.putExtra("userID",userID);
+        }
+        else {
+            intent = new Intent(this,MainActivity.class);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0 /* Request code*/,intent,PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)

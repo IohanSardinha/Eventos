@@ -91,52 +91,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
         this.setTitle(evento.getTitulo());
 
-        final Button participate = (Button)findViewById(R.id.participar_evento_detalhes);
-        if(evento.getUserID().equals(user.getId()))
-        {
-            participate.setVisibility(View.GONE);
-        }
-        else
-        {
-            final DatabaseReference userParticipating = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(evento.getId()).child(user.getId());
-            final DatabaseReference eventsParticipating = FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getId()).child(evento.getId());
-            userParticipating.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.getValue(Usuario.class) == null)
-                    {
-                        participate.setText("Participar");
-                        participate.setBackgroundResource(R.color.button);
-                        participate.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //eventsParticipating.child(evento.getId()).setValue(evento);
-                                userParticipating.child(user.getId()).setValue(user);
-                            }
-                        });
-                    }
-                    else
-                    {
-                        participate.setText("Participando");
-                        participate.setBackgroundResource(R.color.colorPrimary);
-                        participate.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //eventsParticipating.child(evento.getId()).removeValue();
-                                userParticipating.child(user.getId()).removeValue();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
-
         if(evento.getDataInicio().equals(evento.getDataEncerramento()))
         {
             ((TextView)findViewById(R.id.data_detalhes)).setText(getString(R.string.dia)+" "+evento.getDataInicio() + " " + getString(R.string.de) + " " + evento.getHoraInicio() + " " + getString(R.string.as) + " " + evento.getHoraEncerramento());
@@ -174,6 +128,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                users.clear();
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     users.add(ds.getValue(Usuario.class));
@@ -186,6 +141,59 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
             }
         });
+
+        final Button participate = (Button)findViewById(R.id.participar_evento_detalhes);
+        if(evento.getUserID().equals(user.getId()))
+        {
+            participate.setVisibility(View.GONE);
+        }
+        else
+        {
+            final DatabaseReference userParticipating = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(evento.getId());
+            final DatabaseReference eventsParticipating = FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getId()).child(evento.getId());
+            userParticipating.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.hasChild(user.getId()) && (evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1))
+                    {
+                        participate.setText("Participar");
+                        participate.setBackgroundResource(R.color.button);
+                        participate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                eventsParticipating.setValue(evento);
+                                userParticipating.child(user.getId()).setValue(user);
+                            }
+                        });
+                    }
+                    else if(!dataSnapshot.hasChild(user.getId()) && evento.getLimite()-dataSnapshot.getChildrenCount() <= 0 && evento.getLimite() != -1)
+                    {
+                        participate.setText("Lotado");
+                        participate.setBackgroundResource(R.color.button);
+                        participate.setOnClickListener(null);
+                    }
+                    else
+                    {
+                        participate.setText("Participando");
+                        participate.setBackgroundResource(R.color.colorPrimary);
+                        participate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                eventsParticipating.removeValue();
+                                userParticipating.child(user.getId()).removeValue();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
     }
 
     @Override
