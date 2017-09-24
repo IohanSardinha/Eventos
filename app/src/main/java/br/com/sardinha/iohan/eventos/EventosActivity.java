@@ -198,7 +198,9 @@ public class EventosActivity extends AppCompatActivity {
         if(list.size() <= 0)
         {
             noEventToShow.setVisibility(View.VISIBLE);
+            return;
         }
+        noEventToShow.setVisibility(View.GONE);
     }
 
     @Override
