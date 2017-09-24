@@ -52,7 +52,7 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
         {
             Toast.makeText(this, "Senhas não batem", Toast.LENGTH_SHORT).show();
         }
-        else if(image != null) {
+        else if(true) {
             progress = ProgressDialog.show(this,"","Registrando",true);
             final StorageReference reference = FirebaseStorage.getInstance().getReference("Users");
             auth.createUserWithEmailAndPassword(email,senha).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -85,6 +85,10 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
                 }
             });
 
+        }
+        else
+        {
+            Toast.makeText(this, "Insira uma foto", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,7 @@ public class EventosActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private ProgressBar progress;
+    private TextView noEventToShow;
 
     private FirebaseDatabase database;
     private FirebaseAuth auth;
@@ -49,7 +52,7 @@ public class EventosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_eventos);
         progress = (ProgressBar)findViewById(R.id.progressBar2);
         progress.setVisibility(View.VISIBLE);
-
+        noEventToShow = (TextView)findViewById(R.id.nenhum_evento);
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         try
@@ -192,6 +195,10 @@ public class EventosActivity extends AppCompatActivity {
         SystemClock.sleep(250);
         recyclerView.setAdapter(new ListaEventosAdapter(list,this));
         progress.setVisibility(View.GONE);
+        if(list.size() <= 0)
+        {
+            noEventToShow.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
