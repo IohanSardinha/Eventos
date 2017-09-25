@@ -27,7 +27,6 @@ public class confirmarPresentesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<Usuario> list = new ArrayList<>();
     private Evento event;
-    private DatabaseReference usersReference;
     private DatabaseReference eventsReference;
 
     @Override
@@ -44,8 +43,8 @@ public class confirmarPresentesActivity extends AppCompatActivity {
         event = (Evento)intent.getSerializableExtra("event");
         eventsReference = FirebaseDatabase.getInstance().getReference("Events").child(event.getUserID()).child(event.getId());
         ((TextView)findViewById(R.id.confirmar_presentes_titulo)).setText("Confirme os presentes em "+event.getTitulo());
-        usersReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(event.getId());
-        usersReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(event.getId());
+         usersReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren())

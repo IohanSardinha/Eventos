@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Eventos</string>
     <string name="evento">Evento</string>
+    <string name="eventos">Eventos</string>
     <string name="novo_evento">Novo evento</string>
     <string name="titulo_criacao">Título do seu evento</string>
     <string name="data_criacao">Data do seu evento</string>
@@ -12,6 +13,30 @@
     <string name="criar">Criar</string>
     <string name="dia">Dia</string>
     <string name="salvar">Salvar</string>
+    <string name="participarao">Participarão</string>
+    <string name="participar">participar</string>
+    <string name="confirmar_presentes">Confirmar presentes em </string>
+    <string name="nenhum_evento_a_mostrar">Nehum evento a ser mostrado... Crie um ou sigua seus amigos!</string>
+    <string name="ninguem_confirmou_ainda">Ninguém confirmou presença neste evento ainda, seja o primeiro!</string>
+    <string name="senha">Senha</string>
+    <string name="confirmar_senha">Confirmar senha</string>
+    <string name="entrar">Entrar</string>
+    <string name="criar_conta">Nova conta</string>
+    <string name="registrar">Registrar</string>
+    <string name="endereco">Endereço</string>
+    <string name="inicio">Início</string>
+    <string name="fim">Fim*</string>
+    <string name="dataVazia">00/00/0000</string>
+    <string name="opcional">*Opcional</string>
+    <string name="nome">Nome</string>
+    <string name="seguir">Seguir</string>
+    <string name="indice_de_presenca">Presenca : </string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="procurar">Procurar</string>
+    <string name="perfil">Perfil</string>
+    <string name="sair">Sair</string>
+
     <string-array name="tipos_de_eventos">
         <item>Tipo</item>
         <item>Aniversário</item>

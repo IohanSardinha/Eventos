@@ -13,7 +13,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:text="Criar conta"
+        android:text="@string/criar_conta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView13"
@@ -29,7 +29,7 @@
         android:onClick="selecionarFotoPerfil"/>
 
     <TextView
-        android:text="Nome"
+        android:text="@string/nome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -56,7 +56,7 @@
         android:id="@+id/email_registro" />
 
     <TextView
-        android:text="Senha"
+        android:text="@string/senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView11" />
@@ -69,7 +69,7 @@
         android:id="@+id/senha_registro" />
 
     <TextView
-        android:text="Confirmar senha"
+        android:text="@string/confirmar_senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView14" />
@@ -82,7 +82,7 @@
         android:id="@+id/confirmar_senha_registro" />
 
     <Button
-        android:text="Registrar"
+        android:text="@string/registrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

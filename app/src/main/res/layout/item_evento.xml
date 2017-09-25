@@ -55,7 +55,7 @@
         android:textAllCaps="false" />
 
     <Button
-        android:text="Participar"
+        android:text="@string/participar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/participar_item_evento"

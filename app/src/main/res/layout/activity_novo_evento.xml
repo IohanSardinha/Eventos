@@ -79,10 +79,10 @@
                 android:ems="10"
                 android:layout_below="@id/tipo_de_evento_criacao"
                 android:id="@+id/endereco_cricao"
-                android:hint="Endereço" />
+                android:hint="@string/endereco" />
 
             <TextView
-                android:text="Inicio: "
+                android:text="@string/inicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView3"
@@ -93,7 +93,7 @@
                 android:layout_marginTop="16sp"/>
 
             <TextView
-                android:text="Fim*: "
+                android:text="@string/fim"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView6"
@@ -108,7 +108,7 @@
                 android:inputType="date"
                 android:layout_width="110sp"
                 android:id="@+id/data_encerramento_criacao"
-                android:hint="00/00/0000"
+                android:hint="@string/dataVazia"
                 android:onClick="selecionarDataEncerramentoClick"
                 android:layout_below="@id/textView3"
                 android:layout_toRightOf="@id/textView6"
@@ -120,7 +120,7 @@
                 android:inputType="date"
                 android:layout_width="110sp"
                 android:id="@+id/data_inicio_criacao"
-                android:hint="00/00/0000"
+                android:hint="@string/dataVazia"
                 android:onClick="selecionarDataInicioClick"
                 android:layout_below="@id/tipo_de_evento_criacao"
                 android:layout_toRightOf="@id/textView3"
@@ -203,7 +203,7 @@
                 android:textAllCaps="false" />
 
             <TextView
-                android:text="*Opcional"
+                android:text="@string/opcional"
                 android:layout_below="@id/limite_de_convidados_criacao"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"

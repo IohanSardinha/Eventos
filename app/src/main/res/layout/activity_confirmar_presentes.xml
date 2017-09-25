@@ -14,7 +14,7 @@
         android:id="@+id/confirmar_presentes_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirme os presentes em ......"
+        android:text="@string/confirmar_presentes"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textSize="18sp" />

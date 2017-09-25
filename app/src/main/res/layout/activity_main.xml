@@ -31,7 +31,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="Senha"
+        android:text="@string/senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView8"
@@ -53,7 +53,7 @@
 
 
     <TextView
-        android:text="Login"
+        android:text="@string/entrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView9"
@@ -63,7 +63,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Login"
+        android:text="@string/entrar"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="29dp"
@@ -84,7 +84,7 @@
         android:layout_marginStart="28dp" />
 
     <Button
-        android:text="Criar conta"
+        android:text="@string/criar_conta"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/button2"

@@ -30,7 +30,7 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:text="Eventos"
+                android:text="@string/eventos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
@@ -50,7 +50,7 @@
                 android:id="@+id/eventos_usuario_list" />
 
             <Button
-                android:text="Seguir"
+                android:text="@string/seguir"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/seguir_usuario_descricao"
@@ -74,7 +74,7 @@
                 android:text="Presença: 100%" />
 
             <TextView
-                android:text="NOME"
+                android:text="@string/nome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/nome_usuario_descricao"

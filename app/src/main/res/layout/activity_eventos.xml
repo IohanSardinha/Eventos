@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
-        android:text="Nehum evento a ser mostrado... Crie um ou sigua seus amigos!"
+        android:text="@string/nenhum_evento_a_mostrar"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:visibility="gone" />
