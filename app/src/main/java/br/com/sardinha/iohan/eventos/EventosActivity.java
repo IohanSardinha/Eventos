@@ -124,6 +124,23 @@ public class EventosActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         eventsReference.child(e.getId()).removeValue();
+                                        final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(e.getId());
+                                        final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
+                                        usersParticipatingReference.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                for(DataSnapshot ds : dataSnapshot.getChildren())
+                                                {
+                                                    eventsParticipatingReference.child(ds.getKey()).removeValue();
+                                                }
+                                                usersParticipatingReference.removeValue();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
                                         list.clear();
                                     }
                                 })
@@ -237,6 +254,22 @@ public class EventosActivity extends AppCompatActivity {
         {
             case R.id.signout:
                 auth.signOut();
+                DatabaseReference notificationGroupReference = database.getReference("NotificationGroups").child(userID);
+                notificationGroupReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+                        for(DataSnapshot ds:dataSnapshot.getChildren())
+                        {
+                            firebaseMessaging.unsubscribeFromTopic(ds.getKey()+"-WhenCreateEvent");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 finish();
                 startActivity(new Intent(this,MainActivity.class));
                 return true;

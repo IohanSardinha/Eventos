@@ -64,7 +64,40 @@ public class UsuarioActivity extends AppCompatActivity {
         else
         {
             final ImageButton notificateButton = (ImageButton)findViewById(R.id.notification_button);
-            final DatabaseReference notificateReference = database.getReference("NotificateUsers").child(user.getId());
+            final DatabaseReference notificationGroups = database.getReference("NotificationGroups").child(UID);
+            notificationGroups.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild(user.getId()))
+                    {
+                        notificateButton.setBackgroundResource(R.color.colorPrimary);
+                        notificateButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                notificationGroups.child(user.getId()).removeValue();
+                                FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getId()+"-WhenCreateEvent");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        notificateButton.setBackgroundResource(R.color.button);
+                        notificateButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                notificationGroups.child(user.getId()).setValue(user.getId());
+                                FirebaseMessaging.getInstance().subscribeToTopic(user.getId()+"-WhenCreateEvent");
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            /*final DatabaseReference notificateReference = database.getReference("NotificateUsers").child(user.getId());
             notificateReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -97,7 +130,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
+            });*/
 
             final DatabaseReference authFollowers;
             authFollowers = database.getReference("Followings").child(UID);

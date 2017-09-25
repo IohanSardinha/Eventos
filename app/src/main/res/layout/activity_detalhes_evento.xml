@@ -79,14 +79,14 @@
 
 
             <TextView
-                android:text="Participarão"
+                android:id="@+id/Perticiparao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/descricao_detalhes"
                 android:layout_alignLeft="@+id/descricao_detalhes"
                 android:layout_alignStart="@+id/descricao_detalhes"
-                android:id="@+id/Perticiparao"
+                android:layout_below="@+id/descricao_detalhes"
                 android:layout_marginTop="16dp"
+                android:text="Participarão"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
             <android.support.v7.widget.RecyclerView
@@ -118,6 +118,17 @@
                 android:layout_alignParentRight="true"
                 android:background="@color/button"
                 android:text="Participar" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Perticiparao"
+                android:layout_marginTop="16dp"
+
+                android:text="Ninguem confirmou presença neste evento ainda, seja o primeiro!"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat" />
 
         </RelativeLayout>
     </ScrollView>
