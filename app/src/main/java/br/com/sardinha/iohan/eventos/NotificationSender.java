@@ -17,8 +17,8 @@ public class NotificationSender {
 
     public void SendNewEventNotification(Context context, Evento event, Usuario user)
     {
-        String message = user.getNome()+" criou um novo evento";
-        String title = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
+        String title = user.getNome()+" criou um novo evento";
+        String message = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
         String topic = user.getId()+"-WhenCreateEvent";
         String body =
                 "{" +
