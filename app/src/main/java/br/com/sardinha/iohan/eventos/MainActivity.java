@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null)
                 {
                     startActivity(new Intent(MainActivity.this,EventosActivity.class));
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+                            firebaseMessaging.subscribeToTopic(user.getUid());
                             for(DataSnapshot ds:dataSnapshot.getChildren())
                             {
                                 firebaseMessaging.subscribeToTopic(ds.getKey()+"-WhenCreateEvent");
