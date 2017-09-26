@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Calendar;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -272,7 +274,23 @@ public class NovoEventoActivity extends AppCompatActivity {
                             progress.dismiss();
                             new NotificationSender().SendNewEventNotification(NovoEventoActivity.this,evento,usuario);
                             setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
-                            finish();
+                            new AlertDialog.Builder(NovoEventoActivity.this)
+                                    .setTitle("Convidar amigos?")
+                                    .setMessage("Gostaria de convidar amigos para o evento agora?")
+                                    .setCancelable(false)
+                                    .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    })
+                                    .setPositiveButton("Convidar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    });
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
