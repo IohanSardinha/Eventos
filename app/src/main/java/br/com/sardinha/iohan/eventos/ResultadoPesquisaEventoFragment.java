@@ -61,7 +61,6 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for(DataSnapshot dss: dataSnapshot.getChildren())
                             {
-                                System.out.println(dss.getValue(Evento.class).getTitulo());
                                 list.add(dss.getValue(Evento.class));
                             }
                             recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));

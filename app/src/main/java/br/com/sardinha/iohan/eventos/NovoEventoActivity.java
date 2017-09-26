@@ -98,7 +98,6 @@ public class NovoEventoActivity extends AppCompatActivity {
                 ID = evento.getId();
                 Picasso.with(this).load(evento.getImagem()).into(((ImageView)findViewById(R.id.imagem_criacao)));
                 image = Uri.parse(evento.getImagem());
-                System.out.println(image);
                 ((EditText) findViewById(R.id.titulo_Criacao)).setText(evento.getTitulo());
                 ((EditText)findViewById(R.id.endereco_cricao)).setText(evento.getEndereco());
                 ((EditText) findViewById(R.id.data_inicio_criacao)).setText(evento.getDataInicio());

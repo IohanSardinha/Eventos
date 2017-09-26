@@ -79,7 +79,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable) {
-                    System.out.println("ERRO");
+
                 }
 
                 @Override

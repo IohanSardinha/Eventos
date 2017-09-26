@@ -113,4 +113,8 @@ public class MainActivity extends AppCompatActivity {
     public void novoUsuario(View view) {
         startActivity(new Intent(MainActivity.this,NovoUsuarioAcivity.class));
     }
+
+    public void redefinirSenhaClick(View view) {
+        startActivity(new Intent(MainActivity.this,TrocarSenhaActivity.class));
+    }
 }

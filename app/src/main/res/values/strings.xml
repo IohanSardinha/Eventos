@@ -36,6 +36,11 @@
     <string name="procurar">Procurar</string>
     <string name="perfil">Perfil</string>
     <string name="sair">Sair</string>
+    <string name="enviar">Enviar</string>
+    <string name="redefinir_senha">Redefinir senha</string>
+    <string name="insira_email">Insira seu email</string>
+    <string name="email_invalido">Email não registrado</string>
+    <string name="esqueci_senha">Esqueci minha senha</string>
 
     <string-array name="tipos_de_eventos">
         <item>Tipo</item>

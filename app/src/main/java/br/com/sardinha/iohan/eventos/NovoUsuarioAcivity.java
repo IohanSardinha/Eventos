@@ -81,6 +81,7 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
                     else
                     {
                         Toast.makeText(NovoUsuarioAcivity.this, "Não foi possivel registrar usuário", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
                     }
                 }
             });
