@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null)
                 {
-                    //Toast.makeText(MainActivity.this, "Logado com: "+user.getEmail(), Toast.LENGTH_SHORT).show();
-                    progress.setVisibility(View.GONE);
                     startActivity(new Intent(MainActivity.this,EventosActivity.class));
-                    ((EditText)findViewById(R.id.email)).setText("");
-                    ((EditText)findViewById(R.id.password)).setText("");
                     DatabaseReference notificationGroupReference = FirebaseDatabase.getInstance().getReference("NotificationGroups").child(user.getUid());
                     notificationGroupReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -62,10 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     });
-                }
-                else
-                {
-                    //Toast.makeText(MainActivity.this, "Saiu", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -93,7 +88,21 @@ public class MainActivity extends AppCompatActivity {
         String password = ((EditText)findViewById(R.id.password)).getText().toString();
         if(!email.isEmpty() && !password.isEmpty())
         {
-            auth.signInWithEmailAndPassword(email,password);
+            auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()) {
+                        progress.setVisibility(View.GONE);
+                        ((EditText) findViewById(R.id.email)).setText("");
+                        ((EditText) findViewById(R.id.password)).setText("");
+                    }
+                    else
+                    {
+                        progress.setVisibility(View.GONE);
+                        Toast.makeText(MainActivity.this, "Email ou senha não encontrados", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
         else
         {
