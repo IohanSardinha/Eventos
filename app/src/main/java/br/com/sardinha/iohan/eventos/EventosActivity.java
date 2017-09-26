@@ -259,6 +259,7 @@ public class EventosActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+                        firebaseMessaging.unsubscribeFromTopic(userID);
                         for(DataSnapshot ds:dataSnapshot.getChildren())
                         {
                             firebaseMessaging.unsubscribeFromTopic(ds.getKey()+"-WhenCreateEvent");
