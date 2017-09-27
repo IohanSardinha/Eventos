@@ -96,41 +96,6 @@ public class UsuarioActivity extends AppCompatActivity {
 
                 }
             });
-            /*final DatabaseReference notificateReference = database.getReference("NotificateUsers").child(user.getId());
-            notificateReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.hasChild(UID))
-                    {
-                        notificateButton.setBackgroundResource(R.color.colorPrimary);
-                        notificateButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                notificateReference.child(UID).removeValue();
-                                FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getId()+"-WhenCreateEvent");
-                            }
-                        });
-                    }
-                    else
-                    {
-                        notificateButton.setBackgroundResource(R.color.button);
-                        notificateButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                notificateReference.child(UID).setValue(UID);
-                                FirebaseMessaging.getInstance().subscribeToTopic(user.getId()+"-WhenCreateEvent");
-                            }
-                        });
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });*/
-
             final DatabaseReference authFollowers;
             authFollowers = database.getReference("Followings").child(UID);
             authFollowers.addValueEventListener(new ValueEventListener() {
@@ -154,7 +119,7 @@ public class UsuarioActivity extends AppCompatActivity {
                         followButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                authFollowers.child(user.getId()).setValue(user.getId());
+                                authFollowers.child(user.getId()).setValue(user);
                             }
                         });
                     }
@@ -181,7 +146,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     list.add(ds.getValue(Evento.class));
 
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this));
+                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
             }
 
             @Override
@@ -199,7 +164,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     list.add(ds.getValue(Evento.class));
 
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this));
+                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
             }
 
             @Override
@@ -215,7 +180,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 {
                     list.add(ds.getValue(Evento.class));
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this));
+                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
             }
 
             @Override

@@ -23,8 +23,8 @@ import android.widget.TextView;
 public class ResultadoPesquisaActivity extends AppCompatActivity {
 
     private FragmentAdapter adapter;
-    ViewPager viewPager;
-    String query;
+    private ViewPager viewPager;
+    private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

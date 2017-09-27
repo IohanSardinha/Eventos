@@ -15,6 +15,32 @@ import java.util.Map;
 
 public class NotificationSender {
 
+    public void SendInvitationNotification(Context context,Evento event, Usuario invatedUser, Usuario createrUser)
+    {
+        String title = createrUser.getNome()+" te convidou para um evento";
+        String message = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
+        String topic = invatedUser.getId();
+        String body =
+                "{" +
+                        "\"to\":" +
+                        "\"/topics/"+topic+"\"" +
+                        "," +
+                        "\"data\":" +
+                        "{" +
+                        "\"eventID\" : \"" +event.getId()+"\""+
+                        "\"userID\" : \"" +event.getUserID()+"\""+
+                        "}," +
+                        "\"notification\":" +
+                        "{" +
+                        "\"title\" : \""+title+"\"," +
+                        "\"text\" : \""+message+"\"" +
+                        "\"click_action\" : \"NOVO_EVENTO\""+
+                        "}" +
+                        "}";
+
+        SendNotification(context,body.getBytes());
+    }
+
     public void SendNewEventNotification(Context context, Evento event, Usuario user)
     {
         String title = user.getNome()+" criou um novo evento";
@@ -42,7 +68,7 @@ public class NotificationSender {
 
     }
 
-    public void SendNotification(Context context, final byte[] body)
+    private void SendNotification(Context context, final byte[] body)
     {
         String URL = "https://fcm.googleapis.com/fcm/send";
 

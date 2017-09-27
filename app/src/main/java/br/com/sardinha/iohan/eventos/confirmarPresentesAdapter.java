@@ -1,6 +1,5 @@
 package br.com.sardinha.iohan.eventos;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,7 +36,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
     }
 
     @Override
-    public confirmarPresentesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType)
+    public confirmarPresentesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_confirmacao_usuario,parent,false));
     }

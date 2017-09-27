@@ -39,8 +39,8 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 
 public class DetalhesEventoActivity extends AppCompatActivity {
-    Evento evento;
-    Usuario user;
+    private Evento evento;
+    private Usuario user;
     private FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +133,14 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 {
                     users.add(ds.getValue(Usuario.class));
                     recyclerView.setAdapter(new ListaUsuariosAdapter(users,DetalhesEventoActivity.this));
+                }
+                if(users.size() <= 0)
+                {
+                    findViewById(R.id.ninguem_confirmou_detalhes).setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    findViewById(R.id.ninguem_confirmou_detalhes).setVisibility(View.GONE);
                 }
             }
 

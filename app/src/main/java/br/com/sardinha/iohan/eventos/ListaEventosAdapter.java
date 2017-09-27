@@ -30,9 +30,17 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     DatabaseReference eventsReference,userReference, userParticipatingReference, eventsParticipatingReference;
     String uID;
     double dateNow;
+    Usuario currentUser;
+    public ListaEventosAdapter(ArrayList<Evento> list, Context context,Usuario currentUser) {
+        this.list = list;
+        this.context = context;
+        this.currentUser = currentUser;
+    }
+
     public ListaEventosAdapter(ArrayList<Evento> list, Context context) {
         this.list = list;
         this.context = context;
+        currentUser = null;
     }
 
     @Override
@@ -45,7 +53,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         final Evento evento = list.get(position);
         if (context instanceof UsuarioActivity)
         {
-            if(evento.getUserID().equals(uID))
+            if(evento.getUserID().equals(currentUser.getId()))
             {
                 userReference.child(uID).addValueEventListener(new ValueEventListener() {
                     @Override

@@ -287,9 +287,11 @@ public class NovoEventoActivity extends AppCompatActivity {
                                     .setPositiveButton("Convidar", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
+                                            startActivity(new Intent(NovoEventoActivity.this,ConvidadosActivity.class));
                                             finish();
                                         }
-                                    });
+                                    })
+                                    .show();
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {

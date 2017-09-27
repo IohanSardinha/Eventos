@@ -49,17 +49,17 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
             holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    database.child(list.get(position).getId()).setValue(list.get(position).getId());
+                    database.child(list.get(position).getId()).setValue(list.get(position));
                     holder.followButton.setText("Seguindo");
                     holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
                     notifyDataSetChanged();
 
                 }
             });
-            database.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+            database.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue(String.class) != null) {
+                    if (dataSnapshot.hasChild(list.get(position).getId())) {
                         holder.followButton.setText("Seguindo");
                         holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
                         holder.followButton.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,7 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
                                 holder.followButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        database.child(list.get(position).getId()).setValue(list.get(position).getId());
+                                        database.child(list.get(position).getId()).setValue(list.get(position));
                                         holder.followButton.setText("Seguindo");
                                         holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
                                         notifyDataSetChanged();
