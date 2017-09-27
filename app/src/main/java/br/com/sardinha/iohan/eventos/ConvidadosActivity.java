@@ -10,6 +10,7 @@ import android.view.WindowManager;
 public class ConvidadosActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
+    private Evento evento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +18,7 @@ public class ConvidadosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_convidados);
 
         setTitle("Convidar");
+        evento = (Evento) getIntent().getSerializableExtra("evento");
 
         viewPager = (ViewPager)findViewById(R.id.container2);
         setupViewPager(viewPager);
@@ -29,7 +31,9 @@ public class ConvidadosActivity extends AppCompatActivity {
     {
         FragmentAdapter a = new FragmentAdapter(getSupportFragmentManager());
         ConvidadosFragment convidadosFragment = new ConvidadosFragment();
+        convidadosFragment.setEvento(evento);
         SeguidoresFragment seguidoresFragment = new SeguidoresFragment();
+        seguidoresFragment.setEvento(evento);
         a.addFragment(seguidoresFragment,"Seguidores");
         a.addFragment(convidadosFragment,"Convidados");
         viewPager.setAdapter(a);

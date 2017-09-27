@@ -23,8 +23,13 @@ public class SeguidoresFragment extends Fragment {
 
     private String uID;
     private ArrayList<Usuario> usersList;
-
     private RecyclerView recyclerView;
+    private Evento evento;
+
+    public void setEvento(Evento evento)
+    {
+        this.evento = evento;
+    }
 
     @Nullable
     @Override
@@ -37,16 +42,31 @@ public class SeguidoresFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        DatabaseReference followings = FirebaseDatabase.getInstance().getReference("Followings").child(uID);
-        followings.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference convidados = FirebaseDatabase.getInstance().getReference().child(evento.getId());
+        final DatabaseReference followings = FirebaseDatabase.getInstance().getReference("Followings").child(uID);
+
+        convidados.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                usersList.clear();
-                for(DataSnapshot ds: dataSnapshot.getChildren())
-                {
-                    usersList.add(ds.getValue(Usuario.class));
-                }
-                recyclerView.setAdapter(new ListaUsuariosAdapter(usersList,view.getContext()));
+            public void onDataChange(final DataSnapshot convidados) {
+                followings.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot followings) {
+                        usersList.clear();
+                        for(DataSnapshot user : followings.getChildren())
+                        {
+                            if(!convidados.hasChild(user.getKey()))
+                            {
+                                usersList.add(user.getValue(Usuario.class));
+                            }
+                        }
+                        recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(usersList,evento));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
