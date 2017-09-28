@@ -1,5 +1,6 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,15 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     private ArrayList<Usuario> list;
     private DatabaseReference invitationReference;
     private Evento evento;
+    private Usuario currentUser;
+    private Context context;
 
-    public ListaUsuariosConvidarAdapter(ArrayList<Usuario> list,Evento evento)
+    public ListaUsuariosConvidarAdapter( Context context,ArrayList<Usuario> list,Evento evento, Usuario currentUser)
     {
         this.list = list;
         this.evento = evento;
+        this.context = context;
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -37,10 +42,10 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.nome.setText(list.get(position).getNome());
-        invitationReference.addValueEventListener(new ValueEventListener() {
+        invitationReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(list.get(position).getId()))
+                if(dataSnapshot.getValue(Usuario.class) != null)
                 {
                     holder.convidarButton.setBackgroundResource(R.color.colorPrimary);
                     holder.convidarButton.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +62,7 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                         @Override
                         public void onClick(View v) {
                             invitationReference.child(list.get(position).getId()).setValue(list.get(position));
+                            new NotificationSender().SendInvitationNotification(context,evento,list.get(position),currentUser);
                         }
                     });
                 }

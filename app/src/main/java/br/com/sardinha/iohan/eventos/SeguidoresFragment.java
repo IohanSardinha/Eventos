@@ -21,10 +21,17 @@ import java.util.ArrayList;
 
 public class SeguidoresFragment extends Fragment {
 
-    private String uID;
+
+
+
     private ArrayList<Usuario> usersList;
     private RecyclerView recyclerView;
     private Evento evento;
+    private Usuario usuario;
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public void setEvento(Evento evento)
     {
@@ -35,15 +42,14 @@ public class SeguidoresFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.seguidores_fragment,container,false);
-        uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         usersList = new ArrayList<>();
 
         recyclerView = (RecyclerView)view.findViewById(R.id.lista_usuarios_convidar);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        final DatabaseReference convidados = FirebaseDatabase.getInstance().getReference().child(evento.getId());
-        final DatabaseReference followings = FirebaseDatabase.getInstance().getReference("Followings").child(uID);
+        final DatabaseReference convidados = FirebaseDatabase.getInstance().getReference("UsersInvited").child(evento.getId());
+        final DatabaseReference followings = FirebaseDatabase.getInstance().getReference("Followings").child(usuario.getId());
 
         convidados.addValueEventListener(new ValueEventListener() {
             @Override
@@ -59,7 +65,7 @@ public class SeguidoresFragment extends Fragment {
                                 usersList.add(user.getValue(Usuario.class));
                             }
                         }
-                        recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(usersList,evento));
+                        recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario));
                     }
 
                     @Override

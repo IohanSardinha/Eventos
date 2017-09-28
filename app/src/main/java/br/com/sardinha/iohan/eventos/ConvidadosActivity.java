@@ -1,9 +1,11 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -11,6 +13,7 @@ public class ConvidadosActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private Evento evento;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +21,9 @@ public class ConvidadosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_convidados);
 
         setTitle("Convidar");
-        evento = (Evento) getIntent().getSerializableExtra("evento");
+        Intent intent = getIntent();
+        evento = (Evento) intent.getSerializableExtra("evento");
+        usuario = (Usuario) intent.getSerializableExtra("usuario");
 
         viewPager = (ViewPager)findViewById(R.id.container2);
         setupViewPager(viewPager);
@@ -32,10 +37,16 @@ public class ConvidadosActivity extends AppCompatActivity {
         FragmentAdapter a = new FragmentAdapter(getSupportFragmentManager());
         ConvidadosFragment convidadosFragment = new ConvidadosFragment();
         convidadosFragment.setEvento(evento);
+        convidadosFragment.setUsuario(usuario);
         SeguidoresFragment seguidoresFragment = new SeguidoresFragment();
         seguidoresFragment.setEvento(evento);
+        seguidoresFragment.setUsuario(usuario);
         a.addFragment(seguidoresFragment,"Seguidores");
         a.addFragment(convidadosFragment,"Convidados");
         viewPager.setAdapter(a);
+    }
+
+    public void confirmarOnClick(View view) {
+        finish();
     }
 }

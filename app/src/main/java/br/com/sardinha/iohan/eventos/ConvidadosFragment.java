@@ -21,10 +21,14 @@ import java.util.ArrayList;
 
 public class ConvidadosFragment extends Fragment {
 
-    private String uID;
     private Evento evento;
     private ArrayList<Usuario> usersList;
     private RecyclerView recyclerView;
+    private Usuario usuario;
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public void setEvento(Evento evento)
     {
@@ -34,8 +38,7 @@ public class ConvidadosFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.convidados_fragment,container,false);
-        uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final View view = inflater.inflate(R.layout.convidados_fragment,container,false);
         usersList = new ArrayList<>();
 
         recyclerView = (RecyclerView)view.findViewById(R.id.list_usuarios_convidados);
@@ -51,7 +54,7 @@ public class ConvidadosFragment extends Fragment {
                 {
                     usersList.add(ds.getValue(Usuario.class));
                 }
-                recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(usersList,evento));
+                recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario));
             }
 
             @Override

@@ -289,6 +289,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             Intent intent = new Intent(NovoEventoActivity.this,ConvidadosActivity.class);
                                             intent.putExtra("evento",evento);
+                                            intent.putExtra("usuario",usuario);
                                             startActivity(intent);
                                             finish();
                                         }
