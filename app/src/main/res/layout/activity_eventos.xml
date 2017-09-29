@@ -30,17 +30,17 @@
         android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_event_note_black_24dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:id="@+id/imageButton"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:onClick="novoEvento"
         app:backgroundTint="@color/colorPrimary"
-        android:onClick="novoEvento"/>
+        app:fabSize="normal"
+        app:srcCompat="@drawable/calendar_plus" />
 
 </RelativeLayout>
