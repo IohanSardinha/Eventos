@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                 if(dataSnapshot.getValue(Usuario.class) != null)
                 {
                     holder.convidarButton.setBackgroundResource(R.color.colorPrimary);
+                    holder.convidarButton.setTextColor(Color.WHITE);
                     holder.convidarButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -58,6 +60,7 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                 else
                 {
                     holder.convidarButton.setBackgroundResource(R.color.button);
+                    holder.convidarButton.setTextColor(Color.BLACK);
                     holder.convidarButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

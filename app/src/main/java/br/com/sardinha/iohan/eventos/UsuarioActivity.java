@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,6 +70,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild(user.getId()))
                     {
+                        notificateButton.setColorFilter(Color.WHITE);
                         notificateButton.setBackgroundResource(R.color.colorPrimary);
                         notificateButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -80,6 +82,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        notificateButton.setColorFilter(Color.BLACK);
                         notificateButton.setBackgroundResource(R.color.button);
                         notificateButton.setOnClickListener(new View.OnClickListener() {
                             @Override

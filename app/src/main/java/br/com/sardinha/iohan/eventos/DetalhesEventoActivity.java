@@ -166,6 +166,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     {
                         participate.setText("Participar");
                         participate.setBackgroundResource(R.color.button);
+                        participate.setTextColor(Color.BLACK);
                         participate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -178,11 +179,13 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     {
                         participate.setText("Lotado");
                         participate.setBackgroundResource(R.color.button);
+                        participate.setTextColor(Color.BLACK);
                         participate.setOnClickListener(null);
                     }
                     else
                     {
                         participate.setText("Participando");
+                        participate.setTextColor(Color.WHITE);
                         participate.setBackgroundResource(R.color.colorPrimary);
                         participate.setOnClickListener(new View.OnClickListener() {
                             @Override

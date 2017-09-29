@@ -3,6 +3,7 @@ package br.com.sardinha.iohan.eventos;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -127,6 +128,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                 {
                     holder.participate.setText("Participando");
                     holder.participate.setBackgroundResource(R.color.colorPrimary);
+                    holder.participate.setTextColor(Color.WHITE);
                     holder.participate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -148,6 +150,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                         {
                             holder.participate.setBackgroundResource(R.color.button);
                             holder.participate.setText("Participar");
+                            holder.participate.setTextColor(Color.BLACK);
                             holder.participate.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -170,6 +173,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                         else if(!dataSnapshot.hasChild(uID))
                         {
                             holder.participate.setBackgroundResource(R.color.button);
+                            holder.participate.setTextColor(Color.BLACK);
                             holder.participate.setText("Lotado");
                         }
                     }
