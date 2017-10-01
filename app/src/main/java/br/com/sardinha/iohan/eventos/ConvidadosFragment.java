@@ -25,6 +25,7 @@ public class ConvidadosFragment extends Fragment {
     private ArrayList<Usuario> usersList;
     private RecyclerView recyclerView;
     private Usuario usuario;
+    private ListaUsuariosConvidarAdapter adapter;
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
@@ -33,6 +34,20 @@ public class ConvidadosFragment extends Fragment {
     public void setEvento(Evento evento)
     {
         this.evento = evento;
+    }
+
+    public void filter(String query)
+    {
+        query = query.toLowerCase();
+        ArrayList<Usuario> newList = new ArrayList<>();
+        for(Usuario user : usersList)
+        {
+            if(user.getNomeLow().contains(query))
+            {
+                newList.add(user);
+            }
+        }
+        adapter.setFilter(newList);
     }
 
     @Nullable
@@ -54,7 +69,8 @@ public class ConvidadosFragment extends Fragment {
                 {
                     usersList.add(ds.getValue(Usuario.class));
                 }
-                recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario));
+                adapter = new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override

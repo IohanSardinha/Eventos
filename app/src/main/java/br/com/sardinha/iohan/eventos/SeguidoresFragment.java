@@ -21,9 +21,7 @@ import java.util.ArrayList;
 
 public class SeguidoresFragment extends Fragment {
 
-
-
-
+    private ListaUsuariosConvidarAdapter adapter;
     private ArrayList<Usuario> usersList;
     private RecyclerView recyclerView;
     private Evento evento;
@@ -36,6 +34,20 @@ public class SeguidoresFragment extends Fragment {
     public void setEvento(Evento evento)
     {
         this.evento = evento;
+    }
+
+    public void filter(String query)
+    {
+        query = query.toLowerCase();
+        ArrayList<Usuario> newList = new ArrayList<>();
+        for(Usuario user : usersList)
+        {
+            if(user.getNomeLow().contains(query))
+            {
+                newList.add(user);
+            }
+        }
+        adapter.setFilter(newList);
     }
 
     @Nullable
@@ -65,7 +77,8 @@ public class SeguidoresFragment extends Fragment {
                                 usersList.add(user.getValue(Usuario.class));
                             }
                         }
-                        recyclerView.setAdapter(new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario));
+                        adapter = new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario);
+                        recyclerView.setAdapter(adapter);
                     }
 
                     @Override

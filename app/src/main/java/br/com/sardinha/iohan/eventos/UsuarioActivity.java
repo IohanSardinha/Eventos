@@ -108,6 +108,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     {
                         followButton.setText("Seguindo");
                         followButton.setBackgroundResource(R.color.colorPrimary);
+                        followButton.setTextColor(Color.WHITE);
                         followButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -119,6 +120,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     {
                         followButton.setText("Seguir");
                         followButton.setBackgroundResource(R.color.button);
+                        followButton.setTextColor(Color.BLACK);
                         followButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

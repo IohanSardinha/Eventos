@@ -93,4 +93,11 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
             invitationReference = FirebaseDatabase.getInstance().getReference("UsersInvited").child(evento.getId());
         }
     }
+
+    public void setFilter(ArrayList<Usuario> newList)
+    {
+        list = new ArrayList<>();
+        list.addAll(newList);
+        notifyDataSetChanged();
+    }
 }

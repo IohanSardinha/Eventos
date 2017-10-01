@@ -1,19 +1,28 @@
 package br.com.sardinha.iohan.eventos;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class ConvidadosActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ConvidadosActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private ViewPager viewPager;
     private Evento evento;
     private Usuario usuario;
+
+    ConvidadosFragment convidadosFragment;
+    SeguidoresFragment seguidoresFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +44,10 @@ public class ConvidadosActivity extends AppCompatActivity {
     public void setupViewPager(ViewPager viewPager)
     {
         FragmentAdapter a = new FragmentAdapter(getSupportFragmentManager());
-        ConvidadosFragment convidadosFragment = new ConvidadosFragment();
+        convidadosFragment = new ConvidadosFragment();
         convidadosFragment.setEvento(evento);
         convidadosFragment.setUsuario(usuario);
-        SeguidoresFragment seguidoresFragment = new SeguidoresFragment();
+        seguidoresFragment = new SeguidoresFragment();
         seguidoresFragment.setEvento(evento);
         seguidoresFragment.setUsuario(usuario);
         a.addFragment(seguidoresFragment,"Seguidores");
@@ -46,7 +55,35 @@ public class ConvidadosActivity extends AppCompatActivity {
         viewPager.setAdapter(a);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_convidados,menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search_eventos).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
     public void confirmarOnClick(View view) {
         finish();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        seguidoresFragment.filter(newText);
+        convidadosFragment.filter(newText);
+        return true;
     }
 }
