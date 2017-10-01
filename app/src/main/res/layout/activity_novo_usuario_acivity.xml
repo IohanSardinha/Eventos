@@ -9,7 +9,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="br.com.sardinha.iohan.eventos.NovoUsuarioAcivity"
+    tools:context="br.com.sardinha.iohan.eventos.Activity.NovoUsuarioAcivity"
     android:orientation="vertical">
 
     <TextView

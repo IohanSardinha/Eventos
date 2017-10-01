@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import br.com.sardinha.iohan.eventos.R;
 
 public class TrocarSenhaActivity extends AppCompatActivity {
 

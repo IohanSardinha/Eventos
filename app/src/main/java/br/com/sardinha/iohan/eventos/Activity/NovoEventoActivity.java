@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +42,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.NotificationSender;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.R;
 
 public class NovoEventoActivity extends AppCompatActivity {
 

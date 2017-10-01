@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,6 +23,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import br.com.sardinha.iohan.eventos.Activity.DetalhesEventoActivity;
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.R;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;
 
 
 public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {

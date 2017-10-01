@@ -1,10 +1,9 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -21,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import br.com.sardinha.iohan.eventos.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Class;
 
 import android.content.Context;
 

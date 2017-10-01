@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import br.com.sardinha.iohan.eventos.Adapter.confirmarPresentesAdapter;
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.R;
 
 public class confirmarPresentesActivity extends AppCompatActivity {
 

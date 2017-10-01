@@ -5,7 +5,7 @@
     android:id="@+id/activity_eventos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.sardinha.iohan.eventos.EventosActivity">
+    tools:context="br.com.sardinha.iohan.eventos.Activity.EventosActivity">
 
     <TextView
         android:id="@+id/nenhum_evento"

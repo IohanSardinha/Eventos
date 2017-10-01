@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+
+import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.R;
 
 public class UsuarioActivity extends AppCompatActivity {
 

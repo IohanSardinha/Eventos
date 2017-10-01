@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    tools:context="br.com.sardinha.iohan.eventos.TrocarSenhaActivity">
+    tools:context="br.com.sardinha.iohan.eventos.Activity.TrocarSenhaActivity">
 
     <EditText
         android:id="@+id/email_redefinir"

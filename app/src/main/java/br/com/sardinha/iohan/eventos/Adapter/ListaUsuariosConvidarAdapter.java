@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,6 +16,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.NotificationSender;
+import br.com.sardinha.iohan.eventos.R;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
 
 
 public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsuariosConvidarAdapter.ViewHolder>{

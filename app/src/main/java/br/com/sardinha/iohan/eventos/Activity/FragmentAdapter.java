@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -1,4 +1,4 @@
-package br.com.sardinha.iohan.eventos;
+package br.com.sardinha.iohan.eventos.Activity;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
-import java.util.ArrayList;
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.Fragment.ConvidadosFragment;
+import br.com.sardinha.iohan.eventos.Fragment.SeguidoresFragment;
+import br.com.sardinha.iohan.eventos.R;
 
 public class ConvidadosActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 

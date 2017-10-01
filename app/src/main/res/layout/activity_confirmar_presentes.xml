@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="br.com.sardinha.iohan.eventos.confirmarPresentesActivity">
+    tools:context="br.com.sardinha.iohan.eventos.Activity.confirmarPresentesActivity">
 
     <TextView
         android:id="@+id/confirmar_presentes_titulo"

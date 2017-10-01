@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.sardinha.iohan.eventos.LoadingActivity">
+    tools:context="br.com.sardinha.iohan.eventos.Activity.LoadingActivity">
 
     <ProgressBar
         android:id="@+id/progressBar3"
