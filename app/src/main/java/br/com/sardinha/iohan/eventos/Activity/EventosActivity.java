@@ -30,6 +30,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
@@ -51,6 +53,8 @@ public class EventosActivity extends AppCompatActivity {
     private DatabaseReference eventsReference;
 
     private Usuario currentUser;
+
+    private Map<String,String> listIDs = new HashMap<>();
 
     ArrayList<Evento> list;
 
@@ -116,9 +120,14 @@ public class EventosActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot userEventSnapshot) {
                         list.clear();
-                        for(DataSnapshot event : userEventSnapshot.getChildren())
+                        for(DataSnapshot eventSnapshot : userEventSnapshot.getChildren())
                         {
-                            list.add(event.getValue(Evento.class));
+                            Evento event = eventSnapshot.getValue(Evento.class);
+                            if(listIDs.get(event.getId()) == null)
+                            {
+                                list.add(eventSnapshot.getValue(Evento.class));
+                                listIDs.put(event.getId(),event.getId());
+                            }
                         }
                         for(DataSnapshot follower : followersSnapshot.getChildren())
                         {
@@ -128,7 +137,12 @@ public class EventosActivity extends AppCompatActivity {
                                 public void onDataChange(DataSnapshot followerEventSnapshot) {
                                     for(DataSnapshot eventSnapshot : followerEventSnapshot.getChildren())
                                     {
-                                        list.add(eventSnapshot.getValue(Evento.class));
+                                        Evento event = eventSnapshot.getValue(Evento.class);
+                                        if(listIDs.get(event.getId()) == null)
+                                        {
+                                            list.add(eventSnapshot.getValue(Evento.class));
+                                            listIDs.put(event.getId(),event.getId());
+                                        }
                                     }
                                     Collections.sort(list);
                                     recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
