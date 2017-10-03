@@ -53,29 +53,16 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Events");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        Query firebaseQuery = databaseReference.orderByChild("tituloLow").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
+        firebaseQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren())
+                for(DataSnapshot dss: dataSnapshot.getChildren())
                 {
-                    Query firebaseQuery = databaseReference.child(ds.getKey()).orderByChild("tituloLow").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
-                    firebaseQuery.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot dss: dataSnapshot.getChildren())
-                            {
-                                list.add(dss.getValue(Evento.class));
-                            }
-                            recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                    list.add(dss.getValue(Evento.class));
                 }
+                recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

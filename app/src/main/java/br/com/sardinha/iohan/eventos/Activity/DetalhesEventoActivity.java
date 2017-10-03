@@ -33,7 +33,9 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosAdapter;
+import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosConvidadosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
 
@@ -131,7 +133,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     users.add(ds.getValue(Usuario.class));
-                    recyclerView.setAdapter(new ListaUsuariosAdapter(users,DetalhesEventoActivity.this));
                 }
                 if(users.size() <= 0)
                 {
@@ -140,7 +141,9 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 else
                 {
                     findViewById(R.id.ninguem_confirmou_detalhes).setVisibility(View.GONE);
+                    users.add(new Usuario("","Ver todos",""));
                 }
+                recyclerView.setAdapter(new ListaUsuariosConvidadosAdapter(users,DetalhesEventoActivity.this,user,evento));
             }
 
             @Override
@@ -202,6 +205,17 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 }
             });
 
+            ((TextView)findViewById(R.id.Perticiparao)).setOnClickListener(new OneShotClickListener() {
+                @Override
+                public void performClick(View v) {
+                    Intent intent = new Intent(DetalhesEventoActivity.this, ConvidadosActivity.class);
+                    intent.putExtra("evento",evento);
+                    intent.putExtra("usuario",user);
+                    intent.putExtra("confirmados",true);
+                    startActivity(intent);
+                }
+            });
+
         }
 
     }
@@ -233,10 +247,9 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                         .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String USER_ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 StorageReference storage = FirebaseStorage.getInstance().getReference("Events").child(evento.getId());
                                 storage.delete();
-                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(USER_ID).child(evento.getId());
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(evento.getId());
                                 reference.removeValue();
                                 startActivity(new Intent(DetalhesEventoActivity.this,EventosActivity.class));
                                 finish();
@@ -295,6 +308,5 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         color = 0xFF000000 | r | g | b;
         return color;
     }
-
 
 }

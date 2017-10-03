@@ -86,7 +86,7 @@
                 android:layout_alignStart="@+id/descricao_detalhes"
                 android:layout_below="@+id/descricao_detalhes"
                 android:layout_marginTop="16dp"
-                android:text="Participarão"
+                android:text="@string/participarao"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
             <android.support.v7.widget.RecyclerView

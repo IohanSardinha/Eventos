@@ -3,6 +3,7 @@ package br.com.sardinha.iohan.eventos.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.Fragment.ConfirmadosFragment;
 import br.com.sardinha.iohan.eventos.Fragment.ConvidadosFragment;
 import br.com.sardinha.iohan.eventos.Fragment.SeguidoresFragment;
 import br.com.sardinha.iohan.eventos.R;
@@ -22,9 +24,11 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
     private ViewPager viewPager;
     private Evento evento;
     private Usuario usuario;
+    private boolean confirmados;
 
     ConvidadosFragment convidadosFragment;
     SeguidoresFragment seguidoresFragment;
+    ConfirmadosFragment confirmadosFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
         evento = (Evento) intent.getSerializableExtra("evento");
         usuario = (Usuario) intent.getSerializableExtra("usuario");
 
+        confirmados = intent.getBooleanExtra("confirmados",false);
         viewPager = (ViewPager)findViewById(R.id.container2);
         setupViewPager(viewPager);
 
@@ -49,11 +54,26 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
         convidadosFragment = new ConvidadosFragment();
         convidadosFragment.setEvento(evento);
         convidadosFragment.setUsuario(usuario);
-        seguidoresFragment = new SeguidoresFragment();
-        seguidoresFragment.setEvento(evento);
-        seguidoresFragment.setUsuario(usuario);
-        a.addFragment(seguidoresFragment,"Seguidores");
+
+        if(confirmados)
+        {
+            confirmadosFragment = new ConfirmadosFragment();
+            confirmadosFragment.setEvento(evento);
+            confirmadosFragment.setUsuario(usuario);
+            a.addFragment(confirmadosFragment,"Confirmados");
+            convidadosFragment.setConvidados(true);
+            findViewById(R.id.floatingActionButton2).setVisibility(View.GONE);
+        }
+        else
+        {
+            seguidoresFragment = new SeguidoresFragment();
+            seguidoresFragment.setEvento(evento);
+            seguidoresFragment.setUsuario(usuario);
+            a.addFragment(seguidoresFragment,"Seguidores");
+        }
+
         a.addFragment(convidadosFragment,"Convidados");
+
         viewPager.setAdapter(a);
     }
 
@@ -86,6 +106,7 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
     public boolean onQueryTextChange(String newText) {
         seguidoresFragment.filter(newText);
         convidadosFragment.filter(newText);
+        confirmadosFragment.filter(newText);
         return true;
     }
 }

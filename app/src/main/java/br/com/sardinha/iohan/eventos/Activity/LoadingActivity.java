@@ -24,7 +24,7 @@ public class LoadingActivity extends AppCompatActivity {
         String userID = intent.getStringExtra("userID");
         String eventID = intent.getStringExtra("eventID");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(userID).child(eventID);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(eventID);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

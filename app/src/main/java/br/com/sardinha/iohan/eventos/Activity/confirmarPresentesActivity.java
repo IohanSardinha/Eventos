@@ -44,7 +44,7 @@ public class confirmarPresentesActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         event = (Evento)intent.getSerializableExtra("event");
-        eventsReference = FirebaseDatabase.getInstance().getReference("Events").child(event.getUserID()).child(event.getId());
+        eventsReference = FirebaseDatabase.getInstance().getReference("Events").child(event.getId());
         ((TextView)findViewById(R.id.confirmar_presentes_titulo)).setText("Confirme os presentes em "+event.getTitulo());
         DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(event.getId());
          usersReference.addValueEventListener(new ValueEventListener() {

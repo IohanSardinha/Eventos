@@ -14,6 +14,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -31,6 +33,7 @@ import java.util.Collections;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
 
@@ -70,9 +73,16 @@ public class EventosActivity extends AppCompatActivity {
             finish();
         }
 
+        findViewById(R.id.novoEventoButtunEventosActivity).setOnClickListener(new OneShotClickListener() {
+            @Override
+            public void performClick(View v) {
+                startActivity(new Intent(EventosActivity.this,NovoEventoActivity.class));
+            }
+        });
+
         followingsReference = database.getReference("Followings").child(userID);
 
-        eventsReference = database.getReference("Events").child(userID);
+        eventsReference = database.getReference("Events");
 
         list = new ArrayList<>();
 
@@ -88,12 +98,71 @@ public class EventosActivity extends AppCompatActivity {
             }
         });
 
-        getData();
+        retrieveData();
 
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ListaEventosAdapter(list,this));
+    }
+
+    private void retrieveData()
+    {
+        followingsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot followersSnapshot) {
+                Query eventsQuery = eventsReference.orderByChild("userID").startAt(userID).limitToFirst(10);
+                eventsQuery.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot userEventSnapshot) {
+                        list.clear();
+                        for(DataSnapshot event : userEventSnapshot.getChildren())
+                        {
+                            list.add(event.getValue(Evento.class));
+                        }
+                        for(DataSnapshot follower : followersSnapshot.getChildren())
+                        {
+                            Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getKey()).limitToFirst(10);
+                            queryFollower.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot followerEventSnapshot) {
+                                    for(DataSnapshot eventSnapshot : followerEventSnapshot.getChildren())
+                                    {
+                                        list.add(eventSnapshot.getValue(Evento.class));
+                                    }
+                                    Collections.sort(list);
+                                    recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
+                                    progress.setVisibility(View.GONE);
+                                    if(list.size() <= 0)
+                                    {
+                                        noEventToShow.setVisibility(View.VISIBLE);
+                                    }
+                                    else
+                                    {
+                                        noEventToShow.setVisibility(View.GONE);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getData()
@@ -122,7 +191,7 @@ public class EventosActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
-                                        finish();
+                                        //finish();
                                     }
                                 })
                                 .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
@@ -241,7 +310,7 @@ public class EventosActivity extends AppCompatActivity {
                 Intent intent = new Intent(EventosActivity.this,ResultadoPesquisaActivity.class);
                 intent.putExtra("Query",query.toLowerCase());
                 startActivity(intent);
-                finish();
+                //finish();
                 return false;
             }
 
@@ -289,10 +358,10 @@ public class EventosActivity extends AppCompatActivity {
         }
     }
 
-    public void novoEvento(View view) {
+    /*public void novoEvento(View view) {
         startActivity(new Intent(this,NovoEventoActivity.class));
         finish();
-    }
+    }*/
 
     private String formatador(int x){
         if (x < 10){

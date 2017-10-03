@@ -271,7 +271,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     evento.setImagem(taskSnapshot.getDownloadUrl().toString());
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events").child(userID).child(ID);
+                    DatabaseReference ref = eventReference.child(ID);
                     ref.setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -322,7 +322,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             evento.setImagem(image.toString());
             DatabaseReference userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(ID);
             final Map<String,Object> updateMap = new HashMap<>();
-            updateMap.put("Events/"+userID+"/"+evento.getId(),evento);
+            updateMap.put("Events/"+evento.getId(),evento);
             userParticipatingReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -586,6 +586,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         }
     }
 
+    /*
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -596,5 +597,5 @@ public class NovoEventoActivity extends AppCompatActivity {
             return;
         }
         finish();
-    }
+    }*/
 }

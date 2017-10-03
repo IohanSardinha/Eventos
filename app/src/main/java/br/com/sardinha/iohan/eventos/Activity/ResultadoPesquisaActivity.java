@@ -47,10 +47,10 @@ public class ResultadoPesquisaActivity extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
         startActivity(new Intent(this,EventosActivity.class));
-    }
+    }*/
 }

@@ -22,19 +22,13 @@ import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
 
+public class ConfirmadosFragment extends Fragment {
 
-public class ConvidadosFragment extends Fragment {
-
-    private Evento evento;
+    private ListaUsuariosConvidarAdapter adapter;
     private ArrayList<Usuario> usersList;
     private RecyclerView recyclerView;
+    private Evento evento;
     private Usuario usuario;
-    private ListaUsuariosConvidarAdapter adapter;
-    private boolean convidados;
-
-    public void setConvidados(boolean convidados){
-        this.convidados = convidados;
-    }
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
@@ -62,23 +56,24 @@ public class ConvidadosFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.convidados_fragment,container,false);
+        final View view = inflater.inflate(R.layout.confirmados_fragment,container,false);
+
         usersList = new ArrayList<>();
 
-        recyclerView = (RecyclerView)view.findViewById(R.id.list_usuarios_convidados);
+        recyclerView = (RecyclerView)view.findViewById(R.id.lista_usuarios_confirmados);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        DatabaseReference usersInvitedReference = FirebaseDatabase.getInstance().getReference("UsersInvited").child(evento.getId());
-        usersInvitedReference.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference confirmados = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(evento.getId());
+        confirmados.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 usersList.clear();
-                for(DataSnapshot ds:dataSnapshot.getChildren())
+                for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     usersList.add(ds.getValue(Usuario.class));
                 }
-                adapter = new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario,convidados);
+                adapter = new ListaUsuariosConvidarAdapter(view.getContext(),usersList,evento,usuario,true);
                 recyclerView.setAdapter(adapter);
             }
 

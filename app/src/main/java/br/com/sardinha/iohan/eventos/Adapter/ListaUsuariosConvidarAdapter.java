@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +18,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.NotificationSender;
+import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.R;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 
@@ -30,6 +33,8 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     private Evento evento;
     private Usuario currentUser;
     private Context context;
+    private boolean confirmados = false;
+
 
     public ListaUsuariosConvidarAdapter( Context context,ArrayList<Usuario> list,Evento evento, Usuario currentUser)
     {
@@ -37,6 +42,15 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
         this.evento = evento;
         this.context = context;
         this.currentUser = currentUser;
+    }
+
+    public ListaUsuariosConvidarAdapter( Context context,ArrayList<Usuario> list,Evento evento, Usuario currentUser, boolean confirmados)
+    {
+        this.list = list;
+        this.evento = evento;
+        this.context = context;
+        this.currentUser = currentUser;
+        this.confirmados = confirmados;
     }
 
     @Override
@@ -48,41 +62,48 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.nome.setText(list.get(position).getNome());
-        invitationReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue(Usuario.class) != null)
-                {
-                    holder.convidarButton.setBackgroundResource(R.color.colorPrimary);
-                    holder.convidarButton.setText("Convidado");
-                    holder.convidarButton.setTextColor(Color.WHITE);
-                    holder.convidarButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            invitationReference.child(list.get(position).getId()).removeValue();
-                        }
-                    });
+        if(confirmados)
+        {
+            holder.convidarButton.setVisibility(View.GONE);
+        }
+        else
+        {
+            invitationReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue(Usuario.class) != null)
+                    {
+                        holder.convidarButton.setBackgroundResource(R.color.colorPrimary);
+                        holder.convidarButton.setText("Convidado");
+                        holder.convidarButton.setTextColor(Color.WHITE);
+                        holder.convidarButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                invitationReference.child(list.get(position).getId()).removeValue();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        holder.convidarButton.setBackgroundResource(R.color.button);
+                        holder.convidarButton.setText("Convidar");
+                        holder.convidarButton.setTextColor(Color.BLACK);
+                        holder.convidarButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                invitationReference.child(list.get(position).getId()).setValue(list.get(position));
+                                new NotificationSender().SendInvitationNotification(context,evento,list.get(position),currentUser);
+                            }
+                        });
+                    }
                 }
-                else
-                {
-                    holder.convidarButton.setBackgroundResource(R.color.button);
-                    holder.convidarButton.setText("Convidar");
-                    holder.convidarButton.setTextColor(Color.BLACK);
-                    holder.convidarButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            invitationReference.child(list.get(position).getId()).setValue(list.get(position));
-                            new NotificationSender().SendInvitationNotification(context,evento,list.get(position),currentUser);
-                        }
-                    });
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -98,6 +119,12 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
             nome = (TextView) itemView.findViewById(R.id.nome_usuario_convidar_item);
             convidarButton = (Button)itemView.findViewById(R.id.convidar_usuario_item);
             invitationReference = FirebaseDatabase.getInstance().getReference("UsersInvited").child(evento.getId());
+            itemView.setOnClickListener(new OneShotClickListener() {
+                @Override
+                public void performClick(View v) {
+                    context.startActivity(new Intent(context, UsuarioActivity.class));
+                }
+            });
         }
     }
 
