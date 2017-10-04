@@ -133,7 +133,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                 if(dataSnapshot.hasChild(uID))
                 {
                     holder.participate.setText("Participando");
-                    holder.participate.setBackgroundResource(R.color.colorPrimary);
+                    holder.participate.setBackgroundResource(R.color.buttonPressed);
                     holder.participate.setTextColor(Color.WHITE);
                     holder.participate.setOnClickListener(new View.OnClickListener() {
                         @Override

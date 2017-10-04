@@ -76,7 +76,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     if(dataSnapshot.hasChild(user.getId()))
                     {
                         notificateButton.setColorFilter(Color.WHITE);
-                        notificateButton.setBackgroundResource(R.color.colorPrimary);
+                        notificateButton.setBackgroundResource(R.color.buttonPressed);
                         notificateButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -112,7 +112,7 @@ public class UsuarioActivity extends AppCompatActivity {
                     if(dataSnapshot.hasChild(user.getId()))
                     {
                         followButton.setText("Seguindo");
-                        followButton.setBackgroundResource(R.color.colorPrimary);
+                        followButton.setBackgroundResource(R.color.buttonPressed);
                         followButton.setTextColor(Color.WHITE);
                         followButton.setOnClickListener(new View.OnClickListener() {
                             @Override

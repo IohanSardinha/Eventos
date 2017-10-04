@@ -188,7 +188,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     {
                         participate.setText("Participando");
                         participate.setTextColor(Color.WHITE);
-                        participate.setBackgroundResource(R.color.colorPrimary);
+                        participate.setBackgroundResource(R.color.buttonPressed);
                         participate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
