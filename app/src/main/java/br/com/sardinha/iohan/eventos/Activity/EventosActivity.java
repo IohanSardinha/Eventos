@@ -132,9 +132,11 @@ public class EventosActivity extends AppCompatActivity {
                                 listIDs.add(event.getId());
                             }
                         }
+
                         invitationReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(final DataSnapshot eventsInvitedSnapshot) {
+                                progress.setVisibility(View.VISIBLE);
                                 for(DataSnapshot follower : followersSnapshot.getChildren())
                                 {
                                     Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getKey()).limitToFirst(10);
@@ -154,17 +156,6 @@ public class EventosActivity extends AppCompatActivity {
 
                                                 }
                                             }
-                                            Collections.sort(list);
-                                            recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
-                                            progress.setVisibility(View.GONE);
-                                            if(list.size() <= 0)
-                                            {
-                                                noEventToShow.setVisibility(View.VISIBLE);
-                                            }
-                                            else
-                                            {
-                                                noEventToShow.setVisibility(View.GONE);
-                                            }
                                         }
 
                                         @Override
@@ -172,6 +163,17 @@ public class EventosActivity extends AppCompatActivity {
 
                                         }
                                     });
+                                }
+                                Collections.sort(list);
+                                recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
+                                progress.setVisibility(View.GONE);
+                                if(list.size() <= 0)
+                                {
+                                    noEventToShow.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    noEventToShow.setVisibility(View.GONE);
                                 }
                             }
 
