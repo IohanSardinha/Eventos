@@ -89,11 +89,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_eventos,R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        ((Spinner)findViewById(R.id.tipo_de_evento_criacao)).setAdapter(adapter);
-
-        adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_privacidade,R.layout.support_simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.tipos_de_privacidade,R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.privacidade_criacao)).setAdapter(adapter);
 
@@ -114,20 +110,6 @@ public class NovoEventoActivity extends AppCompatActivity {
                 if(evento.getLimite() != -1)
                 {
                     ((EditText) findViewById(R.id.limite_de_convidados_criacao)).setText(String.valueOf(evento.getLimite()));
-                }
-                switch(evento.getTipo()){
-                    case "Aniversário":
-                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(1);
-                        break;
-                    case "Festa":
-                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(2);
-                        break;
-                    case "Show":
-                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(3);
-                        break;
-                    default:
-                        ((Spinner) findViewById(R.id.tipo_de_evento_criacao)).setSelection(4);
-                        break;
                 }
                 switch(evento.getPrivacidade()){
                     case "Aberto":
@@ -216,12 +198,6 @@ public class NovoEventoActivity extends AppCompatActivity {
             }
         }
 
-        String tipo = ((Spinner)findViewById(R.id.tipo_de_evento_criacao)).getSelectedItem().toString();
-        if(tipo.equals("Tipo")){
-            Toast.makeText(this,"Selecione um tipo de evento!",Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         String privacidade = ((Spinner)findViewById(R.id.privacidade_criacao)).getSelectedItem().toString();
         if(privacidade.equals("Privacidade")){
             Toast.makeText(this,"Selecione a privacidade do seu evento",Toast.LENGTH_SHORT).show();
@@ -232,7 +208,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         String horaEncerramento = ((EditText) findViewById(R.id.hora_encerramento_criacao)).getText().toString();
         String limite = ((EditText) findViewById(R.id.limite_de_convidados_criacao)).getText().toString();
 
-        final Evento evento = new Evento(userID,titulo,endereco,data_inicio,"",horaInicio,"",tipo,privacidade,descricao,-1);
+        final Evento evento = new Evento(userID,titulo,endereco,data_inicio,"",horaInicio,"",privacidade,descricao,-1);
 
         if(!limite.isEmpty())
         {

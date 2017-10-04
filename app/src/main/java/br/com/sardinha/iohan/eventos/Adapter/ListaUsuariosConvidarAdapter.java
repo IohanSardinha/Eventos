@@ -29,7 +29,8 @@ import br.com.sardinha.iohan.eventos.Class.Usuario;
 public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsuariosConvidarAdapter.ViewHolder>{
 
     private ArrayList<Usuario> list;
-    private DatabaseReference invitationReference;
+    private DatabaseReference usersInvited;
+    private DatabaseReference eventsInvited;
     private Evento evento;
     private Usuario currentUser;
     private Context context;
@@ -68,7 +69,7 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
         }
         else
         {
-            invitationReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+            usersInvited.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getValue(Usuario.class) != null)
@@ -79,7 +80,8 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                         holder.convidarButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                invitationReference.child(list.get(position).getId()).removeValue();
+                                usersInvited.child(list.get(position).getId()).removeValue();
+                                eventsInvited.child(list.get(position).getId()).child(evento.getId()).removeValue();
                             }
                         });
                     }
@@ -91,7 +93,8 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                         holder.convidarButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                invitationReference.child(list.get(position).getId()).setValue(list.get(position));
+                                usersInvited.child(list.get(position).getId()).setValue(list.get(position));
+                                eventsInvited.child(list.get(position).getId()).child(evento.getId()).setValue(evento.getId());
                                 new NotificationSender().SendInvitationNotification(context,evento,list.get(position),currentUser);
                             }
                         });
@@ -118,11 +121,15 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
             super(itemView);
             nome = (TextView) itemView.findViewById(R.id.nome_usuario_convidar_item);
             convidarButton = (Button)itemView.findViewById(R.id.convidar_usuario_item);
-            invitationReference = FirebaseDatabase.getInstance().getReference("UsersInvited").child(evento.getId());
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            usersInvited = database.getReference("UsersInvited").child(evento.getId());
+            eventsInvited = database.getReference("EventsInvited");
             itemView.setOnClickListener(new OneShotClickListener() {
                 @Override
                 public void performClick(View v) {
-                    context.startActivity(new Intent(context, UsuarioActivity.class));
+                    Intent intent = new Intent(context, UsuarioActivity.class);
+                    intent.putExtra("Usuario",list.get(getAdapterPosition()));
+                    context.startActivity(intent);
                 }
             });
         }

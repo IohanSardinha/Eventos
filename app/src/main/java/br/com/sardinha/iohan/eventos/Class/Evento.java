@@ -47,14 +47,6 @@ public class Evento implements Serializable,Comparable<Evento> {
         this.horaEncerramento = horaEncerramento;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public String getPrivacidade() {
         return privacidade;
     }
@@ -133,7 +125,6 @@ public class Evento implements Serializable,Comparable<Evento> {
     private String horaEncerramento;
     private String dataInicio;
     private String dataEncerramento;
-    private String tipo;
     private String privacidade;
     private String descricao;
     private int limite;
@@ -148,7 +139,7 @@ public class Evento implements Serializable,Comparable<Evento> {
         //Empty constructor for Firebase
     }
 
-    public Evento(String userID,String titulo,String endereco, String dataInicio, String dataEncerramento, String horaInicio, String horaEncerramento, String tipo, String privacidade, String descricao, int limite){
+    public Evento(String userID,String titulo,String endereco, String dataInicio, String dataEncerramento, String horaInicio, String horaEncerramento, String privacidade, String descricao, int limite){
         this.userID = userID;
         this.setTitulo(titulo);
         this.endereco = endereco;
@@ -156,7 +147,6 @@ public class Evento implements Serializable,Comparable<Evento> {
         this.setDataEncerramento(dataEncerramento);
         this.setHoraInicio(horaInicio);
         this.setHoraEncerramento(horaEncerramento);
-        this.setTipo(tipo);
         this.setPrivacidade(privacidade);
         this.setDescricao(descricao);
         this.setLimite(limite);

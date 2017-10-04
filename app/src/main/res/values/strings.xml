@@ -43,17 +43,8 @@
     <string name="esqueci_senha">Esqueci minha senha</string>
     <string name="convidar">Convidar</string>
 
-    <string-array name="tipos_de_eventos">
-        <item>Tipo</item>
-        <item>Aniversário</item>
-        <item>Festa</item>
-        <item>Show</item>
-        <item>Outro</item>
-    </string-array>
-
     <string-array name="tipos_de_privacidade">
         <item>Privacidade</item>
-        <item>Aberto</item>
         <item>Público</item>
         <item>Privado</item>
     </string-array>

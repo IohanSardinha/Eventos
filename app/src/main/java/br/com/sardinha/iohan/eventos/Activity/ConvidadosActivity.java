@@ -3,7 +3,6 @@ package br.com.sardinha.iohan.eventos.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,14 +33,6 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_convidados);
-        if(confirmados)
-        {
-            setTitle("Convidar");
-        }
-        else
-        {
-            setTitle("Convidados");
-        }
         Intent intent = getIntent();
         evento = (Evento) intent.getSerializableExtra("evento");
         usuario = (Usuario) intent.getSerializableExtra("usuario");
@@ -61,24 +52,54 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
         convidadosFragment.setEvento(evento);
         convidadosFragment.setUsuario(usuario);
 
-        if(confirmados)
+         if(!evento.getPrivacidade().equals("Privado"))
         {
+            setTitle("Confirmados");
             confirmadosFragment = new ConfirmadosFragment();
             confirmadosFragment.setEvento(evento);
             confirmadosFragment.setUsuario(usuario);
-            a.addFragment(confirmadosFragment,"Confirmados");
             convidadosFragment.setConvidados(true);
-            findViewById(R.id.floatingActionButton2).setVisibility(View.GONE);
+            a.addFragment(confirmadosFragment,"Confirmados");
         }
-        else
+        else if(confirmados && usuario.getId().equals(evento.getUserID()))
         {
+            setTitle("Convidar");
             seguidoresFragment = new SeguidoresFragment();
             seguidoresFragment.setEvento(evento);
             seguidoresFragment.setUsuario(usuario);
+
+            confirmadosFragment = new ConfirmadosFragment();
+            confirmadosFragment.setEvento(evento);
+            confirmadosFragment.setUsuario(usuario);
+
+            a.addFragment(confirmadosFragment,"Confirmados");
+            a.addFragment(convidadosFragment,"Convidados");
             a.addFragment(seguidoresFragment,"Seguidores");
         }
+        else if(confirmados)
+        {
+            setTitle("Convidados");
+            confirmadosFragment = new ConfirmadosFragment();
+            confirmadosFragment.setEvento(evento);
+            confirmadosFragment.setUsuario(usuario);
+            convidadosFragment.setConvidados(true);
+            findViewById(R.id.floatingActionButton2).setVisibility(View.GONE);
 
-        a.addFragment(convidadosFragment,"Convidados");
+            a.addFragment(confirmadosFragment,"Confirmados");
+            a.addFragment(convidadosFragment,"Convidados");
+        }
+        else
+        {
+            setTitle("Convidar");
+            seguidoresFragment = new SeguidoresFragment();
+            seguidoresFragment.setEvento(evento);
+            seguidoresFragment.setUsuario(usuario);
+
+            a.addFragment(seguidoresFragment,"Seguidores");
+            a.addFragment(convidadosFragment,"Convidados");
+        }
+
+
 
         viewPager.setAdapter(a);
     }

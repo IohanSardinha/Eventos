@@ -51,6 +51,7 @@ public class EventosActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private DatabaseReference followingsReference;
+    private DatabaseReference invitationReference;
     private String userID;
     private DatabaseReference eventsReference;
 
@@ -87,6 +88,7 @@ public class EventosActivity extends AppCompatActivity {
         });
 
         followingsReference = database.getReference("Followings").child(userID);
+        invitationReference = database.getReference("EventsInvited").child(userID);
 
         eventsReference = database.getReference("Events");
 
@@ -130,40 +132,54 @@ public class EventosActivity extends AppCompatActivity {
                                 listIDs.add(event.getId());
                             }
                         }
-                        for(DataSnapshot follower : followersSnapshot.getChildren())
-                        {
-                            Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getKey()).limitToFirst(10);
-                            queryFollower.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot followerEventSnapshot) {
-                                    for(DataSnapshot eventSnapshot : followerEventSnapshot.getChildren())
-                                    {
-                                        Evento event = eventSnapshot.getValue(Evento.class);
-                                        if(!listIDs.contains(event.getId()))
-                                        {
-                                            list.add(event);
-                                            listIDs.add(event.getId());
+                        invitationReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(final DataSnapshot eventsInvitedSnapshot) {
+                                for(DataSnapshot follower : followersSnapshot.getChildren())
+                                {
+                                    Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getKey()).limitToFirst(10);
+                                    queryFollower.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot followerEventSnapshot) {
+                                            for(DataSnapshot eventSnapshot : followerEventSnapshot.getChildren())
+                                            {
+                                                Evento event = eventSnapshot.getValue(Evento.class);
+                                                if(!listIDs.contains(event.getId()))
+                                                {
+                                                    if(!event.getPrivacidade().equals("Privado") || eventsInvitedSnapshot.hasChild(event.getId()))
+                                                    {
+                                                        list.add(event);
+                                                        listIDs.add(event.getId());
+                                                    }
+
+                                                }
+                                            }
+                                            Collections.sort(list);
+                                            recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
+                                            progress.setVisibility(View.GONE);
+                                            if(list.size() <= 0)
+                                            {
+                                                noEventToShow.setVisibility(View.VISIBLE);
+                                            }
+                                            else
+                                            {
+                                                noEventToShow.setVisibility(View.GONE);
+                                            }
                                         }
-                                    }
-                                    Collections.sort(list);
-                                    recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
-                                    progress.setVisibility(View.GONE);
-                                    if(list.size() <= 0)
-                                    {
-                                        noEventToShow.setVisibility(View.VISIBLE);
-                                    }
-                                    else
-                                    {
-                                        noEventToShow.setVisibility(View.GONE);
-                                    }
-                                }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
+                                        }
+                                    });
                                 }
-                            });
-                        }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
