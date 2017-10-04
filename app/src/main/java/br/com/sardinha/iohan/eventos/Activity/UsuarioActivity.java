@@ -1,7 +1,13 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +15,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,11 +29,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
 
@@ -33,7 +48,9 @@ public class UsuarioActivity extends AppCompatActivity {
     private DatabaseReference userReference;
     private Button followButton;
     private ArrayList<Evento> list;
+    private ImageView userImage;
     RecyclerView recyclerView;
+    Usuario user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +59,11 @@ public class UsuarioActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Intent intent = getIntent();
-        final Usuario user = (Usuario)intent.getSerializableExtra("Usuario");
+        user = (Usuario)intent.getSerializableExtra("Usuario");
         followButton = (Button)findViewById(R.id.seguir_usuario_descricao);
         ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
         userReference = database.getReference("Users").child(user.getId());
+        userImage = (ImageView)findViewById(R.id.foto_usuario_descricao);
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -62,9 +80,34 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         });
 
+        if(!user.getImagem().isEmpty())
+        {
+            Glide.with(UsuarioActivity.this).load(Uri.parse(user.getImagem())).placeholder(R.drawable.ic_person_black_24dp).into(userImage);
+        }
+
         if(user.getId().equals(UID)) {
             followButton.setVisibility(View.GONE);
             findViewById(R.id.notification_button).setVisibility(View.GONE);
+
+            ImageView imageView = ((ImageView)findViewById(R.id.foto_usuario_descricao));
+            imageView.setOnClickListener(new OneShotClickListener() {
+                @Override
+                public void performClick(View v) {
+                    new AlertDialog.Builder(UsuarioActivity.this).setTitle("Mudar foto de perfil?")
+                            .setMessage("Deseja escolher uma nova foto de perfil?")
+                            .setCancelable(false)
+                            .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(Intent.ACTION_PICK);
+                                    intent.setType("image/*");
+                                    startActivityForResult(intent,2);
+                                }
+                            })
+                            .setNegativeButton("Cancelar", null)
+                            .show();
+                }
+            });
         }
         else
         {
@@ -198,5 +241,30 @@ public class UsuarioActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 2 && resultCode == RESULT_OK)
+        {
+            final Uri image;
+            image = data.getData();
+            userImage.setImageURI(image);
+            final ProgressDialog progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
+            StorageReference reference = FirebaseStorage.getInstance().getReference("Users").child(user.getId());
+            reference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    user.setImagem(taskSnapshot.getDownloadUrl().toString());
+                    userReference.setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            progress.dismiss();
+                        }
+                    });
+                }
+            });
+        }
     }
 }

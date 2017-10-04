@@ -252,8 +252,11 @@ public class NovoEventoActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progress.dismiss();
-                            new NotificationSender().SendNewEventNotification(NovoEventoActivity.this,evento,usuario);
                             setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
+                            if(!evento.getPrivacidade().equals("Privado"))
+                            {
+                                new NotificationSender().SendNewEventNotification(NovoEventoActivity.this,evento,usuario);
+                            }
                             new AlertDialog.Builder(NovoEventoActivity.this)
                                     .setTitle("Convidar amigos?")
                                     .setMessage("Gostaria de convidar amigos para o evento agora?")

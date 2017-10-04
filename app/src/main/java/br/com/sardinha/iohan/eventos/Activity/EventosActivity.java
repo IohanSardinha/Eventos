@@ -116,6 +116,15 @@ public class EventosActivity extends AppCompatActivity {
 
     private void retrieveData()
     {
+
+        Calendar calendar = Calendar.getInstance();
+        final double dateNow = Double.parseDouble(
+                formatador(calendar.get(Calendar.YEAR))
+                        +formatador(calendar.get(Calendar.MONTH)+1)
+                        +formatador(calendar.get(Calendar.DAY_OF_MONTH))
+                        +formatador(calendar.get(Calendar.HOUR_OF_DAY))
+                        +formatador(calendar.get(Calendar.MINUTE)));
+
         followingsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot followersSnapshot) {
@@ -125,12 +134,53 @@ public class EventosActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot userEventSnapshot) {
                         for(DataSnapshot eventSnapshot : userEventSnapshot.getChildren())
                         {
-                            Evento event = eventSnapshot.getValue(Evento.class);
+                            final Evento event = eventSnapshot.getValue(Evento.class);
+                            if(event.getDataHora()<=dateNow)
+                            {
+                                new AlertDialog.Builder(EventosActivity.this)
+                                        .setTitle(event.getTitulo())
+                                        .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
+                                                "Confirme quem realmente foi.")
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",event));
+                                                //finish();
+                                            }
+                                        })
+                                        .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                eventsReference.child(event.getId()).removeValue();
+                                                final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(event.getId());
+                                                final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
+                                                usersParticipatingReference.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        for(DataSnapshot ds : dataSnapshot.getChildren())
+                                                        {
+                                                            eventsParticipatingReference.child(ds.getKey()).removeValue();
+                                                        }
+                                                        usersParticipatingReference.removeValue();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                                list.clear();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .show();
+                            }
                             if(!listIDs.contains(event.getId()))
                             {
                                 list.add(event);
                                 listIDs.add(event.getId());
                             }
+
                         }
 
                         invitationReference.addValueEventListener(new ValueEventListener() {
@@ -139,7 +189,7 @@ public class EventosActivity extends AppCompatActivity {
                                 progress.setVisibility(View.VISIBLE);
                                 for(DataSnapshot follower : followersSnapshot.getChildren())
                                 {
-                                    Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getKey()).limitToFirst(10);
+                                    Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getValue(Usuario.class).getId()).limitToFirst(10);
                                     queryFollower.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot followerEventSnapshot) {

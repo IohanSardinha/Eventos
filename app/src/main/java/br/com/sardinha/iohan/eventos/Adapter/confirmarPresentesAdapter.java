@@ -1,13 +1,16 @@
 package br.com.sardinha.iohan.eventos.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +51,11 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
     @Override
     public void onBindViewHolder(final confirmarPresentesAdapter.ViewHolder holder, final int position) {
         holder.nomeUsuario.setText(list.get(position).getNome());
+
+        if(!list.get(position).getImagem().isEmpty())
+        {
+            Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhoto);
+        }
 
         holder.buttonSim.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +123,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
         TextView nomeUsuario;
         Button buttonSim;
         Button buttonNao;
+        ImageView userPhoto;
         public ViewHolder(View itemView) {
             super(itemView);
             database = FirebaseDatabase.getInstance();
@@ -125,6 +134,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
             nomeUsuario = (TextView)itemView.findViewById(R.id.nome_usuario_item_confirmacao);
             buttonSim = (Button)itemView.findViewById(R.id.foi_item_confirmacao);
             buttonNao = (Button)itemView.findViewById(R.id.nao_foi_item_confirmacao);
+            userPhoto = (ImageView)itemView.findViewById(R.id.foto_usuario_confirmacao);
         }
     }
 }

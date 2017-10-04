@@ -52,16 +52,7 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
         convidadosFragment.setEvento(evento);
         convidadosFragment.setUsuario(usuario);
 
-         if(!evento.getPrivacidade().equals("Privado"))
-        {
-            setTitle("Confirmados");
-            confirmadosFragment = new ConfirmadosFragment();
-            confirmadosFragment.setEvento(evento);
-            confirmadosFragment.setUsuario(usuario);
-            convidadosFragment.setConvidados(true);
-            a.addFragment(confirmadosFragment,"Confirmados");
-        }
-        else if(confirmados && usuario.getId().equals(evento.getUserID()))
+        if(confirmados && usuario.getId().equals(evento.getUserID()))
         {
             setTitle("Convidar");
             seguidoresFragment = new SeguidoresFragment();

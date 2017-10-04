@@ -11,7 +11,9 @@
     android:focusable="true"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground">
+
     <ImageView
+        android:id="@+id/foto_perfil_convidar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         card_view:srcCompat="@drawable/ic_person_black_24dp" />

@@ -62,11 +62,13 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(NovoUsuarioAcivity.this, "Usuario "+nome+" registrado", Toast.LENGTH_SHORT).show();
-                        String id = auth.getCurrentUser().getUid();
-                        database.child(id).setValue(new Usuario(id,nome,email.toLowerCase()));
+                        final String id = auth.getCurrentUser().getUid();
+                        final Usuario user = new Usuario(id,nome,email.toLowerCase());
                         reference.child(id).putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                user.setImagem(taskSnapshot.getDownloadUrl().toString());
+                                database.child(id).setValue(user);
                                 finish();
                                 progress.dismiss();
                             }

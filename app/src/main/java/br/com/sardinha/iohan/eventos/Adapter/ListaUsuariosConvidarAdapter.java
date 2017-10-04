@@ -3,13 +3,16 @@ package br.com.sardinha.iohan.eventos.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +66,10 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.nome.setText(list.get(position).getNome());
+        if(!list.get(position).getImagem().isEmpty())
+        {
+            Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhoto);
+        }
         if(confirmados)
         {
             holder.convidarButton.setVisibility(View.GONE);
@@ -117,9 +124,11 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     public class ViewHolder extends RecyclerView.ViewHolder{
         Button convidarButton;
         TextView nome;
+        ImageView userPhoto;
         public ViewHolder(View itemView) {
             super(itemView);
             nome = (TextView) itemView.findViewById(R.id.nome_usuario_convidar_item);
+            userPhoto = (ImageView)itemView.findViewById(R.id.foto_perfil_convidar);
             convidarButton = (Button)itemView.findViewById(R.id.convidar_usuario_item);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             usersInvited = database.getReference("UsersInvited").child(evento.getId());

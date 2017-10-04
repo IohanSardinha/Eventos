@@ -56,17 +56,26 @@ public class Usuario implements Serializable {
         this.nomeLow = nomeLow;
     }
 
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+
     private String id;
     private String nome;
     private String nomeLow;
     private String email;
+    private String imagem = "";
     private int eventosConfirmados = 10;
     private int eventosComparecidos = 10;
 
     public Usuario() {
     }
 
-    public Usuario(String id, String nome, String email) {
+    public Usuario(String id, String nome, String email){
         this.id = id;
         this.nome = nome;
         this.nomeLow = Normalizer.normalize(nome, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
@@ -76,6 +85,7 @@ public class Usuario implements Serializable {
     public Usuario(String id, String nome, String email,int eventosConfirmados, int eventosComparecidos) {
         this.id = id;
         this.nome = nome;
+        this.nomeLow = Normalizer.normalize(nome, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         this.email = email;
         this.eventosConfirmados = eventosConfirmados;
         this.eventosComparecidos = eventosComparecidos;

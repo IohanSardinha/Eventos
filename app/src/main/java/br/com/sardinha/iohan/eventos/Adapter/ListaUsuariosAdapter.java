@@ -3,14 +3,17 @@ package br.com.sardinha.iohan.eventos.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +47,10 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.userName.setText(list.get(position).getNome());
+        if(!list.get(position).getImagem().isEmpty())
+        {
+            Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhoto);
+        }
         if(list.get(position).getId().equals(user))
         {
             holder.followButton.setVisibility(View.GONE);
@@ -106,11 +113,13 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView userName;
         Button followButton;
+        ImageView userPhoto;
         public ViewHolder(View itemView) {
             super(itemView);
             database = FirebaseDatabase.getInstance().getReference("Followings").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item);
             followButton = (Button)itemView.findViewById(R.id.seguir_usuario_item);
+            userPhoto = (ImageView)itemView.findViewById(R.id.foto_usuario_item);
             user = FirebaseAuth.getInstance().getCurrentUser().getUid();
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
