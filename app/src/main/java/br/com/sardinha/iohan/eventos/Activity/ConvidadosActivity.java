@@ -34,8 +34,14 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_convidados);
-
-        setTitle("Convidar");
+        if(confirmados)
+        {
+            setTitle("Convidar");
+        }
+        else
+        {
+            setTitle("Convidados");
+        }
         Intent intent = getIntent();
         evento = (Evento) intent.getSerializableExtra("evento");
         usuario = (Usuario) intent.getSerializableExtra("usuario");

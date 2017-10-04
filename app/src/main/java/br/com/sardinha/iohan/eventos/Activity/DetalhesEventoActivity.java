@@ -17,8 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,8 +34,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
@@ -71,23 +76,18 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         }
         else
         {
-            Picasso.with(this).load(Uri.parse(evento.getImagem())).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    ((ImageView)findViewById(R.id.imagem_detalhes)).setImageBitmap(bitmap);
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(bitmap)));
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
+            Glide.with(getApplicationContext())
+                    .load(Uri.parse(evento.getImagem()))
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_file_download_black_24dp)
+                    .into(new SimpleTarget<Bitmap>(1000,1000) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            ((ImageView) findViewById(R.id.imagem_detalhes)).setImageBitmap(resource);
+                            (findViewById(R.id.progressBar4)).setVisibility(View.GONE);
+                            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
+                        }
+                    });
         }
 
         this.setTitle(evento.getTitulo());

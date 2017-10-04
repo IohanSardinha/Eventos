@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -102,7 +102,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             if (intent != null) {
                 Evento evento = (Evento) intent.getSerializableExtra("evento");
                 ID = evento.getId();
-                Picasso.with(this).load(evento.getImagem()).into(((ImageView)findViewById(R.id.imagem_criacao)));
+                Glide.with(this).load(evento.getImagem()).into(((ImageView)findViewById(R.id.imagem_criacao)));
                 image = Uri.parse(evento.getImagem());
                 ((EditText) findViewById(R.id.titulo_Criacao)).setText(evento.getTitulo());
                 ((EditText)findViewById(R.id.endereco_cricao)).setText(evento.getEndereco());
