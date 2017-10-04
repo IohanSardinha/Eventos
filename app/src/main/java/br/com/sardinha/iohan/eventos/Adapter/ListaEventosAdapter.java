@@ -38,7 +38,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     String uID;
     double dateNow;
     Usuario currentUser;
-    public ListaEventosAdapter(ArrayList<Evento> list, Context context,Usuario currentUser) {
+    public ListaEventosAdapter(ArrayList<Evento> list, Context context, Usuario currentUser) {
         this.list = list;
         this.context = context;
         this.currentUser = currentUser;

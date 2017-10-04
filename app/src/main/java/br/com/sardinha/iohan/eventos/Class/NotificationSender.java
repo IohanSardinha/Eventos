@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class NotificationSender {
 
-    public void SendInvitationNotification(Context context,Evento event, Usuario invatedUser, Usuario createrUser)
+    public void SendInvitationNotification(Context context, Evento event, Usuario invatedUser, Usuario createrUser)
     {
         String title = createrUser.getNome()+" te convidou para um evento";
         String message = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
