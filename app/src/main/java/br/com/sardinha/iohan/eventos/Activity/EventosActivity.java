@@ -134,7 +134,12 @@ public class EventosActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
                             {
-                                eventos.add(eventSnapshot.getValue(Evento.class));
+                                Evento e = eventSnapshot.getValue(Evento.class);
+                                if(!listIDs.contains(e.getId()))
+                                {
+                                    listIDs.add(e.getId());
+                                    eventos.add(eventSnapshot.getValue(Evento.class));
+                                }
                             }
                             cont[0] += 1;
                             showData(cont[0],cont[1],userEventCont[0],eventos);
@@ -160,9 +165,14 @@ public class EventosActivity extends AppCompatActivity {
         userEventQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot eventoSnapshot : dataSnapshot.getChildren())
+                for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
                 {
-                    eventos.add(eventoSnapshot.getValue(Evento.class));
+                    Evento e = eventSnapshot.getValue(Evento.class);
+                    if(!listIDs.contains(e.getId()))
+                    {
+                        listIDs.add(e.getId());
+                        eventos.add(eventSnapshot.getValue(Evento.class));
+                    }
                 }
                 userEventCont[0] = true;
                 showData(cont[0],cont[1],userEventCont[0],eventos);
@@ -175,16 +185,6 @@ public class EventosActivity extends AppCompatActivity {
         });
 
         //Eventos convidado
-    }
-
-    private void addEvento(DataSnapshot ds)
-    {
-        Evento e = ds.getValue(Evento.class);
-        if(!listIDs.contains(e.getId()))
-        {
-            listIDs.add(e.getId());
-            list.add(e);
-        }
     }
 
     private void showData(long cont, long total, boolean done, Set<Evento> events)
