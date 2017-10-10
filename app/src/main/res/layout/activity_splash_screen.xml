@@ -5,7 +5,7 @@
     android:id="@+id/SplashScreenLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/colorPrimaryDark"
     android:visibility="visible"
     tools:context="br.com.sardinha.iohan.eventos.Activity.SplashScreenActivity">
 
@@ -13,22 +13,9 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="81dp"
-        app:srcCompat="@drawable/eventos_splash"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/eventos_splash" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="154dp"
-        android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="70sp"
-        android:textStyle="bold" />
 </RelativeLayout>
