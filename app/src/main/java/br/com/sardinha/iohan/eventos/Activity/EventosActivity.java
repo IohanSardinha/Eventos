@@ -59,7 +59,7 @@ public class EventosActivity extends AppCompatActivity {
 
     private Set<String> listIDs = new HashSet<>();
 
-    ArrayList<Evento> list;
+    ArrayList<Evento> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +106,98 @@ public class EventosActivity extends AppCompatActivity {
             }
         });
 
-        retrieveData();
-
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ListaEventosAdapter(list,this));
+
+        getData();
+    }
+
+    private void getData()
+    {
+        final Set<Evento> eventos = new HashSet<>();
+        final long cont[] = new long[2];
+        cont[0] = 0;
+        cont[1] = 999999999;
+        final boolean[] userEventCont = {false};
+
+        //Eventos dos Seguidores
+        followingsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cont[1] = dataSnapshot.getChildrenCount();
+                for(DataSnapshot followerSnapshot : dataSnapshot.getChildren())
+                {
+                    Query followerEventQuery = eventsReference.orderByChild("userID").startAt(followerSnapshot.getKey()).limitToFirst(10);
+                    followerEventQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
+                            {
+                                eventos.add(eventSnapshot.getValue(Evento.class));
+                            }
+                            cont[0] += 1;
+                            showData(cont[0],cont[1],userEventCont[0],eventos);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    showData(cont[0],cont[1],userEventCont[0],eventos);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //Eventos do usuário
+        Query userEventQuery = eventsReference.orderByChild("userID").startAt(userID).limitToFirst(10);
+        userEventQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot eventoSnapshot : dataSnapshot.getChildren())
+                {
+                    eventos.add(eventoSnapshot.getValue(Evento.class));
+                }
+                userEventCont[0] = true;
+                showData(cont[0],cont[1],userEventCont[0],eventos);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //Eventos convidado
+    }
+
+    private void addEvento(DataSnapshot ds)
+    {
+        Evento e = ds.getValue(Evento.class);
+        if(!listIDs.contains(e.getId()))
+        {
+            listIDs.add(e.getId());
+            list.add(e);
+        }
+    }
+
+    private void showData(long cont, long total, boolean done, Set<Evento> events)
+    {
+        if(cont >= total && done)
+        {
+            list.clear();
+            list.addAll(events);
+            Collections.sort(list);
+            recyclerView.setAdapter(new ListaEventosAdapter(list,this));
+            progress.setVisibility(View.GONE);
+        }
+
     }
 
     private void retrieveData()
@@ -248,7 +334,8 @@ public class EventosActivity extends AppCompatActivity {
         });
     }
 
-    private void getData()
+    //region GetData
+    /*private void getData()
     {
         Calendar calendar = Calendar.getInstance();
         final double dateNow = Double.parseDouble(
@@ -375,7 +462,8 @@ public class EventosActivity extends AppCompatActivity {
             return;
         }
         noEventToShow.setVisibility(View.GONE);
-    }
+    }*/
+    //endregion
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
