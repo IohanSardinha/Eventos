@@ -1,105 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="br.com.sardinha.iohan.eventos.Activity.MainActivity">
 
-    <TextView
-        android:text="Email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/textView9"
-        android:layout_alignLeft="@+id/email"
-        android:layout_alignStart="@+id/email"
-        android:layout_marginTop="15dp" />
-
-    <EditText
+    <ImageView
+        android:id="@+id/imageView3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/email"
-        android:layout_below="@+id/textView7"
+        android:layout_height="120dp"
+        app:srcCompat="@drawable/eventos_splash"
+        android:layout_marginTop="57dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="@string/senha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView8"
-        android:layout_alignBottom="@+id/password"
-        android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password"
-        android:layout_marginBottom="41dp" />
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:autoText="true"
+        android:background="@color/cardview_light_background"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="5dp" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
         android:id="@+id/password"
-        android:layout_marginTop="29dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/email"
-        android:layout_alignLeft="@+id/email"
-        android:layout_alignStart="@+id/email" />
+        android:layout_marginTop="11dp"
+        android:background="@color/cardview_light_background"
+        android:ems="10"
+        android:hint="@string/senha"
+        android:inputType="textPassword"
+        android:paddingStart="5dp" />
 
-
-    <TextView
-        android:text="@string/entrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView9"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="22sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="@string/entrar"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="29dp"
         android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/buttonSignIn"
         android:onClick="login"
+        android:text="@string/entrar"
         android:layout_below="@+id/password"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView8"
+        android:layout_alignBottom="@+id/textView8"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:onClick="novoUsuario"
+        android:text="@string/criar_conta"
+        android:textColor="@color/cardview_light_background" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/button"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="18dp"
+        android:onClick="redefinirSenhaClick"
+        android:text="@string/esqueci_senha"
+        android:textColor="@color/cardview_light_background" />
+
+    <TextView
+        android:id="@+id/tituloMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:text="Demorô"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="@color/buttonSignIn"
+        android:textSize="100sp" />
 
     <ProgressBar
+        android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyle"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/progressBar1"
-        android:layout_above="@+id/button2"
-        android:layout_toRightOf="@+id/button"
-        android:layout_toEndOf="@+id/button"
-        android:layout_marginLeft="28dp"
-        android:layout_marginStart="28dp" />
-
-    <Button
-        android:text="@string/criar_conta"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:layout_below="@id/button"
-        android:layout_centerHorizontal="true"
-        android:onClick="novoUsuario" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:onClick="redefinirSenhaClick"
-        android:text="@string/esqueci_senha"
-        android:textSize="10sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/tituloMain"
+        android:layout_alignEnd="@+id/tituloMain" />
 
 </RelativeLayout>

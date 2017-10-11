@@ -1,12 +1,14 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         progress = (ProgressBar)findViewById(R.id.progressBar1);
         progress.setVisibility(View.GONE);
+
+        TextView title = (TextView)findViewById(R.id.tituloMain);
+        Typeface typeface = Typeface.createFromAsset(getAssets(),"fonts/atlantic_bentley.ttf");
+        title.setTypeface(typeface);
 
         auth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {

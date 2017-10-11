@@ -21,7 +21,7 @@
     <string name="senha">Senha</string>
     <string name="confirmar_senha">Confirmar senha</string>
     <string name="entrar">Entrar</string>
-    <string name="criar_conta">Nova conta</string>
+    <string name="criar_conta">Ainda não possui uma conta?</string>
     <string name="registrar">Registrar</string>
     <string name="endereco">Endereço</string>
     <string name="inicio">Início</string>
@@ -40,7 +40,7 @@
     <string name="redefinir_senha">Redefinir senha</string>
     <string name="insira_email">Insira seu email</string>
     <string name="email_invalido">Email não registrado</string>
-    <string name="esqueci_senha">Esqueci minha senha</string>
+    <string name="esqueci_senha">Esqueceu sua senha?</string>
     <string name="convidar">Convidar</string>
 
     <string-array name="tipos_de_privacidade">

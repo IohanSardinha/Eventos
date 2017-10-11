@@ -193,8 +193,48 @@ public class EventosActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
                 {
-                    Evento e = eventSnapshot.getValue(Evento.class);
-                    if(!listIDs.contains(e.getId()))
+                    final Evento e = eventSnapshot.getValue(Evento.class);
+                    if(e.getDataHora()<=dateNow)
+                    {
+                        new AlertDialog.Builder(EventosActivity.this)
+                                .setTitle(e.getTitulo())
+                                .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
+                                        "Confirme quem realmente foi.")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
+                                        //finish();
+                                    }
+                                })
+                                .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        eventsReference.child(e.getId()).removeValue();
+                                        final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(e.getId());
+                                        final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
+                                        usersParticipatingReference.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                for(DataSnapshot ds : dataSnapshot.getChildren())
+                                                {
+                                                    eventsParticipatingReference.child(ds.getKey()).removeValue();
+                                                }
+                                                usersParticipatingReference.removeValue();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                        list.clear();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                    }
+                    else if(!listIDs.contains(e.getId()))
                     {
                         listIDs.add(e.getId());
                         eventos.add(eventSnapshot.getValue(Evento.class));
@@ -221,47 +261,7 @@ public class EventosActivity extends AppCompatActivity {
                     eventQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot eventSnapshot) {
-                            final Evento e = eventSnapshot.getValue(Evento.class);
-                            if(e.getDataHora()<=dateNow)
-                            {
-                                new AlertDialog.Builder(EventosActivity.this)
-                                        .setTitle(e.getTitulo())
-                                        .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
-                                                "Confirme quem realmente foi.")
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
-                                                //finish();
-                                            }
-                                        })
-                                        .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                eventsReference.child(e.getId()).removeValue();
-                                                final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(e.getId());
-                                                final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
-                                                usersParticipatingReference.addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        for(DataSnapshot ds : dataSnapshot.getChildren())
-                                                        {
-                                                            eventsParticipatingReference.child(ds.getKey()).removeValue();
-                                                        }
-                                                        usersParticipatingReference.removeValue();
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                                list.clear();
-                                            }
-                                        })
-                                        .setCancelable(false)
-                                        .show();
-                            }
+                            Evento e = eventSnapshot.getValue(Evento.class);
                             if(e != null && !listIDs.contains(e.getId()))
                             {
                                 listIDs.add(e.getId());
