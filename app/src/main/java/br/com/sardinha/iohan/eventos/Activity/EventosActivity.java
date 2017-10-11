@@ -116,42 +116,60 @@ public class EventosActivity extends AppCompatActivity {
     private void getData()
     {
         final Set<Evento> eventos = new HashSet<>();
-        final long cont[] = new long[2];
+        final long cont[] = new long[4];
         cont[0] = 0;
         cont[1] = 999999999;
+        cont[2] = 0;
+        cont[3] = 999999999;
         final boolean[] userEventCont = {false};
 
         //Eventos dos Seguidores
-        followingsReference.addValueEventListener(new ValueEventListener() {
+
+        invitationReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                cont[1] = dataSnapshot.getChildrenCount();
-                for(DataSnapshot followerSnapshot : dataSnapshot.getChildren())
-                {
-                    Query followerEventQuery = eventsReference.orderByChild("userID").startAt(followerSnapshot.getKey()).limitToFirst(10);
-                    followerEventQuery.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
-                            {
-                                Evento e = eventSnapshot.getValue(Evento.class);
-                                if(!listIDs.contains(e.getId()))
-                                {
-                                    listIDs.add(e.getId());
-                                    eventos.add(eventSnapshot.getValue(Evento.class));
+            public void onDataChange(final DataSnapshot invitations) {
+                followingsReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        cont[1] = dataSnapshot.getChildrenCount();
+                        for(DataSnapshot followerSnapshot : dataSnapshot.getChildren())
+                        {
+                            Query followerEventQuery = eventsReference.orderByChild("userID").startAt(followerSnapshot.getKey()).limitToFirst(10);
+                            followerEventQuery.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot followerSnapshot) {
+                                    for(DataSnapshot eventSnapshot : followerSnapshot.getChildren())
+                                    {
+                                        Evento e = eventSnapshot.getValue(Evento.class);
+                                        DatabaseReference userInvitedReference = database.getReference("UsersInvited").child(e.getId());
+                                        if(!listIDs.contains(e.getId()))
+                                        {
+                                            if(!e.getPrivacidade().equals("Privado") || invitations.hasChild(e.getId()))
+                                            {
+                                                listIDs.add(e.getId());
+                                                eventos.add(eventSnapshot.getValue(Evento.class));
+                                            }
+
+                                        }
+                                    }
+                                    cont[0] += 1;
+                                    showData(cont,userEventCont[0],eventos);
                                 }
-                            }
-                            cont[0] += 1;
-                            showData(cont[0],cont[1],userEventCont[0],eventos);
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
+                                }
+                            });
+                            showData(cont,userEventCont[0],eventos);
                         }
-                    });
-                    showData(cont[0],cont[1],userEventCont[0],eventos);
-                }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -159,6 +177,7 @@ public class EventosActivity extends AppCompatActivity {
 
             }
         });
+
 
         //Eventos do usuário
         Query userEventQuery = eventsReference.orderByChild("userID").startAt(userID).limitToFirst(10);
@@ -175,7 +194,7 @@ public class EventosActivity extends AppCompatActivity {
                     }
                 }
                 userEventCont[0] = true;
-                showData(cont[0],cont[1],userEventCont[0],eventos);
+                showData(cont,userEventCont[0],eventos);
             }
 
             @Override
@@ -185,11 +204,44 @@ public class EventosActivity extends AppCompatActivity {
         });
 
         //Eventos convidado
+        invitationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cont[3] = dataSnapshot.getChildrenCount();
+                for(DataSnapshot eventIdSnapshot: dataSnapshot.getChildren())
+                {
+                    DatabaseReference eventQuery = eventsReference.child(eventIdSnapshot.getKey());
+                    eventQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot eventSnapshot) {
+                            Evento e = eventSnapshot.getValue(Evento.class);
+                            if(e != null && !listIDs.contains(e.getId()))
+                            {
+                                listIDs.add(e.getId());
+                                eventos.add(eventSnapshot.getValue(Evento.class));
+                            }
+                            cont[2] += 1;
+                            showData(cont,userEventCont[0],eventos);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    private void showData(long cont, long total, boolean done, Set<Evento> events)
+    private void showData(long[] cont, boolean done, Set<Evento> events)
     {
-        if(cont >= total && done)
+        if(cont[0] >= cont[1] && cont[2] >= cont[3] && done)
         {
             list.clear();
             list.addAll(events);
@@ -509,6 +561,7 @@ public class EventosActivity extends AppCompatActivity {
                         {
                             firebaseMessaging.unsubscribeFromTopic(ds.getKey()+"-WhenCreateEvent");
                         }
+                        firebaseMessaging.unsubscribeFromTopic(userID);
                     }
 
                     @Override

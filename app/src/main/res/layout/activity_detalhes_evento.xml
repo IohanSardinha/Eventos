@@ -95,6 +95,7 @@
                 android:layout_below="@+id/descricao_detalhes"
                 android:layout_marginTop="16dp"
                 android:text="@string/participarao"
+                android:onClick="participaraoOnClick"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
             <android.support.v7.widget.RecyclerView

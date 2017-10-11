@@ -1,17 +1,24 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,13 +46,16 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.NotificationSender;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.Manifest;
 import br.com.sardinha.iohan.eventos.R;
 
 public class NovoEventoActivity extends AppCompatActivity {
@@ -246,8 +256,11 @@ public class NovoEventoActivity extends AppCompatActivity {
             storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                     evento.setImagem(taskSnapshot.getDownloadUrl().toString());
+
                     DatabaseReference ref = eventReference.child(ID);
+
                     ref.setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -336,7 +349,6 @@ public class NovoEventoActivity extends AppCompatActivity {
             Toast.makeText(cont, "Selecione uma imagem", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     //region DatePickers
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
@@ -565,16 +577,4 @@ public class NovoEventoActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if(ID == null)
-        {
-            startActivity(new Intent(this,EventosActivity.class));
-            finish();
-            return;
-        }
-        finish();
-    }*/
 }

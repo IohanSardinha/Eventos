@@ -205,19 +205,16 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 }
             });
 
-            ((TextView)findViewById(R.id.Perticiparao)).setOnClickListener(new OneShotClickListener() {
-                @Override
-                public void performClick(View v) {
-                    Intent intent = new Intent(DetalhesEventoActivity.this, ConvidadosActivity.class);
-                    intent.putExtra("evento",evento);
-                    intent.putExtra("usuario",user);
-                    intent.putExtra("confirmados",true);
-                    startActivity(intent);
-                }
-            });
-
         }
 
+    }
+
+    public void participaraoOnClick(View view) {
+        Intent intent = new Intent(DetalhesEventoActivity.this, ConvidadosActivity.class);
+        intent.putExtra("evento",evento);
+        intent.putExtra("usuario",user);
+        intent.putExtra("confirmados",true);
+        startActivity(intent);
     }
 
     @Override
@@ -308,5 +305,4 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         color = 0xFF000000 | r | g | b;
         return color;
     }
-
 }
