@@ -178,6 +178,13 @@ public class EventosActivity extends AppCompatActivity {
             }
         });
 
+        Calendar calendar = Calendar.getInstance();
+        final double dateNow = Double.parseDouble(
+                formatador(calendar.get(Calendar.YEAR))
+                        +formatador(calendar.get(Calendar.MONTH)+1)
+                        +formatador(calendar.get(Calendar.DAY_OF_MONTH))
+                        +formatador(calendar.get(Calendar.HOUR_OF_DAY))
+                        +formatador(calendar.get(Calendar.MINUTE)));
 
         //Eventos do usuário
         Query userEventQuery = eventsReference.orderByChild("userID").startAt(userID).limitToFirst(10);
@@ -214,7 +221,47 @@ public class EventosActivity extends AppCompatActivity {
                     eventQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot eventSnapshot) {
-                            Evento e = eventSnapshot.getValue(Evento.class);
+                            final Evento e = eventSnapshot.getValue(Evento.class);
+                            if(e.getDataHora()<=dateNow)
+                            {
+                                new AlertDialog.Builder(EventosActivity.this)
+                                        .setTitle(e.getTitulo())
+                                        .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
+                                                "Confirme quem realmente foi.")
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
+                                                //finish();
+                                            }
+                                        })
+                                        .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                eventsReference.child(e.getId()).removeValue();
+                                                final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(e.getId());
+                                                final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
+                                                usersParticipatingReference.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        for(DataSnapshot ds : dataSnapshot.getChildren())
+                                                        {
+                                                            eventsParticipatingReference.child(ds.getKey()).removeValue();
+                                                        }
+                                                        usersParticipatingReference.removeValue();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                                list.clear();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .show();
+                            }
                             if(e != null && !listIDs.contains(e.getId()))
                             {
                                 listIDs.add(e.getId());
@@ -251,271 +298,6 @@ public class EventosActivity extends AppCompatActivity {
         }
 
     }
-
-    private void retrieveData()
-    {
-
-        Calendar calendar = Calendar.getInstance();
-        final double dateNow = Double.parseDouble(
-                formatador(calendar.get(Calendar.YEAR))
-                        +formatador(calendar.get(Calendar.MONTH)+1)
-                        +formatador(calendar.get(Calendar.DAY_OF_MONTH))
-                        +formatador(calendar.get(Calendar.HOUR_OF_DAY))
-                        +formatador(calendar.get(Calendar.MINUTE)));
-
-        followingsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot followersSnapshot) {
-                Query eventsQuery = eventsReference.orderByChild("userID").startAt(userID).limitToFirst(10);
-                eventsQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot userEventSnapshot) {
-                        for(DataSnapshot eventSnapshot : userEventSnapshot.getChildren())
-                        {
-                            final Evento event = eventSnapshot.getValue(Evento.class);
-                            if(event.getDataHora()<=dateNow)
-                            {
-                                new AlertDialog.Builder(EventosActivity.this)
-                                        .setTitle(event.getTitulo())
-                                        .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
-                                                "Confirme quem realmente foi.")
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",event));
-                                                //finish();
-                                            }
-                                        })
-                                        .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                eventsReference.child(event.getId()).removeValue();
-                                                final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(event.getId());
-                                                final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
-                                                usersParticipatingReference.addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        for(DataSnapshot ds : dataSnapshot.getChildren())
-                                                        {
-                                                            eventsParticipatingReference.child(ds.getKey()).removeValue();
-                                                        }
-                                                        usersParticipatingReference.removeValue();
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                                list.clear();
-                                            }
-                                        })
-                                        .setCancelable(false)
-                                        .show();
-                            }
-                            if(!listIDs.contains(event.getId()))
-                            {
-                                list.add(event);
-                                listIDs.add(event.getId());
-                            }
-
-                        }
-
-                        invitationReference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(final DataSnapshot eventsInvitedSnapshot) {
-                                progress.setVisibility(View.VISIBLE);
-                                for(DataSnapshot follower : followersSnapshot.getChildren())
-                                {
-                                    Query queryFollower = eventsReference.orderByChild("userID").startAt(follower.getValue(Usuario.class).getId()).limitToFirst(10);
-                                    queryFollower.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot followerEventSnapshot) {
-                                            for(DataSnapshot eventSnapshot : followerEventSnapshot.getChildren())
-                                            {
-                                                Evento event = eventSnapshot.getValue(Evento.class);
-                                                if(!listIDs.contains(event.getId()))
-                                                {
-                                                    if(!event.getPrivacidade().equals("Privado") || eventsInvitedSnapshot.hasChild(event.getId()))
-                                                    {
-                                                        list.add(event);
-                                                        listIDs.add(event.getId());
-                                                    }
-
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-                                Collections.sort(list);
-                                recyclerView.setAdapter(new ListaEventosAdapter(list,EventosActivity.this));
-                                progress.setVisibility(View.GONE);
-                                if(list.size() <= 0)
-                                {
-                                    noEventToShow.setVisibility(View.VISIBLE);
-                                }
-                                else
-                                {
-                                    noEventToShow.setVisibility(View.GONE);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    //region GetData
-    /*private void getData()
-    {
-        Calendar calendar = Calendar.getInstance();
-        final double dateNow = Double.parseDouble(
-                         formatador(calendar.get(Calendar.YEAR))
-                        +formatador(calendar.get(Calendar.MONTH)+1)
-                        +formatador(calendar.get(Calendar.DAY_OF_MONTH))
-                        +formatador(calendar.get(Calendar.HOUR_OF_DAY))
-                        +formatador(calendar.get(Calendar.MINUTE)));
-
-        eventsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren())
-                {
-                    final Evento e = ds.getValue(Evento.class);
-                    if(e.getDataHora()<=dateNow)
-                    {
-                        new AlertDialog.Builder(EventosActivity.this)
-                                .setTitle(e.getTitulo())
-                                .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
-                                        "Confirme quem realmente foi.")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
-                                        //finish();
-                                    }
-                                })
-                                .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        eventsReference.child(e.getId()).removeValue();
-                                        final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(e.getId());
-                                        final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
-                                        usersParticipatingReference.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                for(DataSnapshot ds : dataSnapshot.getChildren())
-                                                {
-                                                    eventsParticipatingReference.child(ds.getKey()).removeValue();
-                                                }
-                                                usersParticipatingReference.removeValue();
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                                        list.clear();
-                                    }
-                                })
-                                .setCancelable(false)
-                                .show();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        list.clear();
-        followingsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren())
-                {
-                    DatabaseReference ref = database.getReference("Events").child(ds.getKey());
-                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            showData(dataSnapshot);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        eventsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void showData(DataSnapshot dataSnapshot)
-    {
-        for(DataSnapshot ds: dataSnapshot.getChildren())
-        {
-            Evento evento = ds.getValue(Evento.class);
-            if(evento.getPrivacidade().equals("Público"))
-            {
-                //list.add(ds.getValue(Evento.class));
-            }
-            list.add(ds.getValue(Evento.class));
-        }
-        Collections.sort(list);
-        progress.setVisibility(View.VISIBLE);
-        SystemClock.sleep(250);
-        recyclerView.setAdapter(new ListaEventosAdapter(list,this));
-        progress.setVisibility(View.GONE);
-        if(list.size() <= 0)
-        {
-            noEventToShow.setVisibility(View.VISIBLE);
-            return;
-        }
-        noEventToShow.setVisibility(View.GONE);
-    }*/
-    //endregion
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
