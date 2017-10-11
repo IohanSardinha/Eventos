@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -208,7 +209,7 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseReference userEventsReference = database.getReference("Events").child(user.getId());
+        Query userEventsReference = database.getReference("Events").orderByChild("userID").startAt(user.getId()).limitToFirst(10);
         userEventsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
