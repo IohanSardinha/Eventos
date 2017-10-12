@@ -1,24 +1,17 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,21 +39,17 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.NotificationSender;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
-import br.com.sardinha.iohan.eventos.Manifest;
 import br.com.sardinha.iohan.eventos.R;
 
 public class NovoEventoActivity extends AppCompatActivity {
 
-    DateFormat data = DateFormat.getDateInstance();
     Calendar calendario = Calendar.getInstance();
     Context cont = this;
     int hora = -1;
@@ -122,14 +111,11 @@ public class NovoEventoActivity extends AppCompatActivity {
                     ((EditText) findViewById(R.id.limite_de_convidados_criacao)).setText(String.valueOf(evento.getLimite()));
                 }
                 switch(evento.getPrivacidade()){
-                    case "Aberto":
+                    case "Público":
                         ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(1);
                         break;
-                    case "Público":
-                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(2);
-                        break;
                     case "Privado":
-                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(3);
+                        ((Spinner) findViewById(R.id.privacidade_criacao)).setSelection(2);
                         break;
                     default:
                         break;
@@ -253,6 +239,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         {
             StorageReference storageReference = storage.child(ID);
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
+
             storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -560,6 +547,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         }
     }
     //endregion
+
 
     public void selecionarImagemClick(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);

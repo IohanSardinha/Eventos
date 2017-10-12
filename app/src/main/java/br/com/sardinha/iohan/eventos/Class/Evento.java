@@ -116,6 +116,22 @@ public class Evento implements Serializable,Comparable<Evento> {
     public void setTituloLow(String tituloLow) {
         this.tituloLow = tituloLow;
     }
+
+    public String getIdPesquisa() {
+        return idPesquisa;
+    }
+
+    public void setIdPesquisa(String idPesquisa) {
+        this.idPesquisa = idPesquisa;
+    }
+
+    public String getImagemLow() {
+        return imagemLow;
+    }
+
+    public void setImagemLow(String imagemLow) {
+        this.imagemLow = imagemLow;
+    }
     //endregion
 
     private String titulo;
@@ -130,6 +146,7 @@ public class Evento implements Serializable,Comparable<Evento> {
     private int limite;
     private double dataHora;
     private String imagem;
+    private String imagemLow;
     private String id;
     private String idPesquisa;
     private String userID;
@@ -171,11 +188,5 @@ public class Evento implements Serializable,Comparable<Evento> {
     }
 
 
-    public String getIdPesquisa() {
-        return idPesquisa;
-    }
 
-    public void setIdPesquisa(String idPesquisa) {
-        this.idPesquisa = idPesquisa;
-    }
 }

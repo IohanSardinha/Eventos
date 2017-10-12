@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +24,15 @@ public class LoadingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String userID = intent.getStringExtra("userID");
         String eventID = intent.getStringExtra("eventID");
-
+        try
+        {
+            FirebaseAuth.getInstance().getCurrentUser();
+        }
+        catch (Exception ex)
+        {
+            startActivity(new Intent(this,MainActivity.class));
+            finish();
+        }
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(eventID);
         reference.addValueEventListener(new ValueEventListener() {
             @Override

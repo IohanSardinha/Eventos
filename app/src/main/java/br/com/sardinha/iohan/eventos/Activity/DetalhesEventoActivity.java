@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -87,12 +88,13 @@ public class DetalhesEventoActivity extends AppCompatActivity {
             Glide.with(getApplicationContext())
                     .load(Uri.parse(evento.getImagem()))
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.ic_file_download_black_24dp)
-                    .into(new SimpleTarget<Bitmap>(1000,1000) {
+                    .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                             ((ImageView) findViewById(R.id.imagem_detalhes)).setImageBitmap(resource);
-                            (findViewById(R.id.progressBar4)).setVisibility(View.GONE);
+                            ((ProgressBar)findViewById(R.id.progressBar4)).setVisibility(View.GONE);
                             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
                         }
                     });

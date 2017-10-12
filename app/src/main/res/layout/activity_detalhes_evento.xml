@@ -13,29 +13,25 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ProgressBar
-                android:id="@+id/progressBar4"
-                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="50dp"
-                android:paddingBottom="50dp" />
-
             <ImageView
-                android:layout_below="@id/progressBar4"
                 android:id="@+id/imagem_detalhes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/common_google_signin_btn_text_light_normal_background" />
 
             <TextView
                 android:text="Dia 00/00/0000"
@@ -138,6 +134,15 @@
                 android:text="@string/ninguem_confirmou_ainda"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
+
+            <ProgressBar
+                android:id="@+id/progressBar4"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/participar_evento_detalhes"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="32dp" />
 
         </RelativeLayout>
     </ScrollView>
