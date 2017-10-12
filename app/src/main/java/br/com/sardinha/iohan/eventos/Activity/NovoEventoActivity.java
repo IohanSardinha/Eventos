@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -237,62 +241,86 @@ public class NovoEventoActivity extends AppCompatActivity {
         //CRIANDO
         if(image != null && !image.toString().substring(0,5).equals("https"))
         {
-            StorageReference storageReference = storage.child(ID);
+            final StorageReference storageReference = storage.child(ID);
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
 
-            storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            try
+            {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),image);
+                bitmap = getResizedBitmap(bitmap,10);
+                ByteArrayOutputStream boas = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100,boas);
+                byte[] bytes = boas.toByteArray();
+                storage.child(ID+"LOW").putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        evento.setImagemLow(taskSnapshot.getDownloadUrl().toString());
+                        storageReference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    evento.setImagem(taskSnapshot.getDownloadUrl().toString());
+                                evento.setImagem(taskSnapshot.getDownloadUrl().toString());
 
-                    DatabaseReference ref = eventReference.child(ID);
+                                DatabaseReference ref = eventReference.child(ID);
 
-                    ref.setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            progress.dismiss();
-                            setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
-                            if(!evento.getPrivacidade().equals("Privado"))
-                            {
-                                new NotificationSender().SendNewEventNotification(NovoEventoActivity.this,evento,usuario);
+                                ref.setValue(evento).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        progress.dismiss();
+                                        setResult(RESULT_OK,(new Intent()).putExtra("evento",evento));
+                                        if(!evento.getPrivacidade().equals("Privado"))
+                                        {
+                                            new NotificationSender().SendNewEventNotification(NovoEventoActivity.this,evento,usuario);
+                                        }
+                                        new AlertDialog.Builder(NovoEventoActivity.this)
+                                                .setTitle("Convidar amigos?")
+                                                .setMessage("Gostaria de convidar amigos para o evento agora?")
+                                                .setCancelable(false)
+                                                .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        finish();
+                                                    }
+                                                })
+                                                .setPositiveButton("Convidar", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Intent intent = new Intent(NovoEventoActivity.this,ConvidadosActivity.class);
+                                                        intent.putExtra("evento",evento);
+                                                        intent.putExtra("usuario",usuario);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                })
+                                                .show();
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
-                            new AlertDialog.Builder(NovoEventoActivity.this)
-                                    .setTitle("Convidar amigos?")
-                                    .setMessage("Gostaria de convidar amigos para o evento agora?")
-                                    .setCancelable(false)
-                                    .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            finish();
-                                        }
-                                    })
-                                    .setPositiveButton("Convidar", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent(NovoEventoActivity.this,ConvidadosActivity.class);
-                                            intent.putExtra("evento",evento);
-                                            intent.putExtra("usuario",usuario);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    })
-                                    .show();
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(cont, "Erro no upload da imagem", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(cont, "Erro no upload da imagem", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
 
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(cont, "Erro salvando os dados", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(cont, "Erro no upload da imagem", Toast.LENGTH_SHORT).show();
-                }
-            });
+            }
+
         }
         //ATUALIZANDO
         else if(image != null && image.toString().substring(0,5).equals("https"))
@@ -562,7 +590,25 @@ public class NovoEventoActivity extends AppCompatActivity {
         {
             image = data.getData();
             ((ImageView)findViewById(R.id.imagem_criacao)).setImageURI(image);
+
+
         }
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
 }

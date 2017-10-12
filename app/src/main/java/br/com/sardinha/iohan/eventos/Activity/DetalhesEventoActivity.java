@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -18,16 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,10 +34,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosAdapter;
 import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosConvidadosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
-import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
 
@@ -57,24 +50,19 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         Intent intent = getIntent();
         evento = (Evento) intent.getSerializableExtra("evento");
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void run() {
-                database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        user = dataSnapshot.getValue(Usuario.class);
-                        Draw();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(Usuario.class);
+                Draw();
             }
-        },1000);
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -86,7 +74,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         else
         {
             Glide.with(getApplicationContext())
-                    .load(Uri.parse(evento.getImagem()))
+                    .load(Uri.parse(evento.getImagemLow()))
                     .asBitmap()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.ic_file_download_black_24dp)
@@ -94,8 +82,20 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                             ((ImageView) findViewById(R.id.imagem_detalhes)).setImageBitmap(resource);
-                            ((ProgressBar)findViewById(R.id.progressBar4)).setVisibility(View.GONE);
                             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
+                            Glide.with(getApplicationContext())
+                                    .load(Uri.parse(evento.getImagem()))
+                                    .asBitmap()
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .placeholder(R.drawable.ic_file_download_black_24dp)
+                                    .into(new SimpleTarget<Bitmap>(1000,1000) {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                            ((ImageView) findViewById(R.id.imagem_detalhes)).setImageBitmap(resource);
+                                            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
+                                            findViewById(R.id.progressBar4).setVisibility(View.GONE);
+                                        }
+                                    });
                         }
                     });
         }
@@ -163,12 +163,9 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         });
 
         final Button participate = (Button)findViewById(R.id.participar_evento_detalhes);
-        if(evento.getUserID().equals(user.getId()))
+        if(!evento.getUserID().equals(user.getId()))
         {
-            participate.setVisibility(View.GONE);
-        }
-        else
-        {
+            participate.setVisibility(View.VISIBLE);
             final DatabaseReference userParticipating = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(evento.getId());
             final DatabaseReference eventsParticipating = FirebaseDatabase.getInstance().getReference("EventsParticipating").child(user.getId()).child(evento.getId());
             userParticipating.addValueEventListener(new ValueEventListener() {

@@ -31,7 +31,7 @@
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/common_google_signin_btn_text_light_normal_background" />
+                app:srcCompat="@drawable/selecionar" />
 
             <TextView
                 android:text="Dia 00/00/0000"
@@ -122,7 +122,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@color/button"
-                android:text="Participar" />
+                android:text="Participar"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/ninguem_confirmou_detalhes"
@@ -135,16 +136,16 @@
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
-            <ProgressBar
-                android:id="@+id/progressBar4"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/participar_evento_detalhes"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="32dp" />
-
         </RelativeLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar4"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
