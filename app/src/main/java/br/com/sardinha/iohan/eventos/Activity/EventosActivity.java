@@ -297,6 +297,10 @@ public class EventosActivity extends AppCompatActivity {
             Collections.sort(list);
             recyclerView.setAdapter(new ListaEventosAdapter(list,this));
             progress.setVisibility(View.GONE);
+            if(list.size()<= 0)
+            {
+                noEventToShow.setVisibility(View.VISIBLE);
+            }
         }
 
     }

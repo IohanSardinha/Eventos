@@ -63,6 +63,7 @@ public class NovoEventoActivity extends AppCompatActivity {
 
     private final int GALLERY_RESULT = 2;
     Uri image;
+    private String imageLow;
 
     private StorageReference storage;
     private DatabaseReference eventReference;
@@ -103,6 +104,7 @@ public class NovoEventoActivity extends AppCompatActivity {
                 ID = evento.getId();
                 Glide.with(this).load(evento.getImagem()).into(((ImageView)findViewById(R.id.imagem_criacao)));
                 image = Uri.parse(evento.getImagem());
+                imageLow = evento.getImagemLow();
                 ((EditText) findViewById(R.id.titulo_Criacao)).setText(evento.getTitulo());
                 ((EditText)findViewById(R.id.endereco_cricao)).setText(evento.getEndereco());
                 ((EditText) findViewById(R.id.data_inicio_criacao)).setText(evento.getDataInicio());
@@ -327,6 +329,7 @@ public class NovoEventoActivity extends AppCompatActivity {
         {
             progress = ProgressDialog.show(this,"Salvando","Um momento por favor...",true);
             evento.setImagem(image.toString());
+            evento.setImagemLow(imageLow);
             DatabaseReference userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(ID);
             final Map<String,Object> updateMap = new HashMap<>();
             updateMap.put("Events/"+evento.getId(),evento);
