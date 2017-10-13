@@ -107,10 +107,8 @@
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/tituloMain"
-        android:layout_alignEnd="@+id/tituloMain" />
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

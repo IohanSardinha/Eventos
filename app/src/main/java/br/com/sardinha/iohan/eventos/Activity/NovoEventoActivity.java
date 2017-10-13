@@ -247,7 +247,7 @@ public class NovoEventoActivity extends AppCompatActivity {
             try
             {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),image);
-                bitmap = getResizedBitmap(bitmap,10);
+                bitmap = getResizedBitmap(bitmap,50);
                 ByteArrayOutputStream boas = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,boas);
                 byte[] bytes = boas.toByteArray();

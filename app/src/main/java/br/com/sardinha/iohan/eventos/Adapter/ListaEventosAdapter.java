@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import br.com.sardinha.iohan.eventos.Activity.DetalhesEventoActivity;
 import br.com.sardinha.iohan.eventos.Class.Evento;
@@ -32,12 +34,12 @@ import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;
 
 
 public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {
-    ArrayList<Evento> list;
-    Context context;
-    DatabaseReference eventsReference,userReference, userParticipatingReference, eventsParticipatingReference;
-    String uID;
-    double dateNow;
-    Usuario currentUser;
+    private ArrayList<Evento> list;
+    private Context context;
+    private DatabaseReference eventsReference,userReference, userParticipatingReference, eventsParticipatingReference;
+    private String uID;
+    private double dateNow;
+    private Usuario currentUser;
     public ListaEventosAdapter(ArrayList<Evento> list, Context context, Usuario currentUser) {
         this.list = list;
         this.context = context;
@@ -124,23 +126,21 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             });
         }
 
-
-
         final String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userParticipatingReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(uID))
                 {
-                    holder.participate.setText("Participando");
-                    holder.participate.setBackgroundResource(R.color.buttonPressed);
-                    holder.participate.setTextColor(Color.WHITE);
+
+                    holder.participatingImage.setImageResource(R.drawable.ic_event_available_black_24dp);
+                    holder.participatingImage.setColorFilter(Color.BLACK);
+                    holder.participatingText.setText("Confirmado!");
                     holder.participate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            userParticipatingReference.child(list.get(position).getId()).child(userID).removeValue();
-                            eventsParticipatingReference.child(userID).child(list.get(position).getId()).removeValue();
+                            userParticipatingReference.child(list.get(position).getId()).child(uID).removeValue();
+                            eventsParticipatingReference.child(uID).child(list.get(position).getId()).removeValue();
                         }
                     });
                 }
@@ -154,17 +154,17 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                     {
                         if(evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1)
                         {
-                            holder.participate.setBackgroundResource(R.color.button);
-                            holder.participate.setText("Participar");
-                            holder.participate.setTextColor(Color.BLACK);
+
+                            holder.participatingImage.setImageResource(R.drawable.calendar_plus);
+                            holder.participatingImage.setColorFilter(ContextCompat.getColor(context,R.color.button));
+                            holder.participatingText.setText("Ir?");
                             holder.participate.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    userReference.child(userID).addValueEventListener(new ValueEventListener() {
+                                    userReference.child(uID).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            userParticipatingReference.child(list.get(position).getId()).child(userID).setValue(dataSnapshot.getValue(Usuario.class));
+                                            userParticipatingReference.child(list.get(position).getId()).child(uID).setValue(dataSnapshot.getValue(Usuario.class));
                                         }
 
                                         @Override
@@ -172,15 +172,15 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
                                         }
                                     });
-                                    eventsParticipatingReference.child(userID).child(list.get(position).getId()).setValue(list.get(position));
+                                    eventsParticipatingReference.child(uID).child(list.get(position).getId()).setValue(list.get(position));
+
                                 }
                             });
                         }
                         else if(!dataSnapshot.hasChild(uID))
                         {
-                            holder.participate.setBackgroundResource(R.color.button);
-                            holder.participate.setTextColor(Color.BLACK);
-                            holder.participate.setText("Lotado");
+                            holder.participatingImage.setImageResource(R.drawable.ic_event_busy_black_24dp);
+                            holder.participatingImage.setColorFilter(Color.BLACK);
                         }
                     }
                 }
@@ -191,8 +191,14 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
             }
         });
-        holder.info.setText(String.valueOf(list.get(position).getTitulo()));
-        holder.description.setText(String.valueOf(list.get(position).getEndereco()));
+        holder.title.setText(String.valueOf(list.get(position).getTitulo()));
+        holder.address.setText(String.valueOf(list.get(position).getEndereco()));
+        holder.time.setText(list.get(position).getHoraInicio());
+        String data = list.get(position).getDataInicio();
+        List<String> tempData = Arrays.asList(data.split("/"));
+        holder.day.setText(tempData.get(0));
+        holder.month.setText(getStringMonth(tempData.get(1)));
+
         if(list.get(position).getImagem() != null)
         {
             Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.image);
@@ -205,23 +211,36 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView info;
-        TextView description;
+        TextView title;
+        TextView address;
         TextView userName;
+        TextView month;
+        TextView time;
+        TextView day;
         ImageView image;
-        Button participate;
+        View participate;
+        ImageView participatingImage;
+        TextView participatingText;
         public ViewHolder(View itemView) {
             super(itemView);
+
             uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
             userReference = FirebaseDatabase.getInstance().getReference("Users");
             userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating");
             eventsParticipatingReference = FirebaseDatabase.getInstance().getReference("EventsParticipating");
             eventsReference = FirebaseDatabase.getInstance().getReference("Events");
+
             image = (ImageView)itemView.findViewById(R.id.imagem_item_lista);
-            info = (TextView)itemView.findViewById(R.id.info_text);
-            description = (TextView)itemView.findViewById(R.id.info_text2);
+            title = (TextView)itemView.findViewById(R.id.titulo_item_evento);
+            address = (TextView)itemView.findViewById(R.id.endereco_item_evento);
+            month = (TextView)itemView.findViewById(R.id.mes_item_evento);
+            day = (TextView)itemView.findViewById(R.id.dia_item_evento);
+            time = (TextView)itemView.findViewById(R.id.hora_item_evento);
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item_evento);
-            participate = (Button)itemView.findViewById(R.id.participar_item_evento);
+            participate = itemView.findViewById(R.id.participarButton);
+            participatingImage = (ImageView)itemView.findViewById(R.id.imagemParticipandoItem);
+            participatingText = (TextView)itemView.findViewById(R.id.textoParticipandoItem);
+
             Calendar calendar = Calendar.getInstance();
             dateNow = Double.parseDouble(
                     formatador(calendar.get(Calendar.YEAR))
@@ -245,5 +264,35 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             return "0"+String.valueOf(x);
         }
         return String.valueOf(x);
+    }
+    private String getStringMonth(String month)
+    {
+        switch (month)
+        {
+            case "01":
+                return "jan";
+            case "02":
+                return "fev";
+            case "03":
+                return "mar";
+            case "04":
+                return "abr";
+            case "05":
+                return "mai";
+            case "06":
+                return "jun";
+            case "07":
+                return "jul";
+            case "08":
+                return "ago";
+            case "09":
+                return "set";
+            case "10":
+                return "out";
+            case "11":
+                return "nov";
+            default:
+                return "dez";
+        }
     }
 }
