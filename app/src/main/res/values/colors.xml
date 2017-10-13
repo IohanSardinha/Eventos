@@ -5,6 +5,6 @@
     <color name="colorAccent">#9c27b0</color>
     <color name="button">#AAAAAA</color>
     <color name="buttonPressed">#6A1B9A</color>
-    <color name="background">#e1bee7</color>
+    <color name="dataContainer">#82000000</color>
     <color name="buttonSignIn">#93c7cd</color>
 </resources>
