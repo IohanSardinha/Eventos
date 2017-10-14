@@ -256,7 +256,6 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             Intent intent = new Intent(context,DetalhesEventoActivity.class);
             intent.putExtra("evento",list.get(getAdapterPosition()));
             context.startActivity(intent);
-            ((Activity)context).finish();
         }
     }
     private String formatador(int x){
