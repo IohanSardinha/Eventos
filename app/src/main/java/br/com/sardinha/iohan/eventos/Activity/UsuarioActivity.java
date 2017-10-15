@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -41,6 +43,7 @@ import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsuarioActivity extends AppCompatActivity {
 
@@ -49,7 +52,7 @@ public class UsuarioActivity extends AppCompatActivity {
     private DatabaseReference userReference;
     private Button followButton;
     private ArrayList<Evento> list;
-    private ImageView userImage;
+    private CircleImageView userImage;
     RecyclerView recyclerView;
     Usuario user;
 
@@ -64,7 +67,12 @@ public class UsuarioActivity extends AppCompatActivity {
         followButton = (Button)findViewById(R.id.seguir_usuario_descricao);
         ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
         userReference = database.getReference("Users").child(user.getId());
-        userImage = (ImageView)findViewById(R.id.foto_usuario_descricao);
+        userImage = (CircleImageView)findViewById(R.id.foto_usuario_descricao);
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -83,7 +91,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
         if(!user.getImagem().isEmpty())
         {
-            Glide.with(UsuarioActivity.this).load(Uri.parse(user.getImagem())).placeholder(R.drawable.ic_person_black_24dp).into(userImage);
+            Glide.with(UsuarioActivity.this).load(Uri.parse(user.getImagem())).into(userImage);
         }
 
         if(user.getId().equals(UID)) {
@@ -242,6 +250,15 @@ public class UsuarioActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home)
+        {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

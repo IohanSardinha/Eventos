@@ -7,16 +7,22 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="15dp"
+    card_view:cardElevation="11dp"
     card_view:contentPadding="1dp">
 
     <ImageView
-        android:id="@+id/fotoPerfilItemConvidados"
+        android:id="@+id/imageHolder"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginLeft="15dp"
         card_view:srcCompat="@drawable/ic_person_black_24dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/fotoPerfilItemConvidados"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp" />
 
     <TextView
         android:id="@+id/nome_usuario_convidado_item"

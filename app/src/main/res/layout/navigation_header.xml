@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:background="@color/colorAccent">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/foto_usuario_header"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/festa"
+        android:layout_marginTop="11dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/nome_usuario_header"
+        android:layout_alignStart="@+id/nome_usuario_header" />
+
+    <TextView
+        android:id="@+id/nome_usuario_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/foto_usuario_header"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Nome do elemento"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+        android:textSize="18sp" />
+
+</RelativeLayout>

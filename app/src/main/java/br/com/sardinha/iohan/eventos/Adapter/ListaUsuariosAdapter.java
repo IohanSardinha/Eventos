@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import br.com.sardinha.iohan.eventos.R;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdapter.ViewHolder> {
 
@@ -49,7 +50,8 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
         holder.userName.setText(list.get(position).getNome());
         if(!list.get(position).getImagem().isEmpty())
         {
-            Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhoto);
+            Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhotoCirc);
+
         }
         if(list.get(position).getId().equals(user))
         {
@@ -113,13 +115,13 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView userName;
         Button followButton;
-        ImageView userPhoto;
+        CircleImageView userPhotoCirc;
         public ViewHolder(View itemView) {
             super(itemView);
             database = FirebaseDatabase.getInstance().getReference("Followings").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item);
             followButton = (Button)itemView.findViewById(R.id.seguir_usuario_item);
-            userPhoto = (ImageView)itemView.findViewById(R.id.foto_usuario_item);
+            userPhotoCirc = (CircleImageView)itemView.findViewById(R.id.foto_usuario_item_circ);
             user = FirebaseAuth.getInstance().getCurrentUser().getUid();
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

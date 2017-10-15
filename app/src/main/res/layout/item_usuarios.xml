@@ -16,7 +16,14 @@
         android:id="@+id/foto_usuario_item"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
         card_view:srcCompat="@drawable/ic_person_black_24dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/foto_usuario_item_circ"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical" />
     <TextView
         android:id="@+id/nome_usuario_item"
         android:layout_width="wrap_content"

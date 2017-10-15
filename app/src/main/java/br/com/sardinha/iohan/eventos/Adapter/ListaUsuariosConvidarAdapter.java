@@ -27,6 +27,7 @@ import br.com.sardinha.iohan.eventos.Class.NotificationSender;
 import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.R;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsuariosConvidarAdapter.ViewHolder>{
@@ -124,11 +125,11 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
     public class ViewHolder extends RecyclerView.ViewHolder{
         Button convidarButton;
         TextView nome;
-        ImageView userPhoto;
+        CircleImageView userPhoto;
         public ViewHolder(View itemView) {
             super(itemView);
             nome = (TextView) itemView.findViewById(R.id.nome_usuario_convidar_item);
-            userPhoto = (ImageView)itemView.findViewById(R.id.foto_perfil_convidar);
+            userPhoto = (CircleImageView) itemView.findViewById(R.id.foto_perfil_convidar);
             convidarButton = (Button)itemView.findViewById(R.id.convidar_usuario_item);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             usersInvited = database.getReference("UsersInvited").child(evento.getId());

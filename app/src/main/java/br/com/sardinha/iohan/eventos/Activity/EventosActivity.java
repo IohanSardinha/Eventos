@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +22,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,11 +46,14 @@ import br.com.sardinha.iohan.eventos.Class.NotificationSender;
 import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EventosActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
     private ProgressBar progress;
     private TextView noEventToShow;
 
@@ -60,12 +68,64 @@ public class EventosActivity extends AppCompatActivity {
 
     private Set<String> listIDs = new HashSet<>();
 
-    ArrayList<Evento> list = new ArrayList<>();
+    private ArrayList<Evento> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventos);
+
+        drawerLayout = (DrawerLayout)findViewById(R.id.navigation_eventos);
+        toggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navView = (NavigationView)findViewById(R.id.navigation_view_eventos);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.usuario:
+                        Intent intent = new Intent(EventosActivity.this,UsuarioActivity.class);
+                        intent.putExtra("Usuario",currentUser);
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.signout:
+                        auth.signOut();
+                        DatabaseReference notificationGroupReference = database.getReference("NotificationGroups").child(userID);
+                        notificationGroupReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+                                firebaseMessaging.unsubscribeFromTopic(userID);
+                                for(DataSnapshot ds:dataSnapshot.getChildren())
+                                {
+                                    firebaseMessaging.unsubscribeFromTopic(ds.getKey()+"-WhenCreateEvent");
+                                }
+                                firebaseMessaging.unsubscribeFromTopic(userID);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        finish();
+                        startActivity(new Intent(EventosActivity.this,MainActivity.class));
+                        return true;
+
+                    default:
+                        return false;
+
+                }
+            }
+        });
+
         progress = (ProgressBar)findViewById(R.id.progressBar2);
         progress.setVisibility(View.VISIBLE);
         noEventToShow = (TextView)findViewById(R.id.nenhum_evento);
@@ -88,6 +148,7 @@ public class EventosActivity extends AppCompatActivity {
             }
         });
 
+
         followingsReference = database.getReference("Followings").child(userID);
         invitationReference = database.getReference("EventsInvited").child(userID);
 
@@ -99,6 +160,9 @@ public class EventosActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(Usuario.class);
+                CircleImageView userPhoto = (CircleImageView)findViewById(R.id.foto_usuario_header);
+                Glide.with(EventosActivity.this).load(currentUser.getImagem()).into(userPhoto);
+                ((TextView)findViewById(R.id.nome_usuario_header)).setText(currentUser.getNome());
             }
 
             @Override
@@ -335,45 +399,8 @@ public class EventosActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.signout:
-                auth.signOut();
-                DatabaseReference notificationGroupReference = database.getReference("NotificationGroups").child(userID);
-                notificationGroupReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
-                        firebaseMessaging.unsubscribeFromTopic(userID);
-                        for(DataSnapshot ds:dataSnapshot.getChildren())
-                        {
-                            firebaseMessaging.unsubscribeFromTopic(ds.getKey()+"-WhenCreateEvent");
-                        }
-                        firebaseMessaging.unsubscribeFromTopic(userID);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                finish();
-                startActivity(new Intent(this,MainActivity.class));
-                return true;
-            case R.id.usuario:
-                Intent intent = new Intent(this,UsuarioActivity.class);
-                intent.putExtra("Usuario",currentUser);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
-
-    /*public void novoEvento(View view) {
-        startActivity(new Intent(this,NovoEventoActivity.class));
-        finish();
-    }*/
 
     private String formatador(int x){
         if (x < 10){

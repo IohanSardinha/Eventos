@@ -49,6 +49,12 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         Intent intent = getIntent();
         evento = (Evento) intent.getSerializableExtra("evento");
+
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -80,7 +86,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                             ((ImageView) findViewById(R.id.imagem_detalhes)).setImageBitmap(resource);
-                            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
+                            //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
                             Glide.with(getApplicationContext())
                                     .load(Uri.parse(evento.getImagem()))
                                     .asBitmap()
@@ -90,7 +96,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                                         @Override
                                         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                                             ((ImageView) findViewById(R.id.imagem_detalhes)).setImageBitmap(resource);
-                                            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
+                                            //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getDominantColor(resource)));
                                             findViewById(R.id.progressBar4).setVisibility(View.GONE);
                                         }
                                     });
@@ -236,6 +242,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.edit_action:
                 Intent intent = new Intent(this, NovoEventoActivity.class);
@@ -257,6 +264,10 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                                 finish();
                             }
                         }).show();
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

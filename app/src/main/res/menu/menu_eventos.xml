@@ -7,10 +7,4 @@
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/usuario"
-        android:title="@string/perfil" />
-    <item
-        android:id="@+id/signout"
-        android:title="@string/sair" />
 </menu>

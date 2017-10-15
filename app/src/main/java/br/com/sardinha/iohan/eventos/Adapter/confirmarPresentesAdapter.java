@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.R;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPresentesAdapter.ViewHolder> {
 
@@ -123,7 +124,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
         TextView nomeUsuario;
         Button buttonSim;
         Button buttonNao;
-        ImageView userPhoto;
+        CircleImageView userPhoto;
         public ViewHolder(View itemView) {
             super(itemView);
             database = FirebaseDatabase.getInstance();
@@ -134,7 +135,7 @@ public class confirmarPresentesAdapter extends RecyclerView.Adapter<confirmarPre
             nomeUsuario = (TextView)itemView.findViewById(R.id.nome_usuario_item_confirmacao);
             buttonSim = (Button)itemView.findViewById(R.id.foi_item_confirmacao);
             buttonNao = (Button)itemView.findViewById(R.id.nao_foi_item_confirmacao);
-            userPhoto = (ImageView)itemView.findViewById(R.id.foto_usuario_confirmacao);
+            userPhoto = (CircleImageView) itemView.findViewById(R.id.foto_usuario_confirmacao);
         }
     }
 }

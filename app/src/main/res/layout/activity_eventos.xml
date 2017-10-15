@@ -2,7 +2,7 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_eventos"
+    android:id="@+id/navigation_eventos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.sardinha.iohan.eventos.Activity.EventosActivity">
@@ -49,10 +49,11 @@
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/navigation_eventos"
+        android:id="@+id/navigation_view_eventos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/navigation_menu" />
+        app:menu="@menu/navigation_menu"
+        app:headerLayout="@layout/navigation_header"/>
 
 </android.support.v4.widget.DrawerLayout>

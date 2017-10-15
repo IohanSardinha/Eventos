@@ -21,6 +21,7 @@ import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ListaUsuariosConvidadosAdapter extends RecyclerView.Adapter<ListaUsuariosConvidadosAdapter.ViewHolder>{
 
@@ -47,6 +48,7 @@ public class ListaUsuariosConvidadosAdapter extends RecyclerView.Adapter<ListaUs
         if(list.get(position).getId().isEmpty())
         {
             holder.userProfilePhoto.setVisibility(View.GONE);
+            holder.imageHolder.setVisibility(View.GONE);
             holder.userName.setPadding(0,10,0,0);
             holder.userName.setTextSize(18);
         }
@@ -54,7 +56,7 @@ public class ListaUsuariosConvidadosAdapter extends RecyclerView.Adapter<ListaUs
         {
             if(!list.get(position).getImagem().isEmpty())
             {
-                Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhoto);
+                Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userProfilePhoto);
             }
         }
         holder.userName.setText(list.get(position).getNome());
@@ -67,14 +69,14 @@ public class ListaUsuariosConvidadosAdapter extends RecyclerView.Adapter<ListaUs
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView userName;
-        ImageView userProfilePhoto;
-        ImageView userPhoto;
+        CircleImageView userProfilePhoto;
+        View imageHolder;
         public ViewHolder(View itemView)
         {
             super(itemView);
-            userProfilePhoto = (ImageView)itemView.findViewById(R.id.fotoPerfilItemConvidados);
+            userProfilePhoto = (CircleImageView) itemView.findViewById(R.id.fotoPerfilItemConvidados);
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_convidado_item);
-            userPhoto = (ImageView)itemView.findViewById(R.id.fotoPerfilItemConvidados);
+            imageHolder = itemView.findViewById(R.id.imageHolder);
             itemView.setOnClickListener(new OneShotClickListener() {
                 @Override
                 public void performClick(View v) {

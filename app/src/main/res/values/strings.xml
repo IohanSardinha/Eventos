@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Demorô</string>
     <string name="evento">Evento</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
     <string name="eventos">Eventos</string>
     <string name="novo_evento">Novo evento</string>
     <string name="titulo_criacao">Título do seu evento</string>
