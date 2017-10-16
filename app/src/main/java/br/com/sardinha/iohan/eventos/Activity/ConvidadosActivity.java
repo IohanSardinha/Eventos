@@ -45,7 +45,7 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    public void setupViewPager(ViewPager viewPager)
+    private void setupViewPager(ViewPager viewPager)
     {
         FragmentAdapter a = new FragmentAdapter(getSupportFragmentManager());
         convidadosFragment = new ConvidadosFragment();

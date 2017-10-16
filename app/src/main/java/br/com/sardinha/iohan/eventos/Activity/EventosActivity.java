@@ -89,6 +89,11 @@ public class EventosActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId())
                 {
+                    case R.id.meus_eventos:
+                        Intent intent1 = new Intent(EventosActivity.this, meusEventosActivity.class);
+                        startActivity(intent1);
+                        return true;
+
                     case R.id.usuario:
                         Intent intent = new Intent(EventosActivity.this,UsuarioActivity.class);
                         intent.putExtra("Usuario",currentUser);
@@ -162,7 +167,16 @@ public class EventosActivity extends AppCompatActivity {
                 currentUser = dataSnapshot.getValue(Usuario.class);
                 CircleImageView userPhoto = (CircleImageView)findViewById(R.id.foto_usuario_header);
                 Glide.with(EventosActivity.this).load(currentUser.getImagem()).into(userPhoto);
-                ((TextView)findViewById(R.id.nome_usuario_header)).setText(currentUser.getNome());
+                TextView tv = ((TextView)findViewById(R.id.nome_usuario_header));
+                tv.setText(currentUser.getNome());
+                tv.setOnClickListener(new OneShotClickListener() {
+                    @Override
+                    public void performClick(View v) {
+                        Intent intent = new Intent(EventosActivity.this,UsuarioActivity.class);
+                        intent.putExtra("Usuario",currentUser);
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override
