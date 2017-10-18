@@ -133,4 +133,11 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
             });
         }
     }
+
+    public void setFilter(ArrayList<Usuario> newList)
+    {
+        list = new ArrayList<>();
+        list.addAll(newList);
+        notifyDataSetChanged();
+    }
 }

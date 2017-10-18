@@ -281,8 +281,8 @@ public class DetalhesEventoActivity extends AppCompatActivity {
             case R.id.delete_action:
                 new AlertDialog.Builder(this).setTitle(R.string.evento_sera_cancelado)
                         .setMessage(R.string.certeza_que_quer_cancelar)
-                        .setNegativeButton(R.string.sim,null)
-                        .setPositiveButton(R.string.nao, new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.nao,null)
+                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 StorageReference storage = FirebaseStorage.getInstance().getReference("Events").child(evento.getId());

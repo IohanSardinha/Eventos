@@ -9,7 +9,6 @@
         android:id="@+id/foto_usuario_header"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/festa"
         android:layout_marginTop="11dp"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/nome_usuario_header"
@@ -24,7 +23,7 @@
         android:layout_below="@+id/foto_usuario_header"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:text="Nome do elemento"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
         android:textSize="18sp" />
 

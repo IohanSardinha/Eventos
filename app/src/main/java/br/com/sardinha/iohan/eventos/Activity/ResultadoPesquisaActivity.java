@@ -1,6 +1,7 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
-import android.content.Intent;
+
+import android.widget.SearchView;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
@@ -11,11 +12,15 @@ import br.com.sardinha.iohan.eventos.Fragment.ResultadoPesquisaEventoFragment;
 import br.com.sardinha.iohan.eventos.Fragment.ResultadoPesquisaUsuarioFragment;
 import br.com.sardinha.iohan.eventos.R;
 
-public class ResultadoPesquisaActivity extends AppCompatActivity {
+public class ResultadoPesquisaActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private FragmentAdapter adapter;
     private ViewPager viewPager;
     private String query;
+    private SearchView searchView;
+
+    ResultadoPesquisaUsuarioFragment userFragment;
+    ResultadoPesquisaEventoFragment eventFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,8 @@ public class ResultadoPesquisaActivity extends AppCompatActivity {
         query = getIntent().getStringExtra("Query");
 
         adapter = new FragmentAdapter(getSupportFragmentManager());
+        searchView = (SearchView)findViewById(R.id.search_view_resultado);
+        searchView.setOnQueryTextListener(this);
 
         viewPager = (ViewPager)findViewById(R.id.container);
         setupViewPager(viewPager);
@@ -37,20 +44,25 @@ public class ResultadoPesquisaActivity extends AppCompatActivity {
     public void setupViewPager(ViewPager viewPager)
     {
         FragmentAdapter a = new FragmentAdapter(getSupportFragmentManager());
-        ResultadoPesquisaUsuarioFragment userFragment = new ResultadoPesquisaUsuarioFragment();
+        userFragment = new ResultadoPesquisaUsuarioFragment();
         userFragment.setQuery(query);
-        ResultadoPesquisaEventoFragment eventFragment = new ResultadoPesquisaEventoFragment();
+        eventFragment = new ResultadoPesquisaEventoFragment();
         eventFragment.setQuery(query);
         a.addFragment(userFragment,"Usuários");
         a.addFragment(eventFragment,"Eventos");
         viewPager.setAdapter(a);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 
-    /*@Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        startActivity(new Intent(this,EventosActivity.class));
-    }*/
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        userFragment.filter(newText);
+        eventFragment.filter(newText);
+        System.out.println(newText);
+        return true;
+    }
 }

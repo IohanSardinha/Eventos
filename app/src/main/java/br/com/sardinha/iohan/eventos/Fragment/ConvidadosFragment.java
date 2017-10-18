@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import br.com.sardinha.iohan.eventos.Activity.ConvidadosActivity;
 import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosConvidarAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
@@ -61,7 +62,7 @@ public class ConvidadosFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.convidados_fragment,container,false);
         usersList = new ArrayList<>();
 

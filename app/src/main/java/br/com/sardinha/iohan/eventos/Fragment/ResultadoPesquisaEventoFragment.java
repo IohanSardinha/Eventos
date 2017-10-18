@@ -33,9 +33,25 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
 
     private DatabaseReference databaseReference;
 
+    private ListaEventosAdapter adapter;
+
     public void setQuery(String query)
     {
         this.query = query;
+    }
+
+    public void filter(String query)
+    {
+        query = query.toLowerCase();
+        ArrayList<Evento> newList = new ArrayList<>();
+        for(Evento evento : list)
+        {
+            if(evento.getTituloLow().contains(query))
+            {
+                newList.add(evento);
+            }
+        }
+        adapter.setFilter(newList);
     }
 
     @Nullable
@@ -61,7 +77,8 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
                 {
                     list.add(dss.getValue(Evento.class));
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
+                adapter = new ListaEventosAdapter(list,view.getContext());
+                recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
             }
 

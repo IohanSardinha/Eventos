@@ -166,17 +166,19 @@ public class EventosActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(Usuario.class);
                 CircleImageView userPhoto = (CircleImageView)findViewById(R.id.foto_usuario_header);
-                Glide.with(EventosActivity.this).load(currentUser.getImagem()).into(userPhoto);
-                TextView tv = ((TextView)findViewById(R.id.nome_usuario_header));
-                tv.setText(currentUser.getNome());
-                tv.setOnClickListener(new OneShotClickListener() {
-                    @Override
-                    public void performClick(View v) {
-                        Intent intent = new Intent(EventosActivity.this,UsuarioActivity.class);
-                        intent.putExtra("Usuario",currentUser);
-                        startActivity(intent);
-                    }
-                });
+                if(userPhoto != null) { // ERROR TO BE FIXED
+                    Glide.with(EventosActivity.this).load(currentUser.getImagem()).into(userPhoto);
+                    TextView tv = ((TextView) findViewById(R.id.nome_usuario_header));
+                    tv.setText(currentUser.getNome());
+                    tv.setOnClickListener(new OneShotClickListener() {
+                        @Override
+                        public void performClick(View v) {
+                            Intent intent = new Intent(EventosActivity.this, UsuarioActivity.class);
+                            intent.putExtra("Usuario", currentUser);
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -420,5 +422,13 @@ public class EventosActivity extends AppCompatActivity {
             return "0"+String.valueOf(x);
         }
         return String.valueOf(x);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
     }
 }

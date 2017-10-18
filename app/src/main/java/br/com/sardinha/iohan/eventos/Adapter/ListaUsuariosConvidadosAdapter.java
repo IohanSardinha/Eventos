@@ -98,4 +98,11 @@ public class ListaUsuariosConvidadosAdapter extends RecyclerView.Adapter<ListaUs
             });
         }
     }
+
+    public void setFilter(ArrayList<Usuario> newList)
+    {
+        list = new ArrayList<>();
+        list.addAll(newList);
+        notifyDataSetChanged();
+    }
 }

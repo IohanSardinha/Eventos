@@ -295,4 +295,11 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
                 return meses[11];
         }
     }
+
+    public void setFilter(ArrayList<Evento> newList)
+    {
+        list = new ArrayList<>();
+        list.addAll(newList);
+        notifyDataSetChanged();
+    }
 }

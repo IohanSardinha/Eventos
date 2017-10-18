@@ -35,10 +35,27 @@ public class ResultadoPesquisaUsuarioFragment extends Fragment {
 
     private String USER_ID;
 
+    private ListaUsuariosAdapter adapter;
+
     public void setQuery(String query)
     {
         this.query = query;
     }
+
+    public void filter(String query)
+    {
+        query = query.toLowerCase();
+        ArrayList<Usuario> newList = new ArrayList<>();
+        for(Usuario user : list)
+        {
+            if(user.getNomeLow().contains(query))
+            {
+                newList.add(user);
+            }
+        }
+        adapter.setFilter(newList);
+    }
+
 
     @Nullable
     @Override
@@ -66,7 +83,8 @@ public class ResultadoPesquisaUsuarioFragment extends Fragment {
                         list.add(user);
                     }
                 }
-                recyclerView.setAdapter(new ListaUsuariosAdapter(list,view.getContext()));
+                adapter = new ListaUsuariosAdapter(list,view.getContext());
+                recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
             }
 

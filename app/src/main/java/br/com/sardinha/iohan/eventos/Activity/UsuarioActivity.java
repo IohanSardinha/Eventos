@@ -37,6 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
@@ -274,15 +277,81 @@ public class UsuarioActivity extends AppCompatActivity {
             reference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    final boolean[] done = {false,false,false};
                     user.setImagem(taskSnapshot.getDownloadUrl().toString());
-                    userReference.setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    final Map<String,Object> updateMap = new HashMap<String, Object>();
+                    updateMap.put("Users/"+user.getId(),user);
+
+                    DatabaseReference eventsParticipating = database.getReference("EventsParticipating").child(user.getId());
+                    eventsParticipating.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            progress.dismiss();
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds: dataSnapshot.getChildren())
+                            {
+                                updateMap.put("UsersParticipating/"+ds.getKey()+"/"+user.getId(),user);
+                            }
+                            done[0] = true;
+                            done(done,updateMap,progress);
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
                     });
+
+                    DatabaseReference eventsInvited = database.getReference("EventsInvited").child(user.getId());
+                    eventsInvited.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds:dataSnapshot.getChildren())
+                            {
+                                updateMap.put("UsersInvited/"+ds.getKey()+"/"+user.getId(),user);
+                            }
+                            done[1] = true;
+                            done(done,updateMap,progress);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    Query followings = database.getReference("Followings").orderByChild(user.getId()).startAt(user.getId()).endAt(user.getId());
+                    followings.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds:dataSnapshot.getChildren())
+                            {
+                                System.out.println(ds.getKey());
+                                updateMap.put("Followings/"+ds.getKey()+"/"+user.getId(),user);
+                            }
+                            done[2] = true;
+                            done(done,updateMap,progress);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
             });
         }
     }
+
+    private void done(boolean[] done, Map<String,Object> updateMap, final ProgressDialog progressDialog)
+    {
+        if(done[0] && done[1] && done[2])
+        {
+            database.getReference().updateChildren(updateMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    progressDialog.dismiss();
+                }
+            });
+        }
+    }
+
 }
