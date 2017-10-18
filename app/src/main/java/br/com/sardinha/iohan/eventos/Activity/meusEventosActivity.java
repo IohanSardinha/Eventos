@@ -40,8 +40,8 @@ public class meusEventosActivity extends AppCompatActivity {
         meus_eventos.setMeus_eventos(true);
         MeusEventosFragment eventos_convidado = new MeusEventosFragment();
         eventos_convidado.setMeus_eventos(false);
-        a.addFragment(meus_eventos,"Criados por mim");
-        a.addFragment(eventos_convidado,"Convidado");
+        a.addFragment(meus_eventos,""+R.string.criados_por_mim);
+        a.addFragment(eventos_convidado,""+R.string.convidado);
         viewPager.setAdapter(a);
     }
 

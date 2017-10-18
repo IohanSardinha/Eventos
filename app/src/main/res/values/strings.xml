@@ -32,6 +32,7 @@
     <string name="opcional">*Opcional</string>
     <string name="nome">Nome</string>
     <string name="seguir">Seguir</string>
+    <string name="seguindo">Seguindo</string>
     <string name="indice_de_presenca">Presenca : </string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
@@ -44,6 +45,13 @@
     <string name="email_invalido">Email não registrado</string>
     <string name="esqueci_senha">Esqueceu sua senha?</string>
     <string name="convidar">Convidar</string>
+    <string name="convidado">Convidado</string>
+    <string name="meus_eventos">Meus Eventos</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="confirmado">Confirmado!</string>
+    <string name="ir">Ir?</string>
+    <string name="te_convidou"> te convidou para um evento</string>
+    <string name="criou_um_evento"> criou um evento</string>
 
     <string-array name="tipos_de_privacidade">
         <item>Privacidade</item>
@@ -51,7 +59,39 @@
         <item>Privado</item>
     </string-array>
 
+    <string-array name="meses">
+        <item>Jan</item>
+        <item>Fev</item>
+        <item>Mar</item>
+        <item>Abr</item>
+        <item>Mai</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Ago</item>
+        <item>Set</item>
+        <item>Out</item>
+        <item>Nov</item>
+        <item>Dez</item>
+    </string-array>
+
     <string name="title_activity_resultado_pesquisa">ResultadoPesquisaActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="obrigado_por_contribuir">Obrigado por contribuir</string>
+    <string name="sua_contribuicao_e_importante">Sua contribuição é muito importante para o funcionamento da rede!</string>
+    <string name="confirmados">Confirmados</string>
+    <string name="convidados">Convidados</string>
+    <string name="seguidores">Seguidores</string>
+    <string name="ver_todos">Ver todos</string>
+    <string name="lotado">Lotado</string>
+    <string name="partcipando">Participando</string>
+    <string name="evento_sera_cancelado">Evento será cancelado</string>
+    <string name="certeza_que_quer_cancelar">Tem certeza que quer cancelar o evento?</string>
+    <string name="parece_que_ja_esta_acontecendo">Parece que seu evento  já aconteceu ou está acontecendo.    Confirme quem realmente foi.</string>
+    <string name="ok">Ok</string>
+    <string name="agora_nao">Agora não</string>
+    <string name="nao_registrado">Email ou senha não encontrados</string>
+    <string name="preencha_os_campos">Preencha os campos</string>
+    <string name="criados_por_mim">Criados por mim</string>
 </resources>

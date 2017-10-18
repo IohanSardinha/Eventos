@@ -184,7 +184,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 else
                 {
                     findViewById(R.id.ninguem_confirmou_detalhes).setVisibility(View.GONE);
-                    users.add(new Usuario("","Ver todos",""));
+                    users.add(new Usuario("",getString(R.string.ver_todos),""));
                 }
                 recyclerView.setAdapter(new ListaUsuariosConvidadosAdapter(users,DetalhesEventoActivity.this,user,evento));
             }
@@ -206,7 +206,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.hasChild(user.getId()) && (evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1))
                     {
-                        participate.setText("Participar");
+                        participate.setText(R.string.participar);
                         participate.setBackgroundResource(R.color.button);
                         participate.setTextColor(Color.BLACK);
                         participate.setOnClickListener(new View.OnClickListener() {
@@ -219,14 +219,14 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     }
                     else if(!dataSnapshot.hasChild(user.getId()) && evento.getLimite()-dataSnapshot.getChildrenCount() <= 0 && evento.getLimite() != -1)
                     {
-                        participate.setText("Lotado");
+                        participate.setText(R.string.lotado);
                         participate.setBackgroundResource(R.color.button);
                         participate.setTextColor(Color.BLACK);
                         participate.setOnClickListener(null);
                     }
                     else
                     {
-                        participate.setText("Participando");
+                        participate.setText(R.string.partcipando);
                         participate.setTextColor(Color.WHITE);
                         participate.setBackgroundResource(R.color.buttonPressed);
                         participate.setOnClickListener(new View.OnClickListener() {
@@ -279,10 +279,10 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 startActivityForResult(intent,1);
                 return true;
             case R.id.delete_action:
-                new AlertDialog.Builder(this).setTitle("Evento será cancelado")
-                        .setMessage("Tem certeza que quer cancelar o evento?")
-                        .setNegativeButton("Não",null)
-                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(this).setTitle(R.string.evento_sera_cancelado)
+                        .setMessage(R.string.certeza_que_quer_cancelar)
+                        .setNegativeButton(R.string.sim,null)
+                        .setPositiveButton(R.string.nao, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 StorageReference storage = FirebaseStorage.getInstance().getReference("Events").child(evento.getId());

@@ -45,7 +45,7 @@ public class confirmarPresentesActivity extends AppCompatActivity {
         Intent intent = getIntent();
         event = (Evento)intent.getSerializableExtra("event");
         eventsReference = FirebaseDatabase.getInstance().getReference("Events").child(event.getId());
-        ((TextView)findViewById(R.id.confirmar_presentes_titulo)).setText("Confirme os presentes em "+event.getTitulo());
+        ((TextView)findViewById(R.id.confirmar_presentes_titulo)).setText(R.string.confirmar_presentes+event.getTitulo());
         DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("UsersParticipating").child(event.getId());
          usersReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -58,8 +58,8 @@ public class confirmarPresentesActivity extends AppCompatActivity {
                 if(list.size() == 0)
                 {
                     final AlertDialog alertDialog = new AlertDialog.Builder(confirmarPresentesActivity.this)
-                            .setTitle("Obrigado por contribuir")
-                            .setMessage("Sua contribuição é muito importante para o funcionamento da rede!")
+                            .setTitle(R.string.obrigado_por_contribuir)
+                            .setMessage(R.string.sua_contribuicao_e_importante)
                             .setPositiveButton("Ok",new AlertDialog.OnClickListener(){
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

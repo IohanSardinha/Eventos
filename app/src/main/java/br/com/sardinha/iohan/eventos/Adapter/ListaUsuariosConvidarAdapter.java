@@ -83,7 +83,7 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                     if(dataSnapshot.getValue(Usuario.class) != null)
                     {
                         holder.convidarButton.setBackgroundResource(R.color.colorPrimary);
-                        holder.convidarButton.setText("Convidado");
+                        holder.convidarButton.setText(R.string.convidado);
                         holder.convidarButton.setTextColor(Color.WHITE);
                         holder.convidarButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -96,7 +96,7 @@ public class ListaUsuariosConvidarAdapter extends RecyclerView.Adapter<ListaUsua
                     else
                     {
                         holder.convidarButton.setBackgroundResource(R.color.button);
-                        holder.convidarButton.setText("Convidar");
+                        holder.convidarButton.setText(R.string.convidar);
                         holder.convidarButton.setTextColor(Color.BLACK);
                         holder.convidarButton.setOnClickListener(new View.OnClickListener() {
                             @Override

@@ -13,12 +13,14 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.sardinha.iohan.eventos.R;
+
 public class NotificationSender {
 
     public void SendInvitationNotification(Context context, Evento event, Usuario invatedUser, Usuario createrUser)
     {
-        String title = createrUser.getNome()+" te convidou para um evento";
-        String message = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
+        String title = createrUser.getNome()+ context.getString(R.string.te_convidou);
+        String message = event.getTitulo()+ context.getString(R.string.dia).toLowerCase() +event.getDataInicio()+ context.getString(R.string.as) + event.getHoraInicio();
         String topic = invatedUser.getId();
         String body =
                 "{" +
@@ -43,8 +45,8 @@ public class NotificationSender {
 
     public void SendNewEventNotification(Context context, Evento event, Usuario user)
     {
-        String title = user.getNome()+" criou um novo evento";
-        String message = event.getTitulo()+" dia "+event.getDataInicio()+" as "+ event.getHoraInicio();
+        String title = user.getNome()+ context.getString(R.string.criou_um_evento);
+        String message = event.getTitulo()+ context.getString(R.string.dia) +event.getDataInicio()+ context.getString(R.string.as) + event.getHoraInicio();
         String topic = user.getId()+"-WhenCreateEvent";
         String body =
                 "{" +

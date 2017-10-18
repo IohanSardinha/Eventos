@@ -3,14 +3,14 @@
     <item
         android:id="@+id/usuario"
         android:title="@string/perfil"
-        android:icon="@drawable/ic_person_black_24dp"/>
+        android:icon="@drawable/ic_person_black_24dp" />
     <item
         android:id="@+id/meus_eventos"
-        android:title="Meus eventos"
+        android:title="@string/meus_eventos"
         android:icon="@drawable/ic_event_note_black_24dp"/>
     <item
         android:id="@+id/configuracoes"
-        android:title="Configurações"
+        android:title="@string/configuracoes"
         android:icon="@drawable/ic_settings_black_24dp"
         />
     <item

@@ -107,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
                     else
                     {
                         progress.setVisibility(View.GONE);
-                        Toast.makeText(MainActivity.this, "Email ou senha não encontrados", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, R.string.nao_registrado, Toast.LENGTH_LONG).show();
                     }
                 }
             });
         }
         else
         {
-            Toast.makeText(this, "Preencha os campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.preencha_os_campos, Toast.LENGTH_SHORT).show();
         }
     }
 

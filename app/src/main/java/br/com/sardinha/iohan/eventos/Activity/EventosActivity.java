@@ -278,16 +278,15 @@ public class EventosActivity extends AppCompatActivity {
                     {
                         new AlertDialog.Builder(EventosActivity.this)
                                 .setTitle(e.getTitulo())
-                                .setMessage("Parece que seu evento  já aconteceu ou está acontecendo. \n\n" +
-                                        "Confirme quem realmente foi.")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                .setMessage(R.string.parece_que_ja_esta_acontecendo)
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
                                         //finish();
                                     }
                                 })
-                                .setNegativeButton("Agora não", new DialogInterface.OnClickListener() {
+                                .setNegativeButton(R.string.agora_nao, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         eventsReference.child(e.getId()).removeValue();

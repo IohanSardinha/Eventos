@@ -135,7 +135,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
                     holder.participatingImage.setImageResource(R.drawable.ic_event_available_black_24dp);
                     holder.participatingImage.setColorFilter(Color.BLACK);
-                    holder.participatingText.setText("Confirmado!");
+                    holder.participatingText.setText(R.string.confirmado);
                     holder.participate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -157,7 +157,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
                             holder.participatingImage.setImageResource(R.drawable.calendar_plus);
                             holder.participatingImage.setColorFilter(ContextCompat.getColor(context,R.color.button));
-                            holder.participatingText.setText("Ir?");
+                            holder.participatingText.setText(R.string.ir);
                             holder.participate.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -266,32 +266,33 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
     }
     private String getStringMonth(String month)
     {
+        String[] meses = context.getResources().getStringArray(R.array.meses);
         switch (month)
         {
             case "01":
-                return "jan";
+                return meses[0];
             case "02":
-                return "fev";
+                return meses[1];
             case "03":
-                return "mar";
+                return meses[2];
             case "04":
-                return "abr";
+                return meses[3];
             case "05":
-                return "mai";
+                return meses[4];
             case "06":
-                return "jun";
+                return meses[5];
             case "07":
-                return "jul";
+                return meses[6];
             case "08":
-                return "ago";
+                return meses[7];
             case "09":
-                return "set";
+                return meses[8];
             case "10":
-                return "out";
+                return meses[9];
             case "11":
-                return "nov";
+                return meses[10];
             default:
-                return "dez";
+                return meses[11];
         }
     }
 }

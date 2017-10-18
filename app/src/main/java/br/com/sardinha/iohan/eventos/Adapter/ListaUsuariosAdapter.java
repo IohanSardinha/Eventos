@@ -62,7 +62,7 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
                 @Override
                 public void onClick(View v) {
                     database.child(list.get(position).getId()).setValue(list.get(position));
-                    holder.followButton.setText("Seguindo");
+                    holder.followButton.setText(R.string.seguindo);
                     holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.buttonPressed));
                     holder.followButton.setTextColor(Color.WHITE);
                     notifyDataSetChanged();
@@ -73,21 +73,21 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.hasChild(list.get(position).getId())) {
-                        holder.followButton.setText("Seguindo");
+                        holder.followButton.setText(R.string.seguindo);
                         holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.buttonPressed));
                         holder.followButton.setTextColor(Color.WHITE);
                         holder.followButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 database.child(list.get(position).getId()).removeValue();
-                                holder.followButton.setText("Seguir");
+                                holder.followButton.setText(R.string.seguir);
                                 holder.followButton.setTextColor(Color.BLACK);
                                 holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.button));
                                 holder.followButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         database.child(list.get(position).getId()).setValue(list.get(position));
-                                        holder.followButton.setText("Seguindo");
+                                        holder.followButton.setText(R.string.seguindo);
                                         holder.followButton.setTextColor(Color.WHITE);
                                         holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.buttonPressed));
                                         notifyDataSetChanged();

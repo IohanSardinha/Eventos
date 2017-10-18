@@ -54,7 +54,7 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
 
         if(confirmados && usuario.getId().equals(evento.getUserID()))
         {
-            setTitle("Convidar");
+            setTitle(getString(R.string.convidar));
             seguidoresFragment = new SeguidoresFragment();
             seguidoresFragment.setEvento(evento);
             seguidoresFragment.setUsuario(usuario);
@@ -63,31 +63,31 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
             confirmadosFragment.setEvento(evento);
             confirmadosFragment.setUsuario(usuario);
 
-            a.addFragment(confirmadosFragment,"Confirmados");
-            a.addFragment(convidadosFragment,"Convidados");
-            a.addFragment(seguidoresFragment,"Seguidores");
+            a.addFragment(confirmadosFragment,getString(R.string.confirmados));
+            a.addFragment(convidadosFragment,""+R.string.convidados);
+            a.addFragment(seguidoresFragment,""+R.string.seguidores);
         }
         else if(confirmados)
         {
-            setTitle("Convidados");
+            setTitle(""+R.string.convidados);
             confirmadosFragment = new ConfirmadosFragment();
             confirmadosFragment.setEvento(evento);
             confirmadosFragment.setUsuario(usuario);
             convidadosFragment.setConvidados(true);
             findViewById(R.id.floatingActionButton2).setVisibility(View.GONE);
 
-            a.addFragment(confirmadosFragment,"Confirmados");
-            a.addFragment(convidadosFragment,"Convidados");
+            a.addFragment(confirmadosFragment,""+R.string.confirmados);
+            a.addFragment(convidadosFragment,""+R.string.convidados);
         }
         else
         {
-            setTitle("Convidar");
+            setTitle(""+R.string.convidar);
             seguidoresFragment = new SeguidoresFragment();
             seguidoresFragment.setEvento(evento);
             seguidoresFragment.setUsuario(usuario);
 
-            a.addFragment(seguidoresFragment,"Seguidores");
-            a.addFragment(convidadosFragment,"Convidados");
+            a.addFragment(seguidoresFragment,""+R.string.seguidores);
+            a.addFragment(convidadosFragment,""+R.string.convidados);
         }
 
 
