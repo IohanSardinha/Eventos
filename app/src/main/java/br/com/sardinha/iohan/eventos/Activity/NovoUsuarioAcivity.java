@@ -62,38 +62,61 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(NovoUsuarioAcivity.this, "Usuario "+nome+" registrado", Toast.LENGTH_SHORT).show();
-                        final String id = auth.getCurrentUser().getUid();
-                        final Usuario user = new Usuario(id,nome,email.toLowerCase());
-                        reference.child(id).putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                user.setImagem(taskSnapshot.getDownloadUrl().toString());
-                                database.child(id).setValue(user);
-                                finish();
-                                progress.dismiss();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(NovoUsuarioAcivity.this, "Erro no upload de imagem", Toast.LENGTH_SHORT).show();
-                                finish();
-                                progress.dismiss();
-                            }
-                        });
+                        final String id = task.getResult().getUser().getUid();
+                        final Usuario user = new Usuario(id,nome,email);
+                        if(image != null)
+                        {
+                            reference.child(id).putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    user.setImagem(taskSnapshot.getDownloadUrl().toString());
+                                    database.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            finish();
+                                            progress.dismiss();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(NovoUsuarioAcivity.this, "Erro no upload de imagem", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                            progress.dismiss();
+                                        }
+                                    });
+                        }
+                        else
+                        {
+                            database.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    finish();
+                                    progress.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
                     else
                     {
-                        Toast.makeText(NovoUsuarioAcivity.this, "Não foi possivel registrar usuário", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NovoUsuarioAcivity.this, "Não foi possível registrar o usuário, tente mais tarde", Toast.LENGTH_SHORT).show();
                         progress.dismiss();
                     }
                 }
             });
 
-        }
-        else
-        {
-            Toast.makeText(this, "Insira uma foto", Toast.LENGTH_SHORT).show();
         }
     }
 

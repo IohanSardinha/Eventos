@@ -214,6 +214,11 @@ public class EventosActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         cont[1] = dataSnapshot.getChildrenCount();
+                        if(dataSnapshot.getChildrenCount() <= 0)
+                        {
+                            cont[0] = cont[1];
+                            showData(cont,userEventCont[0],eventos);
+                        }
                         for(DataSnapshot followerSnapshot : dataSnapshot.getChildren())
                         {
                             Query followerEventQuery = eventsReference.orderByChild("userID").startAt(followerSnapshot.getKey()).limitToFirst(10);
@@ -336,6 +341,11 @@ public class EventosActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 cont[3] = dataSnapshot.getChildrenCount();
+                if(dataSnapshot.getChildrenCount() <= 0)
+                {
+                    cont[2] = cont[3];
+                    showData(cont,userEventCont[0],eventos);
+                }
                 for(DataSnapshot eventIdSnapshot: dataSnapshot.getChildren())
                 {
                     DatabaseReference eventQuery = eventsReference.child(eventIdSnapshot.getKey());
