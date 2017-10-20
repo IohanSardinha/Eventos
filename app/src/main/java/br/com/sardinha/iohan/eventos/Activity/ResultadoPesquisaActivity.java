@@ -1,6 +1,10 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
 
+import android.content.Intent;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.SearchView;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,16 +36,17 @@ public class ResultadoPesquisaActivity extends AppCompatActivity implements Sear
         adapter = new FragmentAdapter(getSupportFragmentManager());
         searchView = (SearchView)findViewById(R.id.search_view_resultado);
         searchView.setOnQueryTextListener(this);
+        searchView.setLayoutParams(new Toolbar.LayoutParams(Gravity.RIGHT));
 
         viewPager = (ViewPager)findViewById(R.id.container);
-        setupViewPager(viewPager);
+        setupViewPager(viewPager,query);
 
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
     }
 
-    public void setupViewPager(ViewPager viewPager)
+    public void setupViewPager(ViewPager viewPager, String query)
     {
         FragmentAdapter a = new FragmentAdapter(getSupportFragmentManager());
         userFragment = new ResultadoPesquisaUsuarioFragment();
@@ -55,7 +60,11 @@ public class ResultadoPesquisaActivity extends AppCompatActivity implements Sear
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        finish();
+        Intent intent = new Intent(this,ResultadoPesquisaActivity.class);
+        intent.putExtra("Query",query.toLowerCase());
+        startActivity(intent);
+        return true;
     }
 
     @Override
@@ -64,5 +73,9 @@ public class ResultadoPesquisaActivity extends AppCompatActivity implements Sear
         eventFragment.filter(newText);
         System.out.println(newText);
         return true;
+    }
+
+    public void backOnClick(View view) {
+        finish();
     }
 }

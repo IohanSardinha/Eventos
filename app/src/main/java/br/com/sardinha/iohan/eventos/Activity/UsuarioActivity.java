@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,9 +35,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
@@ -67,6 +68,7 @@ public class UsuarioActivity extends AppCompatActivity {
         UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Intent intent = getIntent();
         user = (Usuario)intent.getSerializableExtra("Usuario");
+        String a = user.getId();
         followButton = (Button)findViewById(R.id.seguir_usuario_descricao);
         ((TextView)findViewById(R.id.nome_usuario_descricao)).setText(user.getNome());
         userReference = database.getReference("Users").child(user.getId());
@@ -197,7 +199,9 @@ public class UsuarioActivity extends AppCompatActivity {
             });
         }
 
-        list = new ArrayList<>();
+        final Map<String,Evento> eventsSet = new HashMap<>();
+        final boolean[] done = {false,false,false};
+
         recyclerView = (RecyclerView)findViewById(R.id.eventos_usuario_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -208,10 +212,10 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds:dataSnapshot.getChildren())
                 {
-                    list.add(ds.getValue(Evento.class));
-
+                    eventsSet.put(ds.getKey(),ds.getValue(Evento.class));
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
+                done[0] = true;
+                doneGettingEvents(done,eventsSet);
             }
 
             @Override
@@ -226,10 +230,11 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds:dataSnapshot.getChildren())
                 {
-                    list.add(ds.getValue(Evento.class));
+                    eventsSet.put(ds.getKey(),ds.getValue(Evento.class));
 
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
+                done[1] = true;
+                doneGettingEvents(done,eventsSet);
             }
 
             @Override
@@ -243,9 +248,10 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds:dataSnapshot.getChildren())
                 {
-                    list.add(ds.getValue(Evento.class));
+                    eventsSet.put(ds.getKey(),ds.getValue(Evento.class));
                 }
-                recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
+                done[2] = true;
+                doneGettingEvents(done,eventsSet);
             }
 
             @Override
@@ -253,6 +259,17 @@ public class UsuarioActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void doneGettingEvents(boolean[] done, Map<String,Evento> map)
+    {
+        if(done[0] && done[1] && done[2])
+        {
+            list = new ArrayList<>();
+            list.addAll(map.values());
+            Collections.sort(list);
+            recyclerView.setAdapter(new ListaEventosAdapter(list,UsuarioActivity.this,user));
+        }
     }
 
     @Override
@@ -291,7 +308,7 @@ public class UsuarioActivity extends AppCompatActivity {
                                 updateMap.put("UsersParticipating/"+ds.getKey()+"/"+user.getId(),user);
                             }
                             done[0] = true;
-                            done(done,updateMap,progress);
+                            doneUpdatingImage(done,updateMap,progress);
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -308,7 +325,7 @@ public class UsuarioActivity extends AppCompatActivity {
                                 updateMap.put("UsersInvited/"+ds.getKey()+"/"+user.getId(),user);
                             }
                             done[1] = true;
-                            done(done,updateMap,progress);
+                            doneUpdatingImage(done,updateMap,progress);
                         }
 
                         @Override
@@ -327,7 +344,7 @@ public class UsuarioActivity extends AppCompatActivity {
                                 updateMap.put("Followings/"+ds.getKey()+"/"+user.getId(),user);
                             }
                             done[2] = true;
-                            done(done,updateMap,progress);
+                            doneUpdatingImage(done,updateMap,progress);
                         }
 
                         @Override
@@ -341,7 +358,7 @@ public class UsuarioActivity extends AppCompatActivity {
         }
     }
 
-    private void done(boolean[] done, Map<String,Object> updateMap, final ProgressDialog progressDialog)
+    private void doneUpdatingImage(boolean[] done, Map<String,Object> updateMap, final ProgressDialog progressDialog)
     {
         if(done[0] && done[1] && done[2])
         {

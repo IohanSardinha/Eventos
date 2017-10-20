@@ -35,10 +35,11 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
     private ArrayList<Usuario> list;
     Context context;
     DatabaseReference database;
-    String user;
+    Usuario currentUser;
 
-    public ListaUsuariosAdapter(ArrayList<Usuario> users, Context context) {
+    public ListaUsuariosAdapter(ArrayList<Usuario> users, Context context,Usuario currentUser) {
         list = users;
+        this.currentUser = currentUser;
         this.context = context;
     }
 
@@ -55,26 +56,15 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
             Glide.with(context).load(Uri.parse(list.get(position).getImagem())).into(holder.userPhotoCirc);
 
         }
-        if(list.get(position).getId().equals(user))
+        if(list.get(position).getId().equals(currentUser.getId()))
         {
             holder.followButton.setVisibility(View.GONE);
         }
         else {
-            holder.followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    database.child(list.get(position).getId()).setValue(list.get(position));
-                    holder.followButton.setText(R.string.seguindo);
-                    holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.buttonPressed));
-                    holder.followButton.setTextColor(Color.WHITE);
-                    notifyDataSetChanged();
-
-                }
-            });
-            database.addValueEventListener(new ValueEventListener() {
+            database.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.hasChild(list.get(position).getId())) {
+                    if (dataSnapshot.exists()) {
                         holder.followButton.setText(R.string.seguindo);
                         holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.buttonPressed));
                         holder.followButton.setTextColor(Color.WHITE);
@@ -82,22 +72,22 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
                             @Override
                             public void onClick(View v) {
                                 database.child(list.get(position).getId()).removeValue();
-                                holder.followButton.setText(R.string.seguir);
-                                holder.followButton.setTextColor(Color.BLACK);
-                                holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.button));
-                                holder.followButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        database.child(list.get(position).getId()).setValue(list.get(position));
-                                        holder.followButton.setText(R.string.seguindo);
-                                        holder.followButton.setTextColor(Color.WHITE);
-                                        holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.buttonPressed));
-                                        notifyDataSetChanged();
-
-                                    }
-                                });
                             }
                         });
+                    }
+                    else
+                    {
+                        holder.followButton.setText(R.string.seguir);
+                        holder.followButton.setTextColor(Color.BLACK);
+                        holder.followButton.setBackgroundColor(ContextCompat.getColor(context, R.color.button));
+                        holder.followButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                database.child(list.get(position).getId()).setValue(list.get(position));
+                                new NotificationSender().sendFollowMessage(context,null,list.get(position),currentUser);
+                            }
+                        });
+
                     }
                 }
 
@@ -120,11 +110,10 @@ public class ListaUsuariosAdapter extends RecyclerView.Adapter<ListaUsuariosAdap
         CircleImageView userPhotoCirc;
         public ViewHolder(View itemView) {
             super(itemView);
-            database = FirebaseDatabase.getInstance().getReference("Followings").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            database = FirebaseDatabase.getInstance().getReference("Followings").child(currentUser.getId());
             userName = (TextView)itemView.findViewById(R.id.nome_usuario_item);
             followButton = (Button)itemView.findViewById(R.id.seguir_usuario_item);
             userPhotoCirc = (CircleImageView)itemView.findViewById(R.id.foto_usuario_item_circ);
-            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

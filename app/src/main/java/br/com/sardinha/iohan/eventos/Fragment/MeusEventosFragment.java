@@ -19,6 +19,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
@@ -28,6 +31,7 @@ public class MeusEventosFragment extends Fragment {
 
     private boolean meus_eventos = false;
     private RecyclerView recyclerView;
+    private ArrayList<Evento> list = new ArrayList<Evento>();
 
 
     public void setMeus_eventos(boolean meus_eventos) {
@@ -51,11 +55,11 @@ public class MeusEventosFragment extends Fragment {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    ArrayList<Evento> list = new ArrayList<Evento>();
                     for(DataSnapshot ds : dataSnapshot.getChildren())
                     {
                         list.add(ds.getValue(Evento.class));
                     }
+                    Collections.sort(list);
                     recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
                     view.findViewById(R.id.progressBar5).setVisibility(View.GONE);
                 }
@@ -72,18 +76,22 @@ public class MeusEventosFragment extends Fragment {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    final Set<Evento> eventos = new HashSet<Evento>();
                     final long[] done = {0,999999999};
                     done[1] = dataSnapshot.getChildrenCount();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events");
-                    final ArrayList<Evento> list = new ArrayList<Evento>();
+                    DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("Events");
                     for(DataSnapshot ds : dataSnapshot.getChildren())
                     {
-                        ref.child(ds.getKey()).addValueEventListener(new ValueEventListener() {
+                        ref1.child(ds.getKey()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                list.add(dataSnapshot.getValue(Evento.class));
+                                Evento evento = dataSnapshot.getValue(Evento.class);
+                                if(evento != null)
+                                {
+                                    eventos.add(dataSnapshot.getValue(Evento.class));
+                                }
                                 done[0] += 1;
-                                draw(done[1],done[0],list,view);
+                                draw(done[1],done[0],eventos,view);
                             }
 
                             @Override
@@ -104,10 +112,13 @@ public class MeusEventosFragment extends Fragment {
         return view;
     }
 
-    private void draw(long total, long done, ArrayList<Evento> list, View view)
+    private void draw(long total, long done, Set<Evento> set, View view)
     {
         if(done >= total)
         {
+            list.clear();
+            list.addAll(set);
+            Collections.sort(list);
             recyclerView.setAdapter(new ListaEventosAdapter(list,view.getContext()));
             view.findViewById(R.id.progressBar5).setVisibility(View.GONE);
         }

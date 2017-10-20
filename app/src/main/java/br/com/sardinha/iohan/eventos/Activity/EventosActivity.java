@@ -168,6 +168,14 @@ public class EventosActivity extends AppCompatActivity {
                 CircleImageView userPhoto = (CircleImageView)findViewById(R.id.foto_usuario_header);
                 if(userPhoto != null) { // ERROR TO BE FIXED
                     Glide.with(EventosActivity.this).load(currentUser.getImagem()).into(userPhoto);
+                    userPhoto.setOnClickListener(new OneShotClickListener() {
+                        @Override
+                        public void performClick(View v) {
+                            Intent intent = new Intent(EventosActivity.this, UsuarioActivity.class);
+                            intent.putExtra("Usuario", currentUser);
+                            startActivity(intent);
+                        }
+                    });
                     TextView tv = ((TextView) findViewById(R.id.nome_usuario_header));
                     tv.setText(currentUser.getNome());
                     tv.setOnClickListener(new OneShotClickListener() {
@@ -206,7 +214,6 @@ public class EventosActivity extends AppCompatActivity {
         final boolean[] userEventCont = {false};
 
         //Eventos dos Seguidores
-
         invitationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot invitations) {
@@ -221,7 +228,7 @@ public class EventosActivity extends AppCompatActivity {
                         }
                         for(DataSnapshot followerSnapshot : dataSnapshot.getChildren())
                         {
-                            Query followerEventQuery = eventsReference.orderByChild("userID").startAt(followerSnapshot.getKey()).limitToFirst(10);
+                            Query followerEventQuery = eventsReference.orderByChild("userID").equalTo(followerSnapshot.getKey()).limitToFirst(10);
                             followerEventQuery.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot followerSnapshot) {
@@ -274,7 +281,7 @@ public class EventosActivity extends AppCompatActivity {
                         +formatador(calendar.get(Calendar.MINUTE)));
 
         //Eventos do usuário
-        Query userEventQuery = eventsReference.orderByChild("userID").startAt(userID).limitToFirst(10);
+        Query userEventQuery = eventsReference.orderByChild("userID").equalTo(userID).limitToFirst(10);
         userEventQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -410,7 +417,6 @@ public class EventosActivity extends AppCompatActivity {
                 Intent intent = new Intent(EventosActivity.this,ResultadoPesquisaActivity.class);
                 intent.putExtra("Query",query.toLowerCase());
                 startActivity(intent);
-                //finish();
                 return false;
             }
 

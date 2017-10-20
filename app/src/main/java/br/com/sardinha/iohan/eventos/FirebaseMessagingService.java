@@ -61,7 +61,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             intent.putExtra("userID",userID);
             intent.putExtra("actionType","NOVO_EVENTO");
         }
-        if(clickAction.equals("SEGUIDO"))
+        else if(clickAction.equals("SEGUIDO"))
         {
             intent = new Intent(this,LoadingActivity.class);
             intent.putExtra("eventID",eventID);
@@ -79,7 +79,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(title)
-                .setColor(getColor(R.color.colorPrimary))
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

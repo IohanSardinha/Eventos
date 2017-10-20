@@ -48,8 +48,8 @@
     <string name="convidado">Convidado</string>
     <string name="meus_eventos">Meus Eventos</string>
     <string name="configuracoes">Configurações</string>
-    <string name="confirmado">Confirmado!</string>
-    <string name="ir">Ir?</string>
+    <string name="confirmado">Demorô!</string>
+    <string name="ir">Bora?</string>
     <string name="te_convidou"> te convidou para um evento</string>
     <string name="criou_um_evento"> criou um evento</string>
 

@@ -7,6 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.SearchView;
@@ -40,6 +42,7 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
 
         searchView = (SearchView)findViewById(R.id.search_view_convidados);
         searchView.setOnQueryTextListener(this);
+        searchView.setLayoutParams(new Toolbar.LayoutParams(Gravity.RIGHT));
 
         confirmados = intent.getBooleanExtra("confirmados",false);
         viewPager = (ViewPager)findViewById(R.id.container2);
@@ -135,5 +138,9 @@ public class ConvidadosActivity extends AppCompatActivity implements SearchView.
             confirmadosFragment.filter(newText);
         }
         return true;
+    }
+
+    public void backOnClick(View view) {
+        finish();
     }
 }

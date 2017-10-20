@@ -36,7 +36,7 @@ import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;
 public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapter.ViewHolder> {
     private ArrayList<Evento> list;
     private Context context;
-    private DatabaseReference eventsReference,userReference, userParticipatingReference, eventsParticipatingReference;
+    private DatabaseReference userReference, userParticipatingReference, eventsParticipatingReference;
     private String uID;
     private double dateNow;
     private Usuario currentUser;
@@ -78,7 +78,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             }
             else
             {
-                userReference.child(uID).addValueEventListener(new ValueEventListener() {
+                userReference.child(currentUser.getId()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final String userName = dataSnapshot.getValue(Usuario.class).getNome();
@@ -127,10 +127,10 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         }
 
         final String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userParticipatingReference.child(list.get(position).getId()).addValueEventListener(new ValueEventListener() {
+        userParticipatingReference.child(list.get(position).getId()).child(uID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(uID))
+                if(dataSnapshot.exists())
                 {
 
                     holder.participatingImage.setImageResource(R.drawable.ic_event_available_black_24dp);
@@ -228,7 +228,6 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             userReference = FirebaseDatabase.getInstance().getReference("Users");
             userParticipatingReference = FirebaseDatabase.getInstance().getReference("UsersParticipating");
             eventsParticipatingReference = FirebaseDatabase.getInstance().getReference("EventsParticipating");
-            eventsReference = FirebaseDatabase.getInstance().getReference("Events");
 
             image = (ImageView)itemView.findViewById(R.id.imagem_item_lista);
             title = (TextView)itemView.findViewById(R.id.titulo_item_evento);

@@ -29,8 +29,8 @@ public class NotificationSender {
                         "," +
                         "\"data\":" +
                         "{" +
-                        "\"eventID\" : \"" +event.getId()+"\""+
-                        "\"userID\" : \"" +event.getUserID()+"\""+
+                        "\"eventID\" : \"111\""+
+                        "\"userID\" : \"" +userFollower.getId()+"\""+
                         "}," +
                         "\"notification\":" +
                         "{" +

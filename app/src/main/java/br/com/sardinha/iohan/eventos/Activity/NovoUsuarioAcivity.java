@@ -1,9 +1,11 @@
 package br.com.sardinha.iohan.eventos.Activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,7 +47,7 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
     public void registrar(View view) {
         final String nome = ((EditText)findViewById(R.id.nome_registro)).getText().toString();
         final String email = ((EditText)findViewById(R.id.email_registro)).getText().toString();
-        String senha = ((EditText)findViewById(R.id.senha_registro)).getText().toString();
+        final String senha = ((EditText)findViewById(R.id.senha_registro)).getText().toString();
         String confSenha = ((EditText)findViewById(R.id.confirmar_senha_registro)).getText().toString();
         if(nome.isEmpty() || email.isEmpty() || senha.isEmpty() || confSenha.isEmpty())
         {
@@ -108,6 +111,32 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
                                 }
                             });
                         }
+                    }
+                    else if(senha.length() < 8)
+                    {
+                        Toast.makeText(NovoUsuarioAcivity.this, "Senha deve ser maior que oito caracteres", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
+                    }
+                    else if(task.getException() instanceof FirebaseAuthUserCollisionException)
+                    {
+                        progress.dismiss();
+                        new AlertDialog.Builder(NovoUsuarioAcivity.this)
+                                .setTitle("Email já está registrado")
+                                .setMessage("Esqueceu sua senha?")
+                                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(NovoUsuarioAcivity.this,TrocarSenhaActivity.class));
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                })
+                                .show();
                     }
                     else
                     {

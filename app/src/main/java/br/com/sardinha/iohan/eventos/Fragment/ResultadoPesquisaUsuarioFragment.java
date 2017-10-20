@@ -67,25 +67,41 @@ public class ResultadoPesquisaUsuarioFragment extends Fragment {
 
         USER_ID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+
         list = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        Query firebaseQuery = databaseReference.orderByChild("nomeLow").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
-        firebaseQuery.addValueEventListener(new ValueEventListener() {
+        recyclerView = (RecyclerView)view.findViewById(R.id.lista_usuarios_resultado_pesquisa);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        FirebaseDatabase.getInstance().getReference("Users").child(USER_ID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
-                for(DataSnapshot ds: dataSnapshot.getChildren())
-                {
-                    Usuario user = ds.getValue(Usuario.class);
-                    if(!user.getId().equals(USER_ID))
-                    {
-                        list.add(user);
+                final Usuario usuario = dataSnapshot.getValue(Usuario.class);
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                Query firebaseQuery = databaseReference.orderByChild("nomeLow").startAt(query).endAt(query+"\uf8ff").limitToFirst(25);
+                firebaseQuery.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        list.clear();
+                        for(DataSnapshot ds: dataSnapshot.getChildren())
+                        {
+                            Usuario user = ds.getValue(Usuario.class);
+                            if(!user.getId().equals(USER_ID))
+                            {
+                                list.add(user);
+                            }
+                        }
+                        adapter = new ListaUsuariosAdapter(list,view.getContext(),usuario);
+                        recyclerView.setAdapter(adapter);
+                        progressBar.setVisibility(View.GONE);
                     }
-                }
-                adapter = new ListaUsuariosAdapter(list,view.getContext());
-                recyclerView.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -93,11 +109,6 @@ public class ResultadoPesquisaUsuarioFragment extends Fragment {
 
             }
         });
-
-        recyclerView = (RecyclerView)view.findViewById(R.id.lista_usuarios_resultado_pesquisa);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new ListaUsuariosAdapter(list,view.getContext()));
 
         return view;
     }

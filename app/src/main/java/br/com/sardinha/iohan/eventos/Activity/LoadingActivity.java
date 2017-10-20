@@ -22,7 +22,7 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
         String userID = intent.getStringExtra("userID");
         String eventID = intent.getStringExtra("eventID");
         String actiontype = intent.getStringExtra("actionType");
@@ -61,7 +61,7 @@ public class LoadingActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Usuario user = dataSnapshot.getValue(Usuario.class);
                     Intent intent1 = new Intent(LoadingActivity.this,UsuarioActivity.class);
-                    intent.putExtra("Usuario",user);
+                    intent1.putExtra("Usuario",user);
                     startActivity(intent1);
                 }
 
@@ -70,6 +70,11 @@ public class LoadingActivity extends AppCompatActivity {
 
                 }
             });
+        }
+        else
+        {
+            startActivity(new Intent(this,MainActivity.class));
+            finish();
         }
     }
 }
