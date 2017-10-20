@@ -23,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.NotificationSender;
 import br.com.sardinha.iohan.eventos.R;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;

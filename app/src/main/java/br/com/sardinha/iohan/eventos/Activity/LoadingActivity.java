@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
 
 public class LoadingActivity extends AppCompatActivity {
@@ -21,9 +22,10 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         String userID = intent.getStringExtra("userID");
         String eventID = intent.getStringExtra("eventID");
+        String actiontype = intent.getStringExtra("actionType");
         try
         {
             FirebaseAuth.getInstance().getCurrentUser();
@@ -33,22 +35,41 @@ public class LoadingActivity extends AppCompatActivity {
             startActivity(new Intent(this,MainActivity.class));
             finish();
         }
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(eventID);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Evento evento = dataSnapshot.getValue(Evento.class);
-                Intent intent1 = new Intent(LoadingActivity.this,DetalhesEventoActivity.class);
-                intent1.putExtra("evento",evento);
-                startActivity(intent1);
-                finish();
-            }
+        if(actiontype.equals("NOVO_EVENTO")) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Events").child(eventID);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Evento evento = dataSnapshot.getValue(Evento.class);
+                    Intent intent1 = new Intent(LoadingActivity.this, DetalhesEventoActivity.class);
+                    intent1.putExtra("evento", evento);
+                    startActivity(intent1);
+                    finish();
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+        else if(actiontype.equals("SEGUIDO"))
+        {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Usuario user = dataSnapshot.getValue(Usuario.class);
+                    Intent intent1 = new Intent(LoadingActivity.this,UsuarioActivity.class);
+                    intent.putExtra("Usuario",user);
+                    startActivity(intent1);
+                }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }

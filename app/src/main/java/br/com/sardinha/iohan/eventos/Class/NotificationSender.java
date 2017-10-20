@@ -17,6 +17,32 @@ import br.com.sardinha.iohan.eventos.R;
 
 public class NotificationSender {
 
+    public void sendFollowMessage(Context context, Evento event, Usuario userFollowed, Usuario userFollower)
+    {
+        String title = userFollower.getNome()+ " te seguiu";
+        String message = "";
+        String topic = userFollowed.getId();
+        String body =
+                "{" +
+                        "\"to\":" +
+                        "\"/topics/"+topic+"\"" +
+                        "," +
+                        "\"data\":" +
+                        "{" +
+                        "\"eventID\" : \"" +event.getId()+"\""+
+                        "\"userID\" : \"" +event.getUserID()+"\""+
+                        "}," +
+                        "\"notification\":" +
+                        "{" +
+                        "\"title\" : \""+title+"\"," +
+                        "\"text\" : \""+message+"\"" +
+                        "\"click_action\" : \"SEGUIDO\""+
+                        "}" +
+                        "}";
+
+        SendNotification(context,body.getBytes());
+    }
+
     public void SendInvitationNotification(Context context, Evento event, Usuario invatedUser, Usuario createrUser)
     {
         String title = createrUser.getNome()+ context.getString(R.string.te_convidou);

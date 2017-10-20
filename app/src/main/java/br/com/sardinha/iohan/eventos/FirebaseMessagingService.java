@@ -59,6 +59,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             intent = new Intent(this,LoadingActivity.class);
             intent.putExtra("eventID",eventID);
             intent.putExtra("userID",userID);
+            intent.putExtra("actionType","NOVO_EVENTO");
+        }
+        if(clickAction.equals("SEGUIDO"))
+        {
+            intent = new Intent(this,LoadingActivity.class);
+            intent.putExtra("eventID",eventID);
+            intent.putExtra("userID",userID);
+            intent.putExtra("actionType","SEGUIDO");
         }
         else {
             intent = new Intent(this,MainActivity.class);
