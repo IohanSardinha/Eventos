@@ -28,6 +28,7 @@ import java.util.List;
 
 import br.com.sardinha.iohan.eventos.Activity.DetalhesEventoActivity;
 import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.R;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.Activity.UsuarioActivity;
@@ -59,12 +60,13 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
 
     @Override
     public void onBindViewHolder(final ListaEventosAdapter.ViewHolder holder, final int position) {
+
         final Evento evento = list.get(position);
         if (context instanceof UsuarioActivity)
         {
             if(evento.getUserID().equals(currentUser.getId()))
             {
-                userReference.child(uID).addValueEventListener(new ValueEventListener() {
+                userReference.child(currentUser.getId()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         holder.userName.setText(dataSnapshot.getValue(Usuario.class).getNome()+" criou um evento");
@@ -126,71 +128,78 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             });
         }
 
-        final String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userParticipatingReference.child(list.get(position).getId()).child(uID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
 
-                    holder.participatingImage.setImageResource(R.drawable.ic_event_available_black_24dp);
-                    holder.participatingImage.setColorFilter(Color.BLACK);
-                    holder.participatingText.setText(R.string.confirmado);
-                    holder.participate.setOnClickListener(new View.OnClickListener() {
+        if(evento.getUserID().equals(uID))
+        {
+            holder.participate.setVisibility(View.GONE);
+        }
+        else
+        {
+            userParticipatingReference.child(evento.getId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(final DataSnapshot eventSnapshot) {
+                    userParticipatingReference.child(evento.getId()).child(uID).addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onClick(View v) {
-                            userParticipatingReference.child(list.get(position).getId()).child(uID).removeValue();
-                            eventsParticipatingReference.child(uID).child(list.get(position).getId()).removeValue();
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists())
+                            {
+                                holder.participatingImage.setImageResource(R.drawable.ic_event_available_black_24dp);
+                                holder.participatingImage.setColorFilter(Color.BLACK);
+                                holder.participatingText.setText(R.string.confirmado);
+                                holder.participate.setOnClickListener(new OneShotClickListener() {
+                                    @Override
+                                    public void performClick(View v) {
+                                        userParticipatingReference.child(evento.getId()).child(uID).removeValue();
+                                        eventsParticipatingReference.child(uID).child(evento.getId()).removeValue();
+                                    }
+                                });
+                            }
+                            else if(evento.getLimite()-eventSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1)
+                            {
+                                holder.participatingImage.setImageResource(R.drawable.calendar_plus);
+                                holder.participatingImage.setColorFilter(ContextCompat.getColor(context,R.color.button));
+                                holder.participatingText.setText(R.string.ir);
+                                holder.participate.setOnClickListener(new OneShotClickListener() {
+                                    @Override
+                                    public void performClick(View v) {
+                                        userReference.child(uID).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                Usuario user = dataSnapshot.getValue(Usuario.class);
+                                                userParticipatingReference.child(evento.getId()).child(uID).setValue(user);
+                                                eventsParticipatingReference.child(uID).child(evento.getId()).setValue(evento);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                holder.participatingImage.setImageResource(R.drawable.ic_event_busy_black_24dp);
+                                holder.participatingImage.setColorFilter(Color.BLACK);
+                                holder.participatingText.setText(R.string.lotado);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
                     });
                 }
-                else
-                {
-                    if(list.get(position).getUserID().equals(uID))
-                    {
-                        holder.participate.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        if(evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1)
-                        {
 
-                            holder.participatingImage.setImageResource(R.drawable.calendar_plus);
-                            holder.participatingImage.setColorFilter(ContextCompat.getColor(context,R.color.button));
-                            holder.participatingText.setText(R.string.ir);
-                            holder.participate.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    userReference.child(uID).addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            userParticipatingReference.child(list.get(position).getId()).child(uID).setValue(dataSnapshot.getValue(Usuario.class));
-                                        }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                    eventsParticipatingReference.child(uID).child(list.get(position).getId()).setValue(list.get(position));
-
-                                }
-                            });
-                        }
-                        else if(!dataSnapshot.hasChild(uID))
-                        {
-                            holder.participatingImage.setImageResource(R.drawable.ic_event_busy_black_24dp);
-                            holder.participatingImage.setColorFilter(Color.BLACK);
-                        }
-                    }
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         holder.title.setText(String.valueOf(list.get(position).getTitulo()));
         holder.address.setText(String.valueOf(list.get(position).getEndereco()));
         holder.time.setText(list.get(position).getHoraInicio());

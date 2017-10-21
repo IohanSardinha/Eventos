@@ -5,12 +5,13 @@
     android:id="@+id/activity_novo_usuario_acivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="br.com.sardinha.iohan.eventos.Activity.NovoUsuarioAcivity"
-    android:orientation="vertical">
+    tools:context="br.com.sardinha.iohan.eventos.Activity.NovoUsuarioAcivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,80 +22,76 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/criar_conta"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-
             <ImageButton
-                android:id="@+id/fotoPerfilCriacao"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:onClick="selecionarFotoPerfil"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_person_black_24dp" />
-
-            <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/imageButton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/nome" />
+                android:background="@android:color/transparent"
+                android:onClick="backOnClick"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/criar_conta"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:layout_marginTop="15dp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large.Inverse"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/nome_registro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:background="@color/cardview_light_background"
                 android:ems="10"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email" />
+                android:hint="@string/nome"
+                android:layout_marginTop="20dp"
+                android:inputType="textPersonName"
+                android:paddingLeft="5dp" />
 
             <EditText
                 android:id="@+id/email_registro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:background="@color/cardview_light_background"
                 android:ems="10"
-                android:inputType="textEmailAddress" />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/senha" />
+                android:hint="Email"
+                android:layout_marginTop="20dp"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="5dp" />
 
             <EditText
                 android:id="@+id/senha_registro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:background="@color/cardview_light_background"
                 android:ems="10"
-                android:inputType="textPassword" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/confirmar_senha" />
+                android:hint="@string/senha"
+                android:inputType="textPassword"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="5dp" />
 
             <EditText
                 android:id="@+id/confirmar_senha_registro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:background="@color/cardview_light_background"
                 android:ems="10"
-                android:inputType="textPassword" />
+                android:hint="@string/confirmar_senha"
+                android:inputType="textPassword"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="5dp" />
 
             <Button
                 android:id="@+id/button3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/buttonSignIn"
                 android:onClick="registrar"
                 android:text="@string/registrar" />
 

@@ -34,6 +34,7 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference database;
     private Uri image;
+    private Usuario user;
     private ProgressDialog progress;
 
     @Override
@@ -57,60 +58,79 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
         {
             Toast.makeText(this, "Senhas não batem", Toast.LENGTH_SHORT).show();
         }
-        else if(true) {
+        else
+        {
             progress = ProgressDialog.show(this,"","Registrando",true);
-            final StorageReference reference = FirebaseStorage.getInstance().getReference("Users");
             auth.createUserWithEmailAndPassword(email,senha).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(NovoUsuarioAcivity.this, "Usuario "+nome+" registrado", Toast.LENGTH_SHORT).show();
                         final String id = task.getResult().getUser().getUid();
-                        final Usuario user = new Usuario(id,nome,email);
-                        if(image != null)
-                        {
-                            reference.child(id).putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    user.setImagem(taskSnapshot.getDownloadUrl().toString());
-                                    database.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            finish();
-                                            progress.dismiss();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(NovoUsuarioAcivity.this, "Erro no upload de imagem", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                            progress.dismiss();
-                                        }
-                                    });
-                        }
-                        else
-                        {
-                            database.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    finish();
-                                    progress.dismiss();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                        user = new Usuario(id,nome,email);
+                        database.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                progress.dismiss();
+                                new AlertDialog.Builder(NovoUsuarioAcivity.this)
+                                        .setTitle("Foto de perfil")
+                                        .setMessage("Gostaria de adicionar uma foto de perfil agora?")
+                                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent = new Intent(Intent.ACTION_PICK);
+                                                intent.setType("image/*");
+                                                startActivityForResult(intent,2);
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                finish();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+//                        if(image != null)
+//                        {
+//                            reference.child(id).putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                @Override
+//                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                    user.setImagem(taskSnapshot.getDownloadUrl().toString());
+//                                    database.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task) {
+//                                            finish();
+//                                            progress.dismiss();
+//                                        }
+//                                    }).addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
+//                            })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Toast.makeText(NovoUsuarioAcivity.this, "Erro no upload de imagem", Toast.LENGTH_SHORT).show();
+//                                            finish();
+//                                            progress.dismiss();
+//                                        }
+//                                    });
+//                        }
+//                        else
+//                        {
+//
+//                        }
                     }
                     else if(senha.length() < 8)
                     {
@@ -149,19 +169,46 @@ public class NovoUsuarioAcivity extends AppCompatActivity {
         }
     }
 
-    public void selecionarFotoPerfil(View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,2);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 2 && resultCode == RESULT_OK)
         {
+            progress = ProgressDialog.show(this,"","Salvando",true);
             image = data.getData();
-            ((ImageView)findViewById(R.id.fotoPerfilCriacao)).setImageURI(image);
+            StorageReference reference = FirebaseStorage.getInstance().getReference("Users").child(user.getId());
+            reference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    user.setImagem(taskSnapshot.getDownloadUrl().toString());
+                    database.child(user.getId()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            finish();
+                            progress.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(NovoUsuarioAcivity.this, "Algo deu errado", Toast.LENGTH_SHORT).show();
+                            progress.dismiss();
+                        }
+                    });
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(NovoUsuarioAcivity.this, "Erro no upload de imagem", Toast.LENGTH_SHORT).show();
+                    finish();
+                    progress.dismiss();
+                }
+            });
         }
+    }
+
+    public void backOnClick(View view) {
+        finish();
     }
 }

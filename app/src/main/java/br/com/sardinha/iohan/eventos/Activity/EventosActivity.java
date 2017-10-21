@@ -61,6 +61,7 @@ public class EventosActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference followingsReference;
     private DatabaseReference invitationReference;
+    private DatabaseReference eventsParticipatingReference;
     private String userID;
     private DatabaseReference eventsReference;
 
@@ -156,6 +157,7 @@ public class EventosActivity extends AppCompatActivity {
 
         followingsReference = database.getReference("Followings").child(userID);
         invitationReference = database.getReference("EventsInvited").child(userID);
+        eventsParticipatingReference = database.getReference("EventsParticipating").child(userID);
 
         eventsReference = database.getReference("Events");
 
@@ -211,7 +213,7 @@ public class EventosActivity extends AppCompatActivity {
         cont[1] = 999999999;
         cont[2] = 0;
         cont[3] = 999999999;
-        final boolean[] userEventCont = {false};
+        final boolean[] done = {false,false};
 
         //Eventos dos Seguidores
         invitationReference.addValueEventListener(new ValueEventListener() {
@@ -224,7 +226,7 @@ public class EventosActivity extends AppCompatActivity {
                         if(dataSnapshot.getChildrenCount() <= 0)
                         {
                             cont[0] = cont[1];
-                            showData(cont,userEventCont[0],eventos);
+                            showData(cont,done,eventos);
                         }
                         for(DataSnapshot followerSnapshot : dataSnapshot.getChildren())
                         {
@@ -247,7 +249,7 @@ public class EventosActivity extends AppCompatActivity {
                                         }
                                     }
                                     cont[0] += 1;
-                                    showData(cont,userEventCont[0],eventos);
+                                    showData(cont,done,eventos);
                                 }
 
                                 @Override
@@ -255,7 +257,7 @@ public class EventosActivity extends AppCompatActivity {
 
                                 }
                             });
-                            showData(cont,userEventCont[0],eventos);
+                            showData(cont,done,eventos);
                         }
                     }
 
@@ -333,8 +335,8 @@ public class EventosActivity extends AppCompatActivity {
                         eventos.add(eventSnapshot.getValue(Evento.class));
                     }
                 }
-                userEventCont[0] = true;
-                showData(cont,userEventCont[0],eventos);
+                done[0] = true;
+                showData(cont,done,eventos);
             }
 
             @Override
@@ -351,7 +353,7 @@ public class EventosActivity extends AppCompatActivity {
                 if(dataSnapshot.getChildrenCount() <= 0)
                 {
                     cont[2] = cont[3];
-                    showData(cont,userEventCont[0],eventos);
+                    showData(cont,done,eventos);
                 }
                 for(DataSnapshot eventIdSnapshot: dataSnapshot.getChildren())
                 {
@@ -366,7 +368,7 @@ public class EventosActivity extends AppCompatActivity {
                                 eventos.add(eventSnapshot.getValue(Evento.class));
                             }
                             cont[2] += 1;
-                            showData(cont,userEventCont[0],eventos);
+                            showData(cont,done,eventos);
                         }
 
                         @Override
@@ -382,11 +384,36 @@ public class EventosActivity extends AppCompatActivity {
 
             }
         });
+
+        //Eventos confirmado
+        eventsParticipatingReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
+                {
+                    Evento e = eventSnapshot.getValue(Evento.class);
+                    if(e != null && !listIDs.contains(e.getId()))
+                    {
+                        listIDs.add(e.getId());
+                        eventos.add(eventSnapshot.getValue(Evento.class));
+                    }
+                }
+                done[1] = true;
+                showData(cont,done,eventos);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //TODO Eventos Eventos que os seguidores vão
     }
 
-    private void showData(long[] cont, boolean done, Set<Evento> events)
+    private void showData(long[] cont, boolean[] done, Set<Evento> events)
     {
-        if(cont[0] >= cont[1] && cont[2] >= cont[3] && done)
+        if(cont[0] >= cont[1] && cont[2] >= cont[3] && done[0] && done[1])
         {
             list.clear();
             list.addAll(events);

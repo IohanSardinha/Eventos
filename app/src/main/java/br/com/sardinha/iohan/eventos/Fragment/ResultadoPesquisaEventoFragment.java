@@ -75,7 +75,11 @@ public class ResultadoPesquisaEventoFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dss: dataSnapshot.getChildren())
                 {
-                    list.add(dss.getValue(Evento.class));
+                    Evento e = dss.getValue(Evento.class);
+                    if(!e.getPrivacidade().equals("Privado"))
+                    {
+                        list.add(dss.getValue(Evento.class));
+                    }
                 }
                 adapter = new ListaEventosAdapter(list,view.getContext());
                 recyclerView.setAdapter(adapter);

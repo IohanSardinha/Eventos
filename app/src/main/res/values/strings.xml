@@ -94,4 +94,5 @@
     <string name="nao_registrado">Email ou senha não encontrados</string>
     <string name="preencha_os_campos">Preencha os campos</string>
     <string name="criados_por_mim">Criados por mim</string>
+    <string name="redefinir_sua_senha">Redefinir senha</string>
 </resources>

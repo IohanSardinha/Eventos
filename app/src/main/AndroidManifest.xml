@@ -25,7 +25,8 @@
             android:label="" />
         <activity
             android:name=".Activity.NovoUsuarioAcivity"
-            android:label="Novo usuário" />
+            android:label="Novo usuário"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Activity.UsuarioActivity"
             android:label="Detalhes" />
@@ -54,7 +55,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.TrocarSenhaActivity" />
+        <activity android:name=".Activity.TrocarSenhaActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.ConvidadosActivity"
             android:theme="@style/AppTheme.NoActionBar" />
