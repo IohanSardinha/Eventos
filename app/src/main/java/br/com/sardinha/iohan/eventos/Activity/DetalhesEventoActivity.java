@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,11 +29,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosConvidadosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
@@ -133,19 +138,36 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     });
         }
 
-        this.setTitle(evento.getTitulo());
+        this.setTitle("");
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        if(evento.getDataInicio().equals(evento.getDataEncerramento()))
+        ((TextView)findViewById(R.id.titulo_detalhes)).setText(evento.getTitulo());
+
+        String data = evento.getDataInicio();
+        List<String> tempDataInicio = Arrays.asList(data.split("/"));
+
+        ((TextView)findViewById(R.id.dia_detalhes)).setText(tempDataInicio.get(0));
+        ((TextView)findViewById(R.id.mes_detalhes)).setText(getStringMonth(tempDataInicio.get(1)));
+        if(!String.valueOf(Calendar.getInstance().get(Calendar.YEAR)).equals(tempDataInicio.get(2)))
         {
-            ((TextView)findViewById(R.id.data_detalhes)).setText(getString(R.string.dia)+" "+evento.getDataInicio() + " " + getString(R.string.de) + " " + evento.getHoraInicio() + " " + getString(R.string.as) + " " + evento.getHoraEncerramento());
+            ((TextView)findViewById(R.id.ano_detalhes)).setText(tempDataInicio.get(2));
         }
-        else if(evento.getDataEncerramento().isEmpty())
+
+        TextView hora = ((TextView)findViewById(R.id.hora_detalhes));
+        if(!evento.getHoraEncerramento().isEmpty())
         {
-            ((TextView)findViewById(R.id.data_detalhes)).setText(getString(R.string.dia)+" "+evento.getDataInicio() + " " + getString(R.string.as) + " " + evento.getHoraInicio());
+            if(evento.getDataEncerramento().equals(evento.getDataInicio()))
+            {
+                hora.setText(evento.getHoraInicio() +" "+ getString(R.string.as) +" "+ evento.getHoraEncerramento());
+            }
+            else
+            {
+                hora.setText(evento.getHoraInicio() +" "+ getString(R.string.a) +" "+ evento.getDataEncerramento() +" "+ getString(R.string.as) +" "+ evento.getHoraEncerramento() );
+            }
         }
         else
         {
-            ((TextView)findViewById(R.id.data_detalhes)).setText(getString(R.string.dia)+" "+evento.getDataInicio() + " " + getString(R.string.as) + " " + evento.getHoraInicio() + "\nà\n" + evento.getDataEncerramento() + " " + getString(R.string.as) + " " + evento.getHoraEncerramento());
+            hora.setText(evento.getHoraInicio());
         }
 
         ((TextView)findViewById(R.id.privacidade_detalhes)).setText(getString(R.string.evento)+" "+evento.getPrivacidade());
@@ -161,6 +183,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.endereco_detalhes)).setText(evento.getEndereco());
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////
 
         final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.lista_usuarios_detalhes);
         recyclerView.setHasFixedSize(true);
@@ -168,7 +191,7 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         final ArrayList<Usuario> users = new ArrayList<>();
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("UsersParticipating").child(evento.getId());
+        Query reference = database.getReference("UsersParticipating").child(evento.getId()).limitToFirst(4);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -195,7 +218,9 @@ public class DetalhesEventoActivity extends AppCompatActivity {
             }
         });
 
-        final Button participate = (Button)findViewById(R.id.participar_evento_detalhes);
+        final View participate = findViewById(R.id.participarButton_detalhes);
+        final ImageView participateImage= (ImageView)findViewById(R.id.imagemParticipandodetalhes);
+        final TextView participateText = (TextView)findViewById(R.id.textoParticipandodetalhes);
         if(!evento.getUserID().equals(user.getId()))
         {
             participate.setVisibility(View.VISIBLE);
@@ -206,9 +231,9 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.hasChild(user.getId()) && (evento.getLimite()-dataSnapshot.getChildrenCount() > 0 || evento.getLimite() == -1))
                     {
-                        participate.setText(R.string.participar);
-                        participate.setBackgroundResource(R.color.button);
-                        participate.setTextColor(Color.BLACK);
+                        participateImage.setImageResource(R.drawable.calendar_plus);
+                        participateImage.setColorFilter(ContextCompat.getColor(DetalhesEventoActivity.this,R.color.button));
+                        participateText.setText(R.string.ir);
                         participate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -219,16 +244,16 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     }
                     else if(!dataSnapshot.hasChild(user.getId()) && evento.getLimite()-dataSnapshot.getChildrenCount() <= 0 && evento.getLimite() != -1)
                     {
-                        participate.setText(R.string.lotado);
-                        participate.setBackgroundResource(R.color.button);
-                        participate.setTextColor(Color.BLACK);
+                        participateImage.setImageResource(R.drawable.ic_event_busy_black_24dp);
+                        participateImage.setColorFilter(Color.BLACK);
+                        participateText.setText(R.string.lotado);
                         participate.setOnClickListener(null);
                     }
                     else
                     {
-                        participate.setText(R.string.partcipando);
-                        participate.setTextColor(Color.WHITE);
-                        participate.setBackgroundResource(R.color.buttonPressed);
+                        participateImage.setImageResource(R.drawable.ic_event_available_black_24dp);
+                        participateImage.setColorFilter(Color.BLACK);
+                        participateText.setText(R.string.confirmado);
                         participate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -315,39 +340,36 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         }
 
     }
-    public static int getDominantColor(Bitmap bitmap) {
-        if (bitmap == null) {
-            return Color.TRANSPARENT;
+
+    private String getStringMonth(String month)
+    {
+        String[] meses = getResources().getStringArray(R.array.meses);
+        switch (month)
+        {
+            case "01":
+                return meses[0];
+            case "02":
+                return meses[1];
+            case "03":
+                return meses[2];
+            case "04":
+                return meses[3];
+            case "05":
+                return meses[4];
+            case "06":
+                return meses[5];
+            case "07":
+                return meses[6];
+            case "08":
+                return meses[7];
+            case "09":
+                return meses[8];
+            case "10":
+                return meses[9];
+            case "11":
+                return meses[10];
+            default:
+                return meses[11];
         }
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int size = width * height;
-        int pixels[] = new int[size];
-        //Bitmap bitmap2 = bitmap.copy(Bitmap.Config.ARGB_4444, false);
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
-        int color;
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        int a;
-        int count = 0;
-        for (int i = 0; i < pixels.length; i++) {
-            color = pixels[i];
-            a = Color.alpha(color);
-            if (a > 0) {
-                r += Color.red(color);
-                g += Color.green(color);
-                b += Color.blue(color);
-                count++;
-            }
-        }
-        r /= count;
-        g /= count;
-        b /= count;
-        r = (r << 16) & 0x00FF0000;
-        g = (g << 8) & 0x0000FF00;
-        b = b & 0x000000FF;
-        color = 0xFF000000 | r | g | b;
-        return color;
     }
 }

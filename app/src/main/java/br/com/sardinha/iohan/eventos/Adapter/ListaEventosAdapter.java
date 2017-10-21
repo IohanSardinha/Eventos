@@ -1,6 +1,5 @@
 package br.com.sardinha.iohan.eventos.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -207,6 +206,10 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         List<String> tempData = Arrays.asList(data.split("/"));
         holder.day.setText(tempData.get(0));
         holder.month.setText(getStringMonth(tempData.get(1)));
+        if(!String.valueOf(Calendar.getInstance().get(Calendar.YEAR)).equals(tempData.get(2)))
+        {
+            holder.year.setText(tempData.get(2));
+        }
 
         if(list.get(position).getImagem() != null)
         {
@@ -223,6 +226,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
         TextView title;
         TextView address;
         TextView userName;
+        TextView year;
         TextView month;
         TextView time;
         TextView day;
@@ -241,6 +245,7 @@ public class ListaEventosAdapter extends RecyclerView.Adapter<ListaEventosAdapte
             image = (ImageView)itemView.findViewById(R.id.imagem_item_lista);
             title = (TextView)itemView.findViewById(R.id.titulo_item_evento);
             address = (TextView)itemView.findViewById(R.id.endereco_item_evento);
+            year = (TextView)itemView.findViewById(R.id.ano_item_evento);
             month = (TextView)itemView.findViewById(R.id.mes_item_evento);
             day = (TextView)itemView.findViewById(R.id.dia_item_evento);
             time = (TextView)itemView.findViewById(R.id.hora_item_evento);

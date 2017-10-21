@@ -11,12 +11,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="br.com.sardinha.iohan.eventos.Activity.DetalhesEventoActivity">
 
-    <ScrollView
+     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+         android:layout_alignParentTop="true"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -33,54 +33,113 @@
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/selecionar" />
 
-            <TextView
-                android:text="Dia 00/00/0000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/data_detalhes"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@id/imagem_detalhes"
-                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+            <FrameLayout
+                android:id="@+id/dateContainer"
+                android:layout_width="60dp"
+                android:layout_height="65dp"
+                android:background="@color/dataContainer"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="3dp">
 
-            <TextView
-                android:text="Evento (pivacidade)"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/privacidade_detalhes"
-                android:layout_below="@id/data_detalhes"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="@dimen/activity_vertical_margin"/>
+                <TextView
+                    android:id="@+id/mes_detalhes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="46dp"
-                android:inputType="textMultiLine"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/descricao_detalhes"
-                android:text="Descrição"
-                android:textColor="@android:color/black"
-                android:layout_below="@id/privacidade_detalhes"
-                android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:id="@+id/dia_detalhes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start|end"
+                    android:layout_marginBottom="5dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:text="@string/limite_de_convidados"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/limite_detalhes"
-                android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:layout_alignBaseline="@+id/privacidade_detalhes"
+                <TextView
+                    android:id="@+id/ano_detalhes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:paddingBottom="1dp"
+                    android:paddingRight="1dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/participarButton_detalhes"
+                android:layout_width="65dp"
+                android:layout_height="55dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="6dp"
-                android:layout_marginEnd="6dp" />
+                android:layout_below="@id/imagem_detalhes"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
 
+                <TextView
+                    android:id="@+id/textoParticipandodetalhes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/confirmado"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/imagemParticipandodetalhes"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/ic_event_available_black_24dp" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/titulo_detalhes"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imagem_detalhes"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/privacidade_detalhes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@+id/titulo_detalhes"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            <TextView
+                android:id="@+id/limite_detalhes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/hora_detalhes"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            <TextView
+                android:id="@+id/descricao_detalhes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/limite_detalhes"
+                android:layout_marginTop="10dp"
+                android:inputType="textMultiLine"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/Perticiparao"
@@ -90,6 +149,7 @@
                 android:layout_alignStart="@+id/descricao_detalhes"
                 android:layout_below="@+id/descricao_detalhes"
                 android:layout_marginTop="16dp"
+                android:layout_marginLeft="5dp"
                 android:text="@string/participarao"
                 android:onClick="participaraoOnClick"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
@@ -105,14 +165,21 @@
                 android:layout_marginRight="6dp"/>
 
             <TextView
-                android:text="Endereço"
+                android:id="@+id/endereco_detalhes"
+                android:layout_width="270dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/privacidade_detalhes"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            <TextView
+                android:id="@+id/hora_detalhes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/endereco_detalhes"
-                android:textColor="@android:color/black"
-                android:layout_below="@+id/privacidade_detalhes"
-                android:layout_alignLeft="@+id/privacidade_detalhes"
-                android:layout_alignStart="@+id/privacidade_detalhes" />
+                android:layout_below="@id/endereco_detalhes"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/participar_evento_detalhes"
