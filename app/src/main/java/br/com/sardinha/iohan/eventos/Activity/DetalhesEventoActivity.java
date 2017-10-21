@@ -39,9 +39,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.sardinha.iohan.eventos.Adapter.ListaComentariosAdapter;
 import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosConvidadosAdapter;
+import br.com.sardinha.iohan.eventos.Class.Comentario;
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
+import br.com.sardinha.iohan.eventos.NovoComentarioActivity;
 import br.com.sardinha.iohan.eventos.R;
 
 public class DetalhesEventoActivity extends AppCompatActivity {
@@ -139,7 +142,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
         }
 
         this.setTitle("");
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         ((TextView)findViewById(R.id.titulo_detalhes)).setText(evento.getTitulo());
 
@@ -183,7 +185,6 @@ public class DetalhesEventoActivity extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.endereco_detalhes)).setText(evento.getEndereco());
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////
 
         final RecyclerView recyclerView = (RecyclerView)findViewById(R.id.lista_usuarios_detalhes);
         recyclerView.setHasFixedSize(true);
@@ -210,6 +211,28 @@ public class DetalhesEventoActivity extends AppCompatActivity {
                     users.add(new Usuario("",getString(R.string.ver_todos),""));
                 }
                 recyclerView.setAdapter(new ListaUsuariosConvidadosAdapter(users,DetalhesEventoActivity.this,user,evento));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        final RecyclerView recyclerViewComentarios = (RecyclerView)findViewById(R.id.lista_discussao_detalhes);
+        recyclerViewComentarios.setHasFixedSize(true);
+        recyclerViewComentarios.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        final ArrayList<Comentario> comentarios = new ArrayList<>();
+        DatabaseReference commentsReference = database.getReference("Comments").child(evento.getId());
+        commentsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                comentarios.clear();
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    comentarios.add(ds.getValue(Comentario.class));
+                }
+                recyclerViewComentarios.setAdapter(new ListaComentariosAdapter(comentarios,DetalhesEventoActivity.this));
             }
 
             @Override
@@ -371,5 +394,11 @@ public class DetalhesEventoActivity extends AppCompatActivity {
             default:
                 return meses[11];
         }
+    }
+
+    public void comentarOnClick(View view) {
+        Intent intent = new Intent(this, NovoComentarioActivity.class);
+        intent.putExtra("Evento",evento);
+        startActivity(intent);
     }
 }
