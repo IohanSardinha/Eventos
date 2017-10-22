@@ -71,7 +71,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.meusEventosActivity" />
-        <activity android:name=".NovoComentarioActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activity.NovoComentarioActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

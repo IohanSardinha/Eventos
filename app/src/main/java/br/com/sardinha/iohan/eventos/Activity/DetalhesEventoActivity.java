@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -16,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,7 +42,6 @@ import br.com.sardinha.iohan.eventos.Adapter.ListaUsuariosConvidadosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Comentario;
 import br.com.sardinha.iohan.eventos.Class.Evento;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
-import br.com.sardinha.iohan.eventos.NovoComentarioActivity;
 import br.com.sardinha.iohan.eventos.R;
 
 public class DetalhesEventoActivity extends AppCompatActivity {

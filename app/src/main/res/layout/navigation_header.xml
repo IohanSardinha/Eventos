@@ -5,6 +5,14 @@
     android:layout_height="140dp"
     android:background="@color/colorAccent">
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@drawable/ic_person_black_24dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"/>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/foto_usuario_header"
         android:layout_width="80dp"

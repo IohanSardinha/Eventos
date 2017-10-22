@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -290,7 +291,61 @@ public class EventosActivity extends AppCompatActivity {
                 for(DataSnapshot eventSnapshot : dataSnapshot.getChildren())
                 {
                     final Evento e = eventSnapshot.getValue(Evento.class);
-                    if(e.getDataHora()<=dateNow)
+                    if(!e.getDataEncerramento().isEmpty())
+                    {
+                        double dataHoraEncerramento;
+                        String temp1;
+                        String[] temp = e.getDataEncerramento().split("/");
+                        temp1 = temp[2]+temp[1]+temp[0];
+                        temp = e.getHoraEncerramento().split(":");
+                        temp1 += temp[0] + temp[1];
+                        dataHoraEncerramento = Double.parseDouble(temp1);
+                        if(dataHoraEncerramento <= dateNow)
+                        {
+                            new AlertDialog.Builder(EventosActivity.this)
+                                    .setTitle(e.getTitulo())
+                                    .setMessage(R.string.parece_que_ja_esta_acontecendo)
+                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            startActivity(new Intent(EventosActivity.this,confirmarPresentesActivity.class).putExtra("event",e));
+                                            //finish();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.agora_nao, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            eventsReference.child(e.getId()).removeValue();
+                                            final DatabaseReference usersParticipatingReference = database.getReference("UsersParticipating").child(e.getId());
+                                            final DatabaseReference eventsParticipatingReference = database.getReference("EventsParticipating");
+                                            usersParticipatingReference.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for(DataSnapshot ds : dataSnapshot.getChildren())
+                                                    {
+                                                        eventsParticipatingReference.child(ds.getKey()).removeValue();
+                                                    }
+                                                    usersParticipatingReference.removeValue();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                            list.clear();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+                        }
+                        else if(!listIDs.contains(e.getId()))
+                        {
+                            listIDs.add(e.getId());
+                            eventos.add(eventSnapshot.getValue(Evento.class));
+                        }
+                    }
+                    else if(e.getDataHora()<=dateNow)
                     {
                         new AlertDialog.Builder(EventosActivity.this)
                                 .setTitle(e.getTitulo())
@@ -473,5 +528,6 @@ public class EventosActivity extends AppCompatActivity {
         moveTaskToBack(true);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
+        finish();
     }
 }

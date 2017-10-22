@@ -44,6 +44,7 @@ import java.util.Set;
 
 import br.com.sardinha.iohan.eventos.Adapter.ListaEventosAdapter;
 import br.com.sardinha.iohan.eventos.Class.Evento;
+import br.com.sardinha.iohan.eventos.Class.NotificationSender;
 import br.com.sardinha.iohan.eventos.Class.OneShotClickListener;
 import br.com.sardinha.iohan.eventos.Class.Usuario;
 import br.com.sardinha.iohan.eventos.R;
@@ -187,6 +188,17 @@ public class UsuarioActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 authFollowers.child(user.getId()).setValue(user);
+                                database.getReference("Users").child(UID).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        new NotificationSender().sendFollowMessage(UsuarioActivity.this,null,user,dataSnapshot.getValue(Usuario.class));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         });
                     }
@@ -198,7 +210,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 }
             });
         }
-
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         final Map<String,Evento> eventsSet = new HashMap<>();
         final boolean[] done = {false,false,false};
 
@@ -212,7 +224,15 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds:dataSnapshot.getChildren())
                 {
-                    eventsSet.put(ds.getKey(),ds.getValue(Evento.class));
+                    Evento e = ds.getValue(Evento.class);
+                    if((!e.getPrivacidade().equals("Privado") && !user.getId().equals(UID)))
+                    {
+                        eventsSet.put(e.getId(),e);
+                    }
+                    else if(user.getId().equals(UID))
+                    {
+                        eventsSet.put(e.getId(),e);
+                    }
                 }
                 done[0] = true;
                 doneGettingEvents(done,eventsSet);
@@ -224,14 +244,21 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         });
 
-        Query userEventsReference = database.getReference("Events").orderByChild("userID").startAt(user.getId()).limitToFirst(10);
+        Query userEventsReference = database.getReference("Events").orderByChild("userID").equalTo(user.getId()).limitToFirst(10);
         userEventsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds:dataSnapshot.getChildren())
                 {
-                    eventsSet.put(ds.getKey(),ds.getValue(Evento.class));
-
+                    Evento e = ds.getValue(Evento.class);
+                    if((!e.getPrivacidade().equals("Privado") && !user.getId().equals(UID)))
+                    {
+                        eventsSet.put(e.getId(),e);
+                    }
+                    else if(user.getId().equals(UID))
+                    {
+                        eventsSet.put(e.getId(),e);
+                    }
                 }
                 done[1] = true;
                 doneGettingEvents(done,eventsSet);
@@ -248,7 +275,15 @@ public class UsuarioActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds:dataSnapshot.getChildren())
                 {
-                    eventsSet.put(ds.getKey(),ds.getValue(Evento.class));
+                    Evento e = ds.getValue(Evento.class);
+                    if((!e.getPrivacidade().equals("Privado") && !user.getId().equals(UID)))
+                    {
+                        eventsSet.put(e.getId(),e);
+                    }
+                    else if(user.getId().equals(UID))
+                    {
+                        eventsSet.put(e.getId(),e);
+                    }
                 }
                 done[2] = true;
                 doneGettingEvents(done,eventsSet);
@@ -260,7 +295,7 @@ public class UsuarioActivity extends AppCompatActivity {
             }
         });
     }
-
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     public void doneGettingEvents(boolean[] done, Map<String,Evento> map)
     {
         if(done[0] && done[1] && done[2])
